@@ -75,4 +75,34 @@ export default [
       ],
     },
   },
+  // Layer boundary enforcement: Layer 2 (state) must not import from Layer 3 or above.
+  {
+    files: ['src/state/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['*/registry*', '../registry/*'],
+              message: 'Layer 2 must not import from Layer 3 (registry)',
+            },
+            {
+              group: ['*/renderers*', '../renderers/*'],
+              message: 'Layer 2 must not import from Layer 4 (renderers)',
+            },
+            {
+              group: ['*/interaction*', '../interaction/*'],
+              message: 'Layer 2 must not import from Layer 5 (interaction)',
+            },
+            {
+              group: ['*/pedagogy*', '../pedagogy/*'],
+              message: 'Layer 2 must not import from Layer 6 (pedagogy)',
+            },
+            { group: ['*/ui*', '../ui/*'], message: 'Layer 2 must not import from the UI layer' },
+          ],
+        },
+      ],
+    },
+  },
 ];

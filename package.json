@@ -21,9 +21,11 @@
   "dependencies": {
     "comlink": "^4.4.2",
     "fraction.js": "^5.3.4",
+    "immer": "^11.1.8",
     "ml-matrix": "^6.12.2",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "zustand": "^5.0.13"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

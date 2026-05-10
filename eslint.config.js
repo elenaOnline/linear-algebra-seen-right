@@ -31,4 +31,42 @@ export default [
       'no-console': 'warn',
     },
   },
+  // Layer boundary enforcement: Layer 0 (types) must not import from higher layers.
+  {
+    files: ['src/types/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['*/state*', '../state/*'],
+              message: 'Layer 0 must not import from Layer 2 (state)',
+            },
+            {
+              group: ['*/compute*', '../compute/*'],
+              message: 'Layer 0 must not import from Layer 1 (compute)',
+            },
+            {
+              group: ['*/registry*', '../registry/*'],
+              message: 'Layer 0 must not import from Layer 3 (registry)',
+            },
+            {
+              group: ['*/renderers*', '../renderers/*'],
+              message: 'Layer 0 must not import from Layer 4 (renderers)',
+            },
+            {
+              group: ['*/interaction*', '../interaction/*'],
+              message: 'Layer 0 must not import from Layer 5 (interaction)',
+            },
+            {
+              group: ['*/pedagogy*', '../pedagogy/*'],
+              message: 'Layer 0 must not import from Layer 6 (pedagogy)',
+            },
+            { group: ['*/ui*', '../ui/*'], message: 'Layer 0 must not import from the UI layer' },
+          ],
+        },
+      ],
+    },
+  },
 ];

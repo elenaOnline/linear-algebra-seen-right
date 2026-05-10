@@ -1,0 +1,5 @@
+dist/
+node_modules/
+public/pyodide/
+pnpm-lock.yaml
+*.md

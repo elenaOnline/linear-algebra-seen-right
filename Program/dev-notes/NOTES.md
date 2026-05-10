@@ -138,6 +138,26 @@ Format:
 **Workaround.** How to handle it; "none — accept the constraint" is a valid answer.
 ```
 
+### Zustand 5: createStore moved to zustand/vanilla
+
+**Constraint.** In Zustand 5, the vanilla (non-React) `createStore` is exported from `zustand/vanilla`, not `zustand`. Importing from `zustand` gives the React hook version.
+**Bites at.** Any non-React code (tests, server code, Layer 2 store factory) that creates a store without React.
+**Workaround.** `import { createStore } from 'zustand/vanilla'`. The React hook wrapper is a separate step if needed.
+
+### castDraft vs. `as Draft<T>` for Immer readonly assignments
+
+**Constraint.** Layer 0 types have `readonly` arrays (e.g., `readonly SpaceId[]` in tensor/product VectorSpace). Assigning them into Immer Draft slots requires removing the readonly, but `as Draft<T>` casts trigger ESLint's `no-unnecessary-type-assertion` rule (even when TypeScript actually needs them due to the readonly mismatch). The rule's analysis differs from TypeScript's actual assignability check.
+**Bites at.** `src/state/store.ts` — any action that assigns a Layer 0 type with deeply readonly fields into a Draft slot.
+**Workaround.** Use `castDraft(value)` from Immer. It's a runtime no-op that converts `T → Draft<T>`. ESLint doesn't flag it as an unnecessary assertion because it's a function call, not a cast expression.
+
+### Undo/redo idempotency interactions with tests
+
+**Constraint.** `setField` and `setActiveBasis` are guarded: if the new value equals the current value, they return without pushing a history entry. A test that calls `setField('C')` when the state is already `field='C'` (e.g., right after `undo()` that landed on a C snapshot) is a no-op and does NOT invalidate the redo branch.
+**Bites at.** Tests for redo-branch invalidation must use values that actually change the state.
+**Workaround.** In redo-branch tests, always use a value that differs from the current undo'd state. The test is "new action after undo invalidates redo", not "same action after undo invalidates redo".
+
+---
+
 ### ml-matrix TypeScript types vs. runtime property names
 
 **Constraint.** `SingularValueDecomposition` TypeScript types use `.leftSingularVectors` / `.rightSingularVectors`, while `EigenvalueDecomposition` uses `.eigenvectorMatrix`. The runtime also has `.U` and `.V` as aliases, but the TypeScript declarations don't expose them.

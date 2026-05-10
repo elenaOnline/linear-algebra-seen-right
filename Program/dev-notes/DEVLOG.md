@@ -21,6 +21,19 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-10 — Phase 3: Layer 2 Session State
+
+**Touched:** `src/state/` (all files), `eslint.config.js` (Layer 2 boundary rule), `package.json` (zustand, immer), `PRD/00`, `PRD/04`, `NOTES.md`
+**Status:** complete
+
+Built the Zustand 5 vanilla store with Immer 11 middleware. Full `MathSession` shape per PRD §2.1. All 17 actions implemented (object creation, naming, basis selection, field, computation lifecycle, views, undo/redo). Selectors in `selectors.ts`; `SessionView` interface implemented in `session-view.ts` wrapping a snapshot. `serialization.ts` documents the intended shape with stub functions (`xtest`'d in selectors.test.ts). 175 tests passing.
+
+**Notable:** Zustand 5's `createStore` moved to `zustand/vanilla` (not `zustand`). `castDraft()` from Immer is the correct way to assign readonly Layer 0 types (with `readonly` arrays in discriminated union variants) into Immer Draft slots — `as Draft<T>` casts fail ESLint's `no-unnecessary-type-assertion` rule even when TypeScript needs them; `castDraft` is the idiomatic workaround. The `setActiveBasis` and `setField` idempotency guards (skip history push if no change) interact with tests — test must use genuinely different values to verify redo-branch invalidation.
+
+**Next:** Phase 4 — Layer 3 Visualization Registry. Re-read `Technical Architecture.md` §"Layer 3". Author `PRD/05 — Layer 3 (Visualization Registry).md` before implementing. Check `src/types/` and `src/state/` actual shapes for any deltas from the architecture sketches.
+
+---
+
 ## 2026-05-10 — Phase 2: Layer 1 Computation Engine
 
 **Touched:** `src/compute/` (all files), `eslint.config.js` (__demo__ ignore), `package.json` (ml-matrix, comlink, fraction.js re-added), `PRD/00`, `PRD/03`, `NOTES.md`

@@ -138,6 +138,66 @@ Format:
 **Workaround.** How to handle it; "none — accept the constraint" is a valid answer.
 ```
 
+### ml-matrix TypeScript types vs. runtime property names
+
+**Constraint.** `SingularValueDecomposition` TypeScript types use `.leftSingularVectors` / `.rightSingularVectors`, while `EigenvalueDecomposition` uses `.eigenvectorMatrix`. The runtime also has `.U` and `.V` as aliases, but the TypeScript declarations don't expose them.
+**Bites at.** `src/compute/numerical/mlmatrix.ts` — always use the TypeScript-declared names.
+**Workaround.** Use `.leftSingularVectors`, `.rightSingularVectors`, `.eigenvectorMatrix` — these match both the TypeScript types and runtime.
+
+### QR decomposition sign convention
+
+**Constraint.** ml-matrix's `QrDecomposition` may return sign-flipped column vectors in Q (and correspondingly in R) for the Householder QR algorithm. Q is still orthogonal and R is still upper-triangular, but diagonal entries may be negative.
+**Bites at.** Tests for QR of identity and similar "known" matrices.
+**Workaround.** Test `|diagonal|` equals expected magnitude rather than checking sign.
+
+### LuDecomposition has a .determinant property
+
+**Constraint.** Computing determinant from the U diagonal times permutation sign is error-prone. `LuDecomposition` exposes `.determinant` directly.
+**Bites at.** Any manual determinant computation via LU.
+**Workaround.** Use `lu.determinant` — it is already computed correctly by the library.
+
+### Fraction.js silently dropped from package.json
+
+**Constraint.** After `pnpm add fraction.js` in Phase 1, Prettier's reformat of `package.json` appeared to drop the entry (or it was never written). The package remained importable as a transitive dep, so typecheck passed, but a fresh `pnpm install --frozen-lockfile` would fail.
+**Bites at.** CI fresh installs, new developer checkouts.
+**Workaround.** Re-added in Phase 2. Watch for this pattern with any `pnpm add` call followed by Prettier format — verify `package.json` has the new dep before committing.
+
+### ADR-009 — Pyodide CDN: jsdelivr pinned to v0.27.0  (2026-05-10)
+
+**Context.** PRD §2.1 posed CDN vs. bundled Pyodide as a Decision. 10MB bundle is too large to bundle; CDN is the only practical option for this project's scope.
+
+**Choice.** `https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.mjs` — pinned to a specific version for reproducibility.
+
+**Why.** Bundling Pyodide within Vite is possible but adds significant build-time and bundle-size overhead. CDN is the official recommended approach for browser Pyodide. jsdelivr is the most reliable CDN for Pyodide (the official Pyodide CDN mirrors to jsdelivr). Version pinning prevents silent upgrades breaking SymPy API compatibility.
+
+**Implications.** Phase 2's Netlify deploy must work with CDN resources (no CORS issues for jsDelivr from Netlify). Version upgrade requires testing on a preview deploy, not just `pnpm verify`. The version pin `v0.27.0` in `sympy.worker.ts` must be bumped deliberately.
+
+---
+
+### ADR-008 — Mixed-provenance scalar promotion rule  (2026-05-10)
+
+**Context.** PRD §6 asked: what does the engine do when a matrix has both rational and float entries?
+
+**Choice.** Any float entry in the matrix → `numerical_only` for the entire matrix; the exact (SymPy) track is skipped.
+
+**Why.** Attempting exact computation with float entries would require rationalizing floats (a heuristic). The results would be meaningless exact-looking answers derived from approximations. Better to be honest: if the user provides float data, the result is numerical.
+
+**Implications.** Users who want exact eigenvalues must enter rational coefficients. This is the mathematically honest behavior; Layer 5 (input parsing) should warn when float input is entered in contexts where exact results are desired.
+
+---
+
+### ADR-010 — Comlink for Pyodide worker protocol  (2026-05-10)
+
+**Context.** PRD §6 asked comlink vs. hand-rolled message protocol.
+
+**Choice.** comlink 4.4.2.
+
+**Why.** comlink wraps the postMessage/onmessage protocol in a transparent async function call interface, eliminating request-ID correlation boilerplate. The wire format is standard structured clone + comlink's thin framing; it is auditable by reading comlink's source. The `SymbolicAdapter` interface in `protocol.ts` documents the contract independent of comlink, so if comlink is replaced (e.g., for Transferable performance), only `pyodide-client.ts` changes.
+
+**Implications.** `AbortSignal` is not transferable; the signal cannot be sent across the comlink boundary to the worker. Cancellation is documented as "reject without interrupting in-flight computation" for SymPy calls. This is recorded in the PRD and is consistent with SymPy's non-interruptible Python execution.
+
+---
+
 ### noUncheckedIndexedAccess + internal array invariants
 
 **Constraint.** TypeScript returns `T | undefined` for any array index access under `noUncheckedIndexedAccess`, even when the index is provably in bounds (e.g., last element of a non-empty array).

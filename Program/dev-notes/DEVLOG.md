@@ -21,6 +21,19 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-10 — Phase 2: Layer 1 Computation Engine
+
+**Touched:** `src/compute/` (all files), `eslint.config.js` (__demo__ ignore), `package.json` (ml-matrix, comlink, fraction.js re-added), `PRD/00`, `PRD/03`, `NOTES.md`
+**Status:** complete
+
+Implemented the unified computation engine with SymbolicAdapter interface + Pyodide worker (CDN, comlink) + ml-matrix numerical adapter. All 15 operations from PRD §2.3 implemented. Layer 0 ↔ SymPy bridge with round-trip serialization for all Scalar kinds. Promotion rule: any float entry → `numerical_only` (no symbolic attempt). Cancellation via AbortSignal threaded through to adapter. MockSymbolicAdapter enables full Vitest coverage without a browser. 132 tests passing.
+
+**Notable:** `LuDecomposition` has a `.determinant` property — use it directly rather than computing from U diagonal (my first attempt was wrong — sign from permutation isn't trivially accessible). `SingularValueDecomposition` uses `.leftSingularVectors`/`.rightSingularVectors` in TypeScript types but `.U`/`.V` at runtime; the TypeScript names are canonical. QR decomposition may return sign-flipped Q columns — tests must use `|diagonal| = 1` not `diagonal = 1`. Fraction.js got dropped from `package.json` (unclear why — Prettier reformatting dropped it silently); re-added in this phase.
+
+**Next:** Phase 3 — Layer 2 Session State. Read `PRD/04 — Layer 2 (Session State).md`. Begin in `src/state/` with the Zustand store.
+
+---
+
 ## 2026-05-10 — Phase 1: Layer 0 Mathematical Type System
 
 **Touched:** `src/types/` (all files), `eslint.config.js` (layer boundary rule), `package.json` (added `fraction.js`), `PRD/00`, `PRD/02`, `NOTES.md`

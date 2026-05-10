@@ -19,6 +19,9 @@
     "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test"
   },
   "dependencies": {
+    "comlink": "^4.4.2",
+    "fraction.js": "^5.3.4",
+    "ml-matrix": "^6.12.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

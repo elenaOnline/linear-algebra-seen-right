@@ -4,7 +4,13 @@ import tsparser from '@typescript-eslint/parser';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
-    ignores: ['dist/**', 'node_modules/**', 'eslint.config.js', 'vite.config.ts'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'eslint.config.js',
+      'vite.config.ts',
+      'src/compute/__demo__/**',
+    ],
   },
   {
     files: ['src/**/*.ts', 'src/**/*.tsx', 'test/**/*.ts'],

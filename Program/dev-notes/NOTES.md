@@ -28,6 +28,54 @@ Format template:
 **Implications.** Knock-on effects on other layers, conventions, or future work.
 ```
 
+### ADR-007 — Basis construction for tensor and quotient spaces deferred to Phase 2  (2026-05-10)
+
+**Context.** The `Basis` type is defined in Layer 0 and the factory `mkBasis` validates that vector count matches space dimension. For `tensor` and `quotient` spaces, constructing a canonical basis requires either knowing a basis for each factor/parent (tensor case) or representing coset representatives (quotient case) — both involve structural reasoning that overlaps with Layer 1 computation.
+
+**Choice.** Declare the `Basis` type in Phase 1; defer factory calls on tensor/quotient spaces to Phase 2.
+
+**Why.** The `mkBasis` factory can still be called on tensor/quotient spaces if the caller supplies vectors with the correct `space` ID and count. Phase 1 enforces the dimension check structurally when dimension is computable. Phase 2 can add higher-level helper functions (`mkTensorProductBasis`, `mkQuotientBasis`) that build basis vectors using Layer 1 facilities.
+
+**Implications.** Phase 2 should add construction helpers. Nothing in Phase 1 prevents the type from being used; callers just have to supply basis vectors manually.
+
+---
+
+### ADR-006 — Space deduplication via content-addressed module-level registry  (2026-05-10)
+
+**Context.** PRD §7 (open design question) asks whether factories should deduplicate structurally identical spaces. The session state uses `SpaceId` as key in Maps, so two R^3 spaces with different object references but the same content would create two entries.
+
+**Choice.** Module-level `Map<string, VectorSpace>` in `src/types/space.ts`. Factories key by a content string (e.g., `space:Fn:R:3`). First call creates and registers; subsequent calls with the same content return the same object.
+
+**Why.** Makes `selectedBasis: Map<SpaceId, BasisId>` behave correctly — dragging a vector into a pre-existing R^3 and a "newly created" R^3 should update the same basis slot. Without dedup, the user would see two R^3 entries in the session store that are mathematically the same space.
+
+**Implications.** Tests must call `_resetSpaceRegistry()` in `beforeEach` to avoid cross-test leakage. Abstract spaces are keyed by `field+dim+label`, so two abstract spaces labeled the same share an ID — this is a feature (consistent with the equality semantics) but worth documenting for users.
+
+---
+
+### ADR-005 — SymExpr wire format: serialized string + vars list  (2026-05-10)
+
+**Context.** Layer 0 must declare `SymExpr`'s shape without knowing how Phase 2 will marshal expressions across the Web Worker boundary.
+
+**Choice.** `{ kind: 'symexpr'; serialized: string; vars: readonly string[] }`. The `serialized` field holds a string representation of the SymPy expression; `vars` lists the free variables. This is opaque to all Layer 0 consumers.
+
+**Why.** Minimal: only what consumers need to know (that there is a serialized form and which variables appear free). Phase 2 has authority to revise the format when the worker bridge is built — it may switch to a binary encoding, a structured JSON form, or a different string dialect. Keeping it opaque ensures no consumers will break.
+
+**Implications.** Phase 2 agent should record a revision of this ADR if the wire format changes. Consumers must never destructure `serialized` or assume its grammar.
+
+---
+
+### ADR-004 — Scalar.rational stores Fraction (Fraction.js) not {num: bigint; den: bigint}  (2026-05-10)
+
+**Context.** Technical Architecture §Layer 0 sketches `{ kind: 'rational'; num: bigint; den: bigint }`. Fraction.js is listed in the Tech Stack for rational arithmetic.
+
+**Choice.** `{ kind: 'rational'; value: Fraction }` where `Fraction` is the Fraction.js class.
+
+**Why.** Using the Fraction type directly avoids wrapping and unwrapping: all arithmetic operations (`add`, `mul`, `inverse`, etc.) are native Fraction methods. The bigint sketch in the architecture was illustrative; the Tech Stack table is authoritative on Fraction.js as the implementation.
+
+**Implications.** Fraction.js uses JS numbers internally (`.n`, `.d`) — not bigints — so precision is limited to 2^53 for numerator/denominator. For the range of values in a linear algebra sandbox this is sufficient. If exact large-integer arithmetic becomes necessary (e.g., symbolic determinant over very large integer matrices), revisit.
+
+---
+
 ### ADR-001 — CI host: GitHub Actions  (2026-05-09)
 
 **Context.** The Phase 0 sub-PRD assumed GitHub Actions for CI without confirming. Originally posed as Open Question on 2026-05-09.
@@ -90,7 +138,23 @@ Format:
 **Workaround.** How to handle it; "none — accept the constraint" is a valid answer.
 ```
 
-*(No gotchas recorded yet. Likely candidates as work begins: Pyodide + Vite asset handling, SymPy unevaluated-expression edge cases, Web Worker module graph quirks, `noUncheckedIndexedAccess` interaction with React.)*
+### noUncheckedIndexedAccess + internal array invariants
+
+**Constraint.** TypeScript returns `T | undefined` for any array index access under `noUncheckedIndexedAccess`, even when the index is provably in bounds (e.g., last element of a non-empty array).
+**Bites at.** `src/types/polynomial.ts` (`leadingCoefficient`, `constantTerm`), `src/types/matrix.ts` (`entry`, `rowOf`), and anywhere else with invariant-protected array access.
+**Workaround.** Check for `undefined` and throw an `invariantViolation()` in cases guaranteed by the factory to be valid. The throw documents that the only way to reach it is a bug, not user input.
+
+### pnpm 11 build script security defaults
+
+**Constraint.** pnpm 11 blocks post-install build scripts by default. `esbuild` (used by Vite internally) needs a build script to install its native binary.
+**Bites at.** `pnpm install` — exits with `ERR_PNPM_IGNORED_BUILDS` if `esbuild` is not approved.
+**Workaround.** Add `"pnpm": { "onlyBuiltDependencies": ["esbuild"] }` to `package.json`. Already done in Phase 0. Any future package that requires a build script must be added to this list.
+
+### skipLibCheck required for Vite + Vitest type defs
+
+**Constraint.** Vite and Vitest ship `.d.ts` files that reference Node.js internals (`node:http`, `Buffer`, etc.) and use optional property conventions that conflict with `exactOptionalPropertyTypes: true`.
+**Bites at.** `tsc --noEmit` — fails with dozens of errors in `node_modules` if `skipLibCheck: false`.
+**Workaround.** `skipLibCheck: true` in `tsconfig.json`. This is the canonical Vite + TypeScript setup; it does not relax strictness on our own code.
 
 ---
 

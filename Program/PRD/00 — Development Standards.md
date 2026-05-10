@@ -161,7 +161,7 @@ The build proceeds bottom-up through the architectural layers, because each high
 | Phase | Sub-PRD | Status |
 |---|---|---|
 | 0. Project scaffolding | `01 — Project Scaffolding.md` | Complete |
-| 1. Layer 0 — Mathematical Type System | `02 — Layer 0 (Type System).md` | Not started |
+| 1. Layer 0 — Mathematical Type System | `02 — Layer 0 (Type System).md` | Complete |
 | 2. Layer 1 — Computation Engine | `03 — Layer 1 (Computation Engine).md` | Not started |
 | 3. Layer 2 — Session State | `04 — Layer 2 (Session State).md` | Not started |
 | 4. Layer 3 — Visualization Registry | *PRD to be authored when Phase 4 begins* | Not started |

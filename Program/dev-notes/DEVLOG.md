@@ -21,6 +21,19 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-10 — Phase 1: Layer 0 Mathematical Type System
+
+**Touched:** `src/types/` (all files), `eslint.config.js` (layer boundary rule), `package.json` (added `fraction.js`), `PRD/00`, `PRD/02`, `NOTES.md`
+**Status:** complete
+
+Defined the full mathematical type system in `src/types/`: `Scalar` (rational/algebraic/complex/symbolic/float), `Polynomial`, `SymExpr`, `Vector` (4 variants), `VectorSpace` (8 variants), `Subspace`, `LinearMap`, `Basis`, `Matrix`, `InnerProduct`, branded IDs, `SessionView` interface, `Result` type, and factory/accessor functions for all. Fraction.js powers exact rational arithmetic. All 79 tests pass: algebraic property tests (commutativity, associativity, distributivity, inverses), dimension calculus properties (dim(V×W), dim(V⊗W), dim(V*)), factory validation, ID snapshot tests, matrix invariants.
+
+**Notable:** Fraction.js v5 constructor overloads are stricter than v4 — string and number forms use separate overloads, so `rational(n)` and `rationalFromString(s)` are split. Added ADR-004 through ADR-007 for the four design questions posed in PRD §7. Layer boundary ESLint rule added (`no-restricted-imports` for `src/types/**/*.ts`).
+
+**Next:** Phase 2 — Layer 1 Computation Engine. Read `PRD/03 — Layer 1 (Computation Engine).md`. Begin with Pyodide worker bootstrap in `src/compute/workers/`.
+
+---
+
 ## 2026-05-10 — Phase 0: Project Scaffolding
 
 **Touched:** `.gitignore`, `package.json`, `tsconfig.json`, `vite.config.ts`, `eslint.config.js`, `.prettierrc`, `.prettierignore`, `.editorconfig`, `.vscode/settings.json`, `index.html`, `src/` placeholder tree, `test/setup.ts`, `test/scaffold.test.ts`, `README.md`, `.github/workflows/verify.yml`, `PRD/00`, `PRD/01`

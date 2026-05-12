@@ -36,7 +36,7 @@ A web-based mathematical sandbox for exploring concepts from Sheldon Axler's *Li
 
 **Phase 8 (Pedagogy Layer):** Browse mode (catalog grid with KaTeX-rendered definitions, concept cards, side panel, "Open in Sandbox"); Sandbox three-column layout (ObjectLibrary + ViewGrid + Inspector); `applyScene` store action for atomic scene loading; `loadScene.ts` + 5 real scene templates + 14 placeholder stubs; 7 example-generator constraints in `GeneratorPanel`; `pnpm build:definitions` script (unified+remark-parse) generating `src/pedagogy/definitions/generated.ts` from `LADR_Definitions/`. **Four post-launch bugs fixed:** LaTeX rendering (`LatexText` component), Open-in-Sandbox empty session (`applyScene` atomic action), "+ view" dropdown clipped by tile stacking context (React portal), vector drag not updating (ID preservation bug in `onArrowDrag`).
 
-**No open action items.** Next phase is Phase 9 (Content Expansion). No new UI — pure content work.
+**Phase 9 (Content Expansion) — in progress.** All 14 placeholder templates replaced with real builds (19 templates total). Chapter 3 overrides complete (30 definitions, §3.A–3.F). Generator constraints: 17 (target ~30). Chapters 4–9 overrides remain. After any override edits: `pnpm build:definitions` locally, commit `generated.ts`.
 
 ---
 
@@ -91,7 +91,7 @@ src/
     index.ts          exports TimelineProvider, useTimeline
   pedagogy/
     definitions/      types.ts, overrides.ts, generated.ts (auto), index.ts
-    templates/        types.ts, starters.ts (5 real + 14 placeholder), index.ts + getTemplateById()
+    templates/        types.ts, starters.ts (19 real templates — Ch1-3), index.ts + getTemplateById()
     generator/        types.ts, constraints.ts (7 starter), index.ts
     loadScene.ts      calls store.applyScene(build) — ADR-017
   ui/

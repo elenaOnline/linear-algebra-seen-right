@@ -21,6 +21,19 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 9 content expansion (templates, Ch3 overrides, generator)
+
+**Touched:** `src/pedagogy/templates/starters.ts`, `src/pedagogy/definitions/overrides.ts`, `src/pedagogy/definitions/generated.ts`, `src/pedagogy/generator/constraints.ts`, `src/pedagogy/generator/types.ts`, `src/pedagogy/generator/index.ts`
+**Status:** complete (Chapter 3 done; Chapters 4–9 overrides remain)
+
+Replaced all 14 placeholder scene templates with real `SceneBuild` implementations covering subspace geometry, vector operations, and four Chapter 3 linear-map scenarios. Added 4 new Chapter 3-specific templates (`linear-map-matrix`, `null-space-demo`, `injective-map-r2`, `invertible-map-r2`, `matrix-product-r2`). Wrote Chapter 3 overrides for all 30 definitions (§3.A–3.F) — sections, prerequisites, linkedVisualizers, examples/nonexamples, commonErrors. Added 10 new generator constraints (rank-k-map, projection-operator, rotation-operator, diagonal-operator, shear-operator, scalar-multiple-of-identity, permutation-matrix, triangular-operator, full-rank-rectangular, symmetric-indefinite), bringing the total to 17. Also fixed two Browse mode bugs: LaTeX not rendering in definition titles, and `+ view` portal click race (mousedown outside-click handler was dismissing the portal before the click event fired).
+
+**Notable:** The `+ view` fix required a `portalRef` on the portal container so the outside-click handler could exclude the portal content from the "click outside" check. The portal's DOM position outside `menuBtnRef` was causing premature dismissal on mousedown.
+
+**Next:** Phase 9 continues — Chapter 4–9 overrides in `overrides.ts` (run `pnpm build:definitions` after each batch and commit `generated.ts`). Generator constraint count is now 17; target is ~30. No new UI needed.
+
+---
+
 ## 2026-05-12 — Phase 8 bug fixes (four issues post-launch)
 
 **Touched:** `src/ui/LatexText.tsx` (new), `src/ui/BrowseMode.tsx`, `src/ui/ViewCard.tsx`, `src/ui/ViewContainer.tsx`, `src/state/store.ts`, `src/pedagogy/loadScene.ts`, `src/ui/App.tsx`

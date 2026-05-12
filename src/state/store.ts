@@ -57,6 +57,11 @@ export type MathStore = MathSession & {
 
   undo: () => void;
   redo: () => void;
+
+  // Reset all mathematical objects and views to a clean state (ADR-017).
+  // Does NOT reset computation cache or history meta — those reset automatically
+  // because a clean session produces different cache keys.
+  resetSession: () => void;
 };
 
 // --- History helpers ---
@@ -274,6 +279,38 @@ export function createMathStore(): StoreApi<MathStore> {
           draft.historyCursor += 1;
           const snap = draft.history[draft.historyCursor];
           if (snap) applySnapshot(draft, snap);
+        }),
+
+      resetSession: () =>
+        set((draft) => {
+          applySnapshot(draft, {
+            field: 'R',
+            spaces: {},
+            subspaces: {},
+            maps: {},
+            vectors: {},
+            bases: {},
+            innerProducts: {},
+            selectedBasis: {},
+            namedObjects: {},
+          });
+          draft.views = [];
+          draft.computationCache = {};
+          draft.pendingComputations = {};
+          draft.history = [
+            {
+              field: 'R',
+              spaces: {},
+              subspaces: {},
+              maps: {},
+              vectors: {},
+              bases: {},
+              innerProducts: {},
+              selectedBasis: {},
+              namedObjects: {},
+            },
+          ];
+          draft.historyCursor = 0;
         }),
     })),
   );

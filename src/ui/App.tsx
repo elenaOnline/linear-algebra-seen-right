@@ -1,50 +1,124 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { JSX } from 'react';
 import { useStore } from 'zustand';
 import { defaultStore } from '../state/index.ts';
 import { ViewGrid } from './ViewGrid.tsx';
 import { ObjectInput } from './ObjectInput.tsx';
+import { ObjectLibrary } from './ObjectLibrary.tsx';
+import { Inspector } from './Inspector.tsx';
 import { TimelineProvider } from '../interaction/timeline/TimelineContext.tsx';
 import { TimelineScrubBar } from './TimelineScrubBar.tsx';
+import { BrowseMode } from './BrowseMode.tsx';
+import { loadScene } from '../pedagogy/loadScene.ts';
+import { getTemplateById } from '../pedagogy/templates/index.ts';
+import type { DefinitionRecord } from '../pedagogy/definitions/index.ts';
+import type { MathObjectRef } from '../state/types.ts';
 
 type Mode = 'sandbox' | 'browse';
 
-function BrowsePlaceholder(): JSX.Element {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100%',
-        gap: '10px',
-        color: 'var(--ink-3)',
-        fontFamily: 'var(--font-mono)',
-        fontSize: 'var(--t-meta)',
-      }}
-    >
-      <span
-        style={{
-          fontSize: 'var(--t-h2)',
-          color: 'var(--ink-4)',
-          fontFamily: 'var(--font-math)',
-          fontStyle: 'italic',
-        }}
-      >
-        The catalog
-      </span>
-      <span>Browse mode — coming in Phase 8.</span>
-    </div>
-  );
-}
-
 function SandboxLayout(): JSX.Element {
+  const [selected, setSelected] = useState<MathObjectRef | null>(null);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <main style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
-        <ViewGrid />
-      </main>
+      {/* Three-column workbench */}
+      <div
+        style={{
+          flex: 1,
+          display: 'grid',
+          gridTemplateColumns: '220px 1fr 280px',
+          overflow: 'hidden',
+          minHeight: 0,
+        }}
+      >
+        {/* Object library */}
+        <div
+          style={{
+            background: 'var(--panel)',
+            borderRight: '1px solid var(--line)',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
+        >
+          <div
+            style={{
+              padding: '9px 14px',
+              borderBottom: '1px solid var(--line)',
+              background: 'var(--panel-2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'var(--t-micro)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-3)',
+                fontWeight: 500,
+              }}
+            >
+              Objects
+            </span>
+          </div>
+          <ObjectLibrary selected={selected} onSelect={setSelected} />
+        </div>
+
+        {/* Canvas */}
+        <div
+          style={{
+            background: 'var(--bg)',
+            borderRight: '1px solid var(--line)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
+        >
+          <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
+            <ViewGrid />
+          </div>
+        </div>
+
+        {/* Inspector */}
+        <div
+          style={{
+            background: 'var(--panel)',
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
+        >
+          <div
+            style={{
+              padding: '9px 14px',
+              borderBottom: '1px solid var(--line)',
+              background: 'var(--panel-2)',
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'var(--t-micro)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: 'var(--ink-3)',
+                fontWeight: 500,
+              }}
+            >
+              Inspector
+            </span>
+          </div>
+          <Inspector selected={selected} />
+        </div>
+      </div>
+
+      {/* Bottom bar */}
       <TimelineScrubBar />
       <ObjectInput />
     </div>
@@ -53,6 +127,16 @@ function SandboxLayout(): JSX.Element {
 
 function AppInner(): JSX.Element {
   const [mode, setMode] = useState<Mode>('sandbox');
+
+  const handleOpenInSandbox = useCallback((def: DefinitionRecord) => {
+    const firstExample = def.examples[0];
+    if (!firstExample) return;
+    const template = getTemplateById(firstExample.templateId);
+    if (!template) return;
+    const build = template.build(firstExample.parameters ?? {});
+    loadScene(build);
+    setMode('sandbox');
+  }, []);
 
   const historyCursor = useStore(defaultStore, (s) => s.historyCursor);
   const historyLength = useStore(defaultStore, (s) => s.history.length);
@@ -239,7 +323,11 @@ function AppInner(): JSX.Element {
 
       {/* ── Main content ── */}
       <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
-        {mode === 'sandbox' ? <SandboxLayout /> : <BrowsePlaceholder />}
+        {mode === 'sandbox' ? (
+          <SandboxLayout />
+        ) : (
+          <BrowseMode onOpenInSandbox={handleOpenInSandbox} />
+        )}
       </div>
     </div>
   );

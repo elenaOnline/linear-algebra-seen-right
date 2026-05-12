@@ -21,6 +21,23 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 8 complete: Pedagogy Layer
+
+**Touched:** `src/pedagogy/` (new), `src/ui/BrowseMode.tsx` (new), `src/ui/ObjectLibrary.tsx` (new), `src/ui/Inspector.tsx` (new), `src/ui/GeneratorPanel.tsx` (new), `src/state/store.ts` (resetSession), `scripts/build-definitions.ts` (new), `package.json`, `PRD/00`, `PRD/08`
+**Status:** complete
+
+Definition build script (`scripts/build-definitions.ts`) parses all 135 markdown files in `LADR_Definitions/` using `unified` + `remark-parse` (ADR-016), merges field-level overrides from `src/pedagogy/definitions/overrides.ts`, and generates `src/pedagogy/definitions/generated.ts`. Chapter 1–2 definitions (24 records) have full overrides: sections, prerequisites, linked visualizers, examples, non-examples, and common errors.
+
+Browse mode (`BrowseMode.tsx`): catalog grid auto-filling at minmax(280px,1fr), concept cards (Geist Mono title, STIX formalStatement teaser, "Read definition ⌄" expand, kind badge, prerequisite count), filter chips, search, and a fixed side panel (definition block, examples/non-examples, prerequisite pills, "Open in Sandbox" CTA). Chapters 3–9 cards render with default overrides (symbolic only).
+
+Sandbox three-column layout: `ObjectLibrary` (left 220px — grouped objects with accent selection), `ViewGrid` (center, existing), `Inspector` (right 280px — definition properties, computed properties with `—` placeholders, "Open as" pill links).
+
+`resetSession` store action (ADR-017) clears the session before loading a scene template. Five starter templates ship (`rn-vector-space`, `span-of-two-vectors-in-r2`, `linear-combination-builder`, `basis-as-coordinates`, `rank-nullity-2d`) plus 14 placeholder stubs.
+
+Example generator (`GeneratorPanel.tsx`): 7 starter constraints — nilpotent operator, non-diagonalizable, self-adjoint with spectrum, direct sum, non-direct sum, linearly dependent set, unitary/orthogonal — each with an Axler-referencing explanation. "Add to session" opens matrix + diagram views. Rendered as a section in the Inspector panel. 312 tests passing.
+
+**Next:** Phase 9 (Content Expansion) — definition records for Chapters 3–9, additional scene templates, expanding generator constraints toward ~30. No new UI; content follows Phase 8 patterns.
+
 ## 2026-05-12 — Phase 7 complete: Design System Integration
 
 **Touched:** `index.html`, `src/main.tsx`, `src/styles/tokens.css` (new), `src/ui/App.tsx`, `src/ui/KindBadge.tsx` (new), `src/ui/ProvenanceBadge.tsx`, `src/ui/ViewCard.tsx`, `src/ui/ViewContainer.tsx`, `src/ui/ViewGrid.tsx`, `src/ui/ViewErrorBoundary.tsx`, `src/ui/LoadingState.tsx`, `src/ui/TimelineScrubBar.tsx`, `src/ui/ObjectInput.tsx`, `src/interaction/controls/FieldToggle.tsx`, `.prettierignore`, `PRD/00`, `PRD/09`

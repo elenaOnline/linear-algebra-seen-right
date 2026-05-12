@@ -188,7 +188,7 @@ The build proceeds bottom-up through the architectural layers. Phases 7 and 8 de
 | 5. Layer 4 — Renderer Plugins | `06 — Layer 4 (Renderer Plugins).md` | Complete |
 | 6. Layer 5 — Interaction Layer | `07 — Layer 5 (Interaction Layer).md` | Complete |
 | 7. Design System Integration | `09 — Design System Integration.md` | Complete |
-| 8. Layer 6 — Pedagogy Layer | `08 — Layer 6 (Pedagogy Layer).md` | Not started |
+| 8. Layer 6 — Pedagogy Layer | `08 — Layer 6 (Pedagogy Layer).md` | Complete |
 | 9. Content Expansion | *(authored at Phase 8 completion)* | Not started |
 | 10. UX Refinement | *(authored at Phase 9 completion)* | Not started |
 

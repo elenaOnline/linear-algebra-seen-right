@@ -34,6 +34,7 @@ export type MathStore = MathSession & {
   addSubspace: (subspace: Subspace) => void;
   addMap: (map: LinearMap) => void;
   addVector: (vector: Vector) => void;
+  updateVector: (vector: Vector) => void;
   addBasis: (basis: Basis) => void;
   addInnerProduct: (ip: InnerProduct) => void;
 
@@ -149,6 +150,14 @@ export function createMathStore(): StoreApi<MathStore> {
         set((draft) => {
           draft.vectors[vector.id] = castDraft(vector);
           pushSnapshot(draft);
+        }),
+
+      // Does NOT push undo history — drag updates fire at ~60fps and would saturate the stack.
+      updateVector: (vector) =>
+        set((draft) => {
+          draft.vectors[vector.id] = castDraft(vector);
+          // Invalidate any cached computations that depended on this vector.
+          draft.computationCache = {};
         }),
 
       addBasis: (basis) =>

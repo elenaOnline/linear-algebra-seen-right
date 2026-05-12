@@ -3,3 +3,5 @@ node_modules/
 public/pyodide/
 pnpm-lock.yaml
 *.md
+.netlify/state.json
+Program/Design/

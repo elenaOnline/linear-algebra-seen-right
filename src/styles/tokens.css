@@ -1,0 +1,248 @@
+/* LADR Visualizer — Design tokens
+   Source of truth: Program/Design/app/styles.css
+   Import this file once in main.tsx; never import it per-component. */
+
+:root,
+[data-palette='bone'] {
+  --bg: #f2f1ef;
+  --bg-2: #e7e6e3;
+  --bg-3: #dcdbd7;
+  --panel: #f9f8f6;
+  --panel-2: #eceae7;
+  --ink: #161614;
+  --ink-2: #3e3e3b;
+  --ink-3: #7c7c78;
+  --ink-4: #adada9;
+  --line: rgba(22, 22, 20, 0.08);
+  --line-2: rgba(22, 22, 20, 0.14);
+  --line-3: rgba(22, 22, 20, 0.22);
+  --accent: #2a2a26;
+  --accent-deep: #000;
+  --accent-soft: rgba(42, 42, 38, 0.06);
+  --accent-line: rgba(42, 42, 38, 0.28);
+}
+
+[data-palette='stone'] {
+  --bg: #f1f0ec;
+  --bg-2: #e7e5df;
+  --bg-3: #dedcd4;
+  --panel: #f8f7f3;
+  --panel-2: #edebe4;
+  --ink: #1c1c1a;
+  --ink-2: #4a4a46;
+  --ink-3: #84847e;
+  --ink-4: #b4b4ac;
+  --line: rgba(28, 28, 26, 0.08);
+  --line-2: rgba(28, 28, 26, 0.14);
+  --line-3: rgba(28, 28, 26, 0.22);
+  --accent: #b85a3e;
+  --accent-deep: #944730;
+  --accent-soft: rgba(184, 90, 62, 0.1);
+  --accent-line: rgba(184, 90, 62, 0.3);
+}
+
+[data-palette='slate'] {
+  --bg: #f1f2f3;
+  --bg-2: #e6e8ea;
+  --bg-3: #dadde0;
+  --panel: #f8f9fa;
+  --panel-2: #ecedef;
+  --ink: #18191c;
+  --ink-2: #43464a;
+  --ink-3: #80838a;
+  --ink-4: #b0b3b9;
+  --line: rgba(24, 25, 28, 0.08);
+  --line-2: rgba(24, 25, 28, 0.14);
+  --line-3: rgba(24, 25, 28, 0.22);
+  --accent: #38597a;
+  --accent-deep: #2a445e;
+  --accent-soft: rgba(56, 89, 122, 0.1);
+  --accent-line: rgba(56, 89, 122, 0.3);
+}
+
+[data-palette='sage'] {
+  --bg: #f0f2ee;
+  --bg-2: #e4e7e0;
+  --bg-3: #d8dcd3;
+  --panel: #f7f9f5;
+  --panel-2: #eaece5;
+  --ink: #181a17;
+  --ink-2: #404440;
+  --ink-3: #7d827b;
+  --ink-4: #adb1a8;
+  --line: rgba(24, 26, 23, 0.08);
+  --line-2: rgba(24, 26, 23, 0.14);
+  --line-3: rgba(24, 26, 23, 0.22);
+  --accent: #436a55;
+  --accent-deep: #325340;
+  --accent-soft: rgba(67, 106, 85, 0.1);
+  --accent-line: rgba(67, 106, 85, 0.3);
+}
+
+:root {
+  /* Representation-kind tints */
+  --kind-geo: #2e6f5e;
+  --kind-geo-soft: rgba(46, 111, 94, 0.1);
+  --kind-abs: #6b5aa3;
+  --kind-abs-soft: rgba(107, 90, 163, 0.1);
+  --kind-mat: #4a4944;
+  --kind-mat-soft: rgba(74, 73, 68, 0.08);
+  --kind-spec: #b8651f;
+  --kind-spec-soft: rgba(184, 101, 31, 0.1);
+  --kind-sym: #2a5f87;
+  --kind-sym-soft: rgba(42, 95, 135, 0.1);
+
+  /* Type scale — comfortable */
+  --t-display: 34px;
+  --t-h1: 24px;
+  --t-h2: 18px;
+  --t-body: 14.5px;
+  --t-meta: 12.5px;
+  --t-micro: 11px;
+
+  /* Spacing — comfortable */
+  --pad: 20px;
+  --pad-tight: 14px;
+  --gap: 14px;
+  --gap-tight: 10px;
+  --radius: 6px;
+  --radius-lg: 10px;
+
+  /* Font stacks */
+  --font-sans:
+    'Geist', 'Söhne', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-math: 'STIX Two Text', 'Latin Modern Roman', 'Cambria Math', 'Times New Roman', serif;
+}
+
+[data-density='compact'] {
+  --t-display: 28px;
+  --t-h1: 20px;
+  --t-h2: 16px;
+  --t-body: 13px;
+  --t-meta: 11.5px;
+  --t-micro: 10.5px;
+  --pad: 14px;
+  --pad-tight: 10px;
+  --gap: 10px;
+  --gap-tight: 6px;
+  --radius: 5px;
+  --radius-lg: 8px;
+}
+
+/* ── Global resets ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Honesty badges ── */
+.kind-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px 2px 7px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.kind-badge::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+.kind-badge.geo {
+  color: var(--kind-geo);
+  background: var(--kind-geo-soft);
+}
+.kind-badge.abs {
+  color: var(--kind-abs);
+  background: var(--kind-abs-soft);
+}
+.kind-badge.mat {
+  color: var(--kind-mat);
+  background: var(--kind-mat-soft);
+}
+.kind-badge.spec {
+  color: var(--kind-spec);
+  background: var(--kind-spec-soft);
+}
+.kind-badge.sym {
+  color: var(--kind-sym);
+  background: var(--kind-sym-soft);
+}
+
+.exactness-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.exactness-chip::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.exactness-chip.exact {
+  color: var(--kind-geo);
+}
+.exactness-chip.approx {
+  color: var(--kind-spec);
+}
+
+/* ── Math utility ── */
+.math-italic {
+  font-family: var(--font-math);
+  font-style: italic;
+}
+
+/* ── Scrollbars ── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border-radius: 999px;
+  border: 2px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--line-3);
+}

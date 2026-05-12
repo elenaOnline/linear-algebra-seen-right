@@ -11,7 +11,7 @@ The PRD set in `Program/PRD/` is the operational complement to the design docume
 - **`Program/Project Overview.md`** — what the product is and why it exists. Treat as immutable framing.
 - **`Program/Technical Architecture.md`** — the binding technical specification: the six layers, the type system shape, the computation engine contract, the visualization registry pattern. Treat as authoritative for architectural questions. Do not edit it without explicit user approval; if something in it feels wrong, raise an `Open Question` in `dev-notes/NOTES.md` rather than amending the spec unilaterally.
 - **`Program/PRD/`** — *how* the architecture gets built: phase ordering, deliverables per layer, acceptance criteria, coding standards, agent working agreement, note-taking conventions. Living documents — agents can amend their own sub-PRDs as they discover new constraints, with the rules in §3.
-- **`Program/dev-notes/`** — the working memory for agents: chronological session log (`DEVLOG.md`) and durable knowledge — decisions, gotchas, open questions (`NOTES.md`).
+- **`Program/dev-notes/`** — the working memory for agents: narrative orientation for fresh agents (`CONTEXT.md`), chronological session log (`DEVLOG.md`), durable knowledge — decisions, gotchas, open questions (`NOTES.md`), and the active punch list of fix-it items and verification gates (`ACTION_ITEMS.md`).
 - **`Program/Necessary components.md`** — legacy. Ignore unless explicitly directed to it.
 
 If the Project Overview, Technical Architecture, and a sub-PRD ever appear to conflict, the Technical Architecture wins, and the conflict goes into `NOTES.md` as an Open Question.
@@ -40,6 +40,8 @@ Every agent working on this project should treat itself as if it has no memory b
 
 ### 3.1 Onboarding flow at the start of every session
 
+If this is your first session on the project, or you have no recall of prior conversations with Elena, start with `dev-notes/CONTEXT.md` for narrative orientation — it captures the arc of the work, Elena's stated preferences, and design intent that lives outside the formal documents. Then proceed with the standard flow below.
+
 Before doing any work on this project:
 
 1. Read `Program/Project Overview.md` and `Program/Technical Architecture.md` if architectural understanding is needed for the task.
@@ -47,7 +49,8 @@ Before doing any work on this project:
 3. Read the sub-PRD(s) for the layer(s) being touched.
 4. Skim the most recent ~5 entries of `dev-notes/DEVLOG.md` to understand current state and any in-flight work.
 5. Skim `dev-notes/NOTES.md` end-to-end. It is meant to remain short enough for this to be cheap; if it is no longer cheap, that is a signal to consolidate, not to skip.
-6. If the task touches code, run `git status` and `git log -n 10 --oneline` (or read the equivalent) to see what has actually been changed recently — file state is authoritative.
+6. Skim `dev-notes/ACTION_ITEMS.md` to see whether any open item blocks the phase you are about to begin. If it does, resolve the blocker first (or surface it to Elena if it's blocked on input).
+7. If the task touches code, run `git status` and `git log -n 10 --oneline` (or read the equivalent) to see what has actually been changed recently — file state is authoritative.
 
 ### 3.2 Closing flow at the end of every session
 
@@ -58,6 +61,7 @@ Before ending a session (or before handing back to Elena):
 3. If you made an architectural choice that the Technical Architecture did not pre-specify, record it as a Decision in `NOTES.md` with rationale. *Why* matters more than *what* — the rationale is what lets the next agent judge edge cases.
 4. If you discovered a compatibility, version, or runtime gotcha (browser API quirk, library bug, WASM/worker constraint), record it as a Gotcha in `NOTES.md`.
 5. If you left an unresolved question that needs Elena's input, record it as an Open Question in `NOTES.md` *and* surface it in your final response.
+6. If you resolved an open item in `dev-notes/ACTION_ITEMS.md`, move it to the **Resolved** section with a date and a brief note on what landed. If you discovered a new pre-phase-gate issue or verification need, append it to **Open items** with the next sequential `AI-NNN` ID (format in §6.3).
 
 ### 3.3 General principles
 
@@ -145,7 +149,23 @@ Three sections, each independently maintained:
 
 Templates and examples are in `dev-notes/NOTES.md`.
 
-### 6.3 What does *not* go in dev-notes
+### 6.3 `ACTION_ITEMS.md` — punch list
+
+The working punch list of fix-it items and verification gates. Distinct from NOTES.md (reference material) and DEVLOG.md (chronological) — this file answers the question "is anything blocking the next phase?"
+
+Each open item has a sequential `AI-NNN` ID and these fields:
+
+- **What** — the concrete change or check required, with file paths or operation names.
+- **Why** — what fails or degrades if it isn't done. The reason is what lets a future agent prioritize.
+- **Where** — `file.ts:line` or operation references.
+- **Blocks** — which phase(s) this should land before. `None` is acceptable for quality-of-life fixes.
+- **Status** — `open`, `in-progress`, or `blocked on [dependency]`.
+
+When an item is resolved, move it to the **Resolved** section with a date — entries are not deleted, so the project's fix history stays auditable. If an item turns out to be wrong or no longer applies, mark it `withdrawn (YYYY-MM-DD)` in **Resolved** with a brief reason rather than deleting it.
+
+Templates and the current open list are in `dev-notes/ACTION_ITEMS.md`.
+
+### 6.4 What does *not* go in dev-notes
 
 - Code-level documentation: that goes in code comments or in a per-folder `README.md` if a folder needs orienting.
 - Restating what's in the Technical Architecture or sub-PRDs: link, don't duplicate.
@@ -156,7 +176,7 @@ Templates and examples are in `dev-notes/NOTES.md`.
 
 ## 7. Roadmap
 
-The build proceeds bottom-up through the architectural layers, because each higher layer depends on the contracts of the ones below.
+The build proceeds bottom-up through the architectural layers. Phases 7 and 8 depart from the pure layer-by-layer pattern: Phase 7 is a cross-cutting design system integration pass (no new mathematical capability), and Phase 8 adds Browse mode and the full Sandbox layout — both specified by the design language in `Program/Design/`. The design is treated as a first-class deliverable at each phase, not a retrofit.
 
 | Phase | Sub-PRD | Status |
 |---|---|---|
@@ -164,14 +184,25 @@ The build proceeds bottom-up through the architectural layers, because each high
 | 1. Layer 0 — Mathematical Type System | `02 — Layer 0 (Type System).md` | Complete |
 | 2. Layer 1 — Computation Engine | `03 — Layer 1 (Computation Engine).md` | Complete |
 | 3. Layer 2 — Session State | `04 — Layer 2 (Session State).md` | Complete |
-| 4. Layer 3 — Visualization Registry | *PRD to be authored when Phase 4 begins* | Not started |
-| 5. Layer 4 — Renderer Plugins | *PRD to be authored when Phase 5 begins* | Not started |
-| 6. Layer 5 — Interaction Layer | *PRD to be authored when Phase 6 begins* | Not started |
-| 7. Layer 6 — Pedagogy Layer | *PRD to be authored when Phase 7 begins* | Not started |
+| 4. Layer 3 — Visualization Registry | `05 — Layer 3 (Visualization Registry).md` | Complete |
+| 5. Layer 4 — Renderer Plugins | `06 — Layer 4 (Renderer Plugins).md` | Complete |
+| 6. Layer 5 — Interaction Layer | `07 — Layer 5 (Interaction Layer).md` | Complete |
+| 7. Design System Integration | `09 — Design System Integration.md` | Complete |
+| 8. Layer 6 — Pedagogy Layer | `08 — Layer 6 (Pedagogy Layer).md` | Not started |
+| 9. Content Expansion | *(authored at Phase 8 completion)* | Not started |
+| 10. UX Refinement | *(authored at Phase 9 completion)* | Not started |
 
-Sub-PRDs for Phases 4–7 are deliberately deferred. The contracts at those layers depend on what is learned building Layers 0–2; specifying them now would either lock in premature decisions or be ignored when the time comes. Each will be authored as a discrete piece of work when its phase begins, using the same structure as the foundational sub-PRDs.
+**Phase 7** establishes the design system (fonts, CSS tokens, honesty badges, app shell) in the existing Sandbox codebase. Its acceptance criteria require zero hardcoded hex values in UI components and a top bar that matches the design spec. No new mathematical capability is added.
 
-Phases are not strictly serial — there is room to begin sketching Layer 3's registry mechanism while Layer 1 is being completed, for instance — but each phase's *acceptance criteria* should be met before its successors' acceptance criteria are evaluated.
+**Phase 8** adds Browse mode (the editorial catalog of LADR concepts) and the full three-column Sandbox layout (object library + canvas + inspector). Every new component is built natively on the Phase 7 design system. The "Open in Sandbox" flow is the primary acceptance test.
+
+**Phase 9** is content expansion: definition records for Chapters 3–9, additional scene templates, and expanding the example-generator constraint set toward the architecture's ~30 target. No new UI components; content follows Phase 8's established patterns.
+
+**Phase 10** is UX refinement: compact density toggle, accessibility pass, animation polish, hover refinements in Browse mode, and optionally an alternate palette option.
+
+Sub-PRDs for Phases 9 and 10 will be authored at the completion of their predecessor phases. Agents working in any phase have authority to amend their own sub-PRD as new information arrives (per §1), with the change recorded as a Decision in `NOTES.md`.
+
+Phases are not strictly serial within their scope, but each phase's *acceptance criteria* must be met before the next phase's are evaluated. In particular, Phase 7's zero-hardcoded-hex-values criterion is a prerequisite for Phase 8 — it is not acceptable to merge Browse mode components that use raw color values.
 
 When updating phase status, change the `Status` column here and add a corresponding devlog entry.
 
@@ -212,9 +243,14 @@ Per the architecture, every computation that *can* be exact returns an `{ exact,
 - `02 — Layer 0 (Type System).md` — Phase 1
 - `03 — Layer 1 (Computation Engine).md` — Phase 2
 - `04 — Layer 2 (Session State).md` — Phase 3
-- (Sub-PRDs for Layers 3–6 will be added as their phases begin.)
+- `05 — Layer 3 (Visualization Registry).md` — Phase 4
+- `06 — Layer 4 (Renderer Plugins).md` — Phase 5
+- `07 — Layer 5 (Interaction Layer).md` — Phase 6
+- `08 — Layer 6 (Pedagogy Layer).md` — Phase 7
 
 dev-notes:
 
+- `dev-notes/CONTEXT.md` — narrative orientation for fresh agents
 - `dev-notes/DEVLOG.md` — chronological session log
 - `dev-notes/NOTES.md` — Decisions, Gotchas, Open Questions
+- `dev-notes/ACTION_ITEMS.md` — punch list of fix-it items and verification gates

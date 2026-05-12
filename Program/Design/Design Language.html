@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LADR Visualizer — Design Language</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=STIX+Two+Text:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app/styles.css">
+<style>
+  body { background: var(--bg); }
+  .doc {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 64px 36px 120px;
+    color: var(--ink);
+  }
+  .doc-head {
+    margin-bottom: 56px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .doc h1 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 38px;
+    letter-spacing: -0.025em;
+    margin: 12px 0 14px;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  .doc .lede {
+    font-size: 16px;
+    color: var(--ink-2);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0;
+  }
+  .doc h2 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.015em;
+    margin: 64px 0 6px;
+    color: var(--ink);
+    scroll-margin-top: 24px;
+  }
+  .doc h2 + .h-sub {
+    color: var(--ink-3);
+    font-size: 13.5px;
+    margin: 0 0 22px;
+    max-width: 60ch;
+  }
+  .doc h3 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: -0.005em;
+    margin: 28px 0 8px;
+    color: var(--ink);
+  }
+  .doc p { font-size: 14.5px; line-height: 1.65; color: var(--ink-2); margin: 0 0 14px; max-width: 64ch; }
+  .doc p strong { color: var(--ink); font-weight: 500; }
+  .doc ul { font-size: 14.5px; line-height: 1.65; color: var(--ink-2); padding-left: 18px; margin: 0 0 14px; max-width: 64ch; }
+  .doc ul li { margin: 4px 0; }
+  .doc ul li::marker { color: var(--ink-4); }
+  .doc em { font-family: var(--font-math); font-style: italic; }
+  .doc code, .doc .mono {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    color: var(--ink);
+    background: var(--bg-2);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .toc {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 28px;
+    font-size: 13px;
+    margin-top: 20px;
+    padding: 18px 22px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+  .toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 5px 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .toc a:hover { color: var(--ink); }
+  .toc a .num {
+    color: var(--ink-4);
+    font-variant-numeric: tabular-nums;
+    width: 22px;
+  }
+
+  /* Principle blocks */
+  .principle {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .principle:last-child { border-bottom: 0; }
+  .principle .n {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .principle h4 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 15.5px;
+    margin: 0 0 6px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .principle p { margin: 0; font-size: 13.5px; color: var(--ink-2); line-height: 1.6; }
+
+  /* Token sample boxes */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .swatch {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .swatch .preview { height: 84px; display: grid; place-items: center; }
+  .swatch .preview .dot {
+    width: 36px; height: 36px; border-radius: 8px;
+  }
+  .swatch .meta {
+    padding: 10px 12px;
+    border-top: 1px solid var(--line);
+    background: var(--panel-2);
+  }
+  .swatch .name {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .swatch .role {
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 2px;
+  }
+
+  /* Type specimen */
+  .type-row {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+  .type-row .role .small { color: var(--ink-4); display: block; margin-top: 2px; }
+  .specimen { color: var(--ink); }
+
+  /* Pattern figure */
+  .figure {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px;
+    margin: 12px 0 18px;
+  }
+  .figure-cap {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.02em;
+    margin-top: 10px;
+  }
+  .ascii {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-2);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* Badge demo row */
+  .badge-demo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 18px;
+  }
+
+  /* Do / Don't */
+  .dod {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 10px 0 8px;
+  }
+  .dod .col {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 16px;
+  }
+  .dod h5 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+  .dod.do h5 { color: #436a55; }
+  .dod.dont h5 { color: var(--accent); }
+  .dod ul { padding-left: 16px; margin: 0; font-size: 13px; }
+  .dod ul li { margin: 5px 0; color: var(--ink-2); }
+
+  .footer-rule {
+    margin-top: 80px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Layout mini-diagram */
+  .layout-diagram {
+    display: grid;
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .layout-diagram .row { display: grid; gap: 6px; }
+  .layout-diagram .cell {
+    background: var(--bg-2);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-2);
+    min-height: 44px;
+  }
+  .layout-diagram .cell.is-accent {
+    background: var(--accent-soft);
+    border-color: var(--accent-line);
+    color: var(--ink);
+  }
+  .browse-layout .row.bands { grid-template-columns: 1fr 280px; }
+  .browse-layout .row.grid-row { grid-template-columns: repeat(4, 1fr); }
+  .sandbox-layout .row.three { grid-template-columns: 220px 1fr 280px; }
+  .sandbox-layout .row.input { grid-template-columns: 1fr; }
+  .sandbox-layout .row.canvas { grid-template-columns: 220px 1fr 1fr 280px; }
+</style>
+</head>
+<body>
+
+<div class="doc" data-screen-label="Design Language">
+
+  <header class="doc-head">
+    <div class="eyebrow">LADR Visualizer · Design language v0.1</div>
+    <h1>How the visualizer should look, feel, and behave.</h1>
+    <p class="lede">
+      A short reference for the design language used in the LADR Visualizer prototype. This is the <em>system</em>, not the implementation: principles, tokens, layout patterns, and the few interaction conventions that, if held consistently, will make the product feel coherent across both its modes.
+    </p>
+    <nav class="toc">
+      <a href="#principles"><span class="num">01</span>Principles</a>
+      <a href="#two-modes"><span class="num">02</span>Two modes, one system</a>
+      <a href="#palette"><span class="num">03</span>Color &amp; palette</a>
+      <a href="#typography"><span class="num">04</span>Typography</a>
+      <a href="#honesty"><span class="num">05</span>The honesty system</a>
+      <a href="#browse"><span class="num">06</span>Browse — catalog</a>
+      <a href="#sandbox"><span class="num">07</span>Sandbox — workbench</a>
+      <a href="#registry"><span class="num">08</span>Visualization registry</a>
+      <a href="#flow"><span class="num">09</span>Cross-mode flow</a>
+      <a href="#dod"><span class="num">10</span>Do &amp; don't</a>
+    </nav>
+  </header>
+
+  <!-- 01 -->
+  <section>
+    <h2 id="principles">01 — Principles</h2>
+    <p class="h-sub">Five commitments that everything else descends from. When in doubt, look here.</p>
+
+    <div class="principle">
+      <div class="n">01.1</div>
+      <div>
+        <h4>Be honest about representation.</h4>
+        <p>The tool shows mathematical objects at the appropriate level of abstraction. Geometric where geometry helps; abstract diagrams, matrix heatmaps, or symbolic forms where it doesn't. Every visualization carries a small badge stating what kind of representation it is and whether its values are <em>exact</em> or <em>approximate</em>. Never pretend a 17-dimensional object is an arrow.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="n">01.2</div>
+      <div>
+        <h4>Sandbox, not slideshow.</h4>
+        <p>The user defines objects, composes them, and views the results across multiple renderers. The UI exposes constructive operations directly, not a curated sequence of scenes. Even Browse mode is a way <em>into</em> the sandbox, not a destination.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="n">01.3</div>
+      <div>
+        <h4>Two modes, one room.</h4>
+        <p>Browse and Sandbox share the same chrome, tokens, badges, and type pairings. The difference between them is density and emphasis, not personality. A user crossing from one to the other should never feel they have entered a different product.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="n">01.4</div>
+      <div>
+        <h4>Calm density.</h4>
+        <p>The Sandbox is dense by necessity, but density is achieved through ruthless consistency — same spacing scale, same control sizes, same chrome — not by cramming. Whitespace earns its place even in a workbench.</p>
+      </div>
+    </div>
+    <div class="principle">
+      <div class="n">01.5</div>
+      <div>
+        <h4>Mathematics rendered as mathematics.</h4>
+        <p>Variables, operators, and inline math are set in a true math face (STIX Two Text italic). UI labels, headings, and prose are set in a clean sans (Geist). The two are never mixed; the boundary between "this is interface" and "this is mathematics" is visible at a glance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section>
+    <h2 id="two-modes">02 — Two modes, one system</h2>
+    <p class="h-sub">Browse is the catalog of LADR concepts. Sandbox is the workbench. They are two views of the same system.</p>
+
+    <p><strong>Browse mode</strong> presents the concepts of <em>Linear Algebra Done Right</em> as an editorial catalog. Wide margins, larger headings, generous whitespace, the page reads more like an extended table of contents than a tool. The unit is the <em>concept card</em> — a small, self-contained chip showing chapter reference, title, mini-visualization, teaser, and representation kind. Cards expand in place for a quick definition peek and open into a secondary side panel for the full treatment.</p>
+
+    <p><strong>Sandbox mode</strong> is a fixed three-column workbench. Same tokens, tighter spacing. The user manipulates objects directly — spaces and operators are first-class items in a library on the left; visualizations of the current selection live as tiles in the center canvas; the inspector on the right shows computed properties of whichever object is focused. A math input bar sits at the bottom, always available.</p>
+
+    <p>The mode toggle lives in the top bar and is the only chrome that changes between them. Everything else — palette, badges, type, chrome, dialog conventions — is shared.</p>
+  </section>
+
+  <!-- 03 -->
+  <section>
+    <h2 id="palette">03 — Color &amp; palette</h2>
+    <p class="h-sub">Four palettes, one structure. Bone is the default. All four are interchangeable at the token level — no component encodes a hex value directly.</p>
+
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="preview" style="background: #f2f1ef;"><div class="dot" style="background: #2a2a26;"></div></div>
+        <div class="meta"><div class="name">Bone — default</div><div class="role">Ink-only accent. Most reserved.</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background: #f1f0ec;"><div class="dot" style="background: #b85a3e;"></div></div>
+        <div class="meta"><div class="name">Stone</div><div class="role">Warm clay accent.</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background: #f1f2f3;"><div class="dot" style="background: #38597a;"></div></div>
+        <div class="meta"><div class="name">Slate</div><div class="role">Cool graphite, blue accent.</div></div>
+      </div>
+      <div class="swatch">
+        <div class="preview" style="background: #f0f2ee;"><div class="dot" style="background: #436a55;"></div></div>
+        <div class="meta"><div class="name">Sage</div><div class="role">Green-grey paper, forest accent.</div></div>
+      </div>
+    </div>
+
+    <p>Each palette exposes the same token surface — components do not need to know which palette is active. The roles are:</p>
+
+    <ul>
+      <li><code>--bg</code>, <code>--bg-2</code>, <code>--bg-3</code> — page background, recessed surfaces, lowest tier</li>
+      <li><code>--panel</code>, <code>--panel-2</code> — raised surfaces (cards, tiles, panels) and their headers/feet</li>
+      <li><code>--ink</code>, <code>--ink-2</code>, <code>--ink-3</code>, <code>--ink-4</code> — text from primary to most muted</li>
+      <li><code>--line</code>, <code>--line-2</code>, <code>--line-3</code> — separators, light to heavy</li>
+      <li><code>--accent</code>, <code>--accent-soft</code>, <code>--accent-line</code> — used <em>only</em> for selection state, the active item in a list, and the focus ring on inputs. Not for decoration.</li>
+    </ul>
+
+    <p><strong>Discipline:</strong> the accent never appears as a flat fill on a large surface, never gradients, and never carries emotional weight (no error reds, no success greens — those roles are filled by the kind badges, below). Saturation across the system is low; whites stay under 0.02 chroma. The product should feel like a serious paper, not a UI.</p>
+  </section>
+
+  <!-- 04 -->
+  <section>
+    <h2 id="typography">04 — Typography</h2>
+    <p class="h-sub">Three faces, three roles, no overlap.</p>
+
+    <div class="type-row">
+      <div class="role">Geist 500<span class="small">UI &amp; headings</span></div>
+      <div class="specimen" style="font-family: Geist, sans-serif; font-weight: 500; font-size: 26px; letter-spacing: -0.02em;">The catalog</div>
+    </div>
+    <div class="type-row">
+      <div class="role">Geist 400<span class="small">Body prose &amp; UI</span></div>
+      <div class="specimen" style="font-family: Geist, sans-serif; font-size: 15px; line-height: 1.55;">Every visualization carries a small representation badge and an exact/approximate chip.</div>
+    </div>
+    <div class="type-row">
+      <div class="role">Geist Mono<span class="small">Labels, metadata, code</span></div>
+      <div class="specimen" style="font-family: 'Geist Mono', monospace; font-size: 13px;">LADR §5.A · Ch 5 · kind: spectral</div>
+    </div>
+    <div class="type-row">
+      <div class="role">STIX Two Text italic<span class="small">Mathematics only</span></div>
+      <div class="specimen" style="font-family: 'STIX Two Text', serif; font-style: italic; font-size: 17px;">For T ∈ ℒ(V), a scalar λ is an eigenvalue if T v = λ v for some nonzero v.</div>
+    </div>
+
+    <h3>Rules</h3>
+    <ul>
+      <li>Headings, section titles, page titles, and concept-card titles use Geist. <strong>Never STIX italic.</strong></li>
+      <li>Concept-card titles specifically use Geist Mono 500 — they read as technical labels, not as essay titles.</li>
+      <li>Geist Mono carries any metadata that belongs to the system rather than the math: chapter references, basis indicators, dimensions, timestamps, exactness chips, status text.</li>
+      <li>STIX Two Text italic is reserved for actual mathematical content: variable names, operator symbols, definitions, statements, expressions. Inside running prose, switch to STIX italic only for the math glyphs themselves.</li>
+      <li>Never use STIX Two Text for decoration or to suggest "this section is fancy." The italic carries information — it tells the reader they're looking at mathematics.</li>
+    </ul>
+  </section>
+
+  <!-- 05 -->
+  <section>
+    <h2 id="honesty">05 — The honesty system</h2>
+    <p class="h-sub">Two small chips, applied consistently, that make the tool's epistemic stance visible.</p>
+
+    <h3>Representation kind</h3>
+    <p>Every visualization tile and every concept card declares what kind of representation it is. This is the heart of the "honest about representation" principle — the badge tells the user not to over-interpret what they're seeing.</p>
+
+    <div class="badge-demo">
+      <span class="kind kind-geo">geometric</span>
+      <span class="kind kind-abs">abstract diagram</span>
+      <span class="kind kind-mat">matrix</span>
+      <span class="kind kind-spec">spectral</span>
+      <span class="kind kind-sym">symbolic</span>
+    </div>
+
+    <ul>
+      <li><strong>Geometric</strong> — a literal picture of the object in ℝ² or ℝ³. Used only when the object actually lives there.</li>
+      <li><strong>Abstract diagram</strong> — spaces as nodes, maps as arrows. Used for objects whose structure is relational (quotients, dual spaces, exact sequences) rather than spatial.</li>
+      <li><strong>Matrix</strong> — a coordinate-dependent grid, usually rendered as a signed heatmap. Always disclosed as basis-dependent.</li>
+      <li><strong>Spectral</strong> — eigenvalues or singular values plotted in ℝ or ℂ. The unit circle is a useful background reference (isometries land on it).</li>
+      <li><strong>Symbolic</strong> — algebraic expressions, polynomial factorizations, dimensions. Always exact.</li>
+    </ul>
+
+    <h3>Exactness</h3>
+    <div class="badge-demo">
+      <span class="exactness is-exact">exact</span>
+      <span class="exactness is-approx">approximate</span>
+    </div>
+    <p>Every value the system surfaces is one or the other. Exact values come from the symbolic computation layer (the computer-algebra side of the engine); approximate values come from numerical routines used for visualization. The distinction matters mathematically — a minimal polynomial computed symbolically over ℚ is not the same artifact as a characteristic polynomial fitted from floating-point eigenvalues. Surface it; do not blur it.</p>
+  </section>
+
+  <!-- 06 -->
+  <section>
+    <h2 id="browse">06 — Browse — the catalog</h2>
+    <p class="h-sub">Editorial, calm, scannable. The unit is the concept card; the move is the secondary panel.</p>
+
+    <h3>Layout</h3>
+    <div class="figure">
+      <div class="layout-diagram browse-layout">
+        <div class="row bands">
+          <div class="cell">title &nbsp; · &nbsp; subtitle</div>
+          <div class="cell">search</div>
+        </div>
+        <div class="row" style="grid-template-columns: 1fr;">
+          <div class="cell">filter chips · representation kinds</div>
+        </div>
+        <div class="row" style="grid-template-columns: 1fr;">
+          <div class="cell" style="background: transparent; border: 0; padding: 4px 0; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px;">Chapter I — Vector Spaces</div>
+        </div>
+        <div class="row grid-row">
+          <div class="cell is-accent">card</div>
+          <div class="cell">card</div>
+          <div class="cell">card</div>
+          <div class="cell">card</div>
+        </div>
+        <div class="row" style="grid-template-columns: 1fr;">
+          <div class="cell" style="background: transparent; border: 0; padding: 4px 0; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; font-size: 11px;">Chapter II — Finite-Dimensional Vector Spaces</div>
+        </div>
+        <div class="row grid-row">
+          <div class="cell">card</div>
+          <div class="cell">card</div>
+          <div class="cell">card</div>
+          <div class="cell">card</div>
+        </div>
+      </div>
+      <div class="figure-cap">Catalog grid — concepts grouped by chapter; auto-fill columns at 280px minimum</div>
+    </div>
+
+    <h3>The card</h3>
+    <p>Each card holds: chapter reference (Geist Mono, muted), title (Geist Mono, primary), a mini preview SVG rendered in the same representation it claims, a two-line teaser, the kind badge, and a prerequisite hint. Cards are pure information; no buttons compete with the click target.</p>
+
+    <h3>Two ways to open a concept</h3>
+    <ul>
+      <li><strong>Expand in place.</strong> A small <em>"Read definition ⌄"</em> chip in the card's bottom-right toggles an inline expansion. The teaser unclamps, and if the concept has authored formal content, the full STIX-typeset definition appears in a soft inset block. The card grows; neighbors reflow. Click again to collapse. This is the lightweight peek.</li>
+      <li><strong>Open the side panel.</strong> Clicking the card body opens a fixed-position panel anchored to the right edge of the viewport. The catalog reflows: it loses its centered max-width and gains right padding equal to the panel's width. The grid stays visible and clickable. No dimming overlay, no modal — the panel is a sister column, not a dialog.</li>
+    </ul>
+
+    <h3>The side panel</h3>
+    <p>The panel is the full treatment of a concept. It contains, in order: header (chapter, title, kind badge, exactness chip, prerequisites); a formal definition in a soft inset card with citation; the canonical visualization rendered larger, with its own kind badge and viz-foot metadata (basis, field); examples and non-examples in a two-column grid; related concepts as pill links; and an action row whose primary CTA is <em>Open in Sandbox</em>.</p>
+  </section>
+
+  <!-- 07 -->
+  <section>
+    <h2 id="sandbox">07 — Sandbox — the workbench</h2>
+    <p class="h-sub">A fixed three-column workbench plus a persistent math input bar. Calm density: many controls, all consistent.</p>
+
+    <h3>Layout</h3>
+    <div class="figure">
+      <div class="layout-diagram sandbox-layout">
+        <div class="row three">
+          <div class="cell">object library</div>
+          <div class="cell" style="min-height: 110px;">canvas — viz tiles (2×2 grid)</div>
+          <div class="cell">inspector</div>
+        </div>
+        <div class="row input">
+          <div class="cell">math input bar · template palette · evaluate</div>
+        </div>
+      </div>
+      <div class="figure-cap">Sandbox — three columns plus persistent input bar. Layout is fixed; tiles flex.</div>
+    </div>
+
+    <h3>Object library (left)</h3>
+    <p>A list of every object the user has defined in the session, grouped by kind (Spaces, Operators &amp; maps, Vectors, Inner products, …). Items show a glyph, a name in STIX italic (because they're math), and a type label in mono. Selection moves a single accent border to the chosen item; the inspector and the focused viz tile follow.</p>
+
+    <h3>Canvas (center)</h3>
+    <p>A grid of <strong>visualization tiles</strong>. Each tile is a self-contained unit: head with kind badge, math-typeset source label (e.g. <em>𝓜(T, ε)</em>, <em>spec(T)</em>), and tile actions; body with the visualization itself; foot with metadata (basis, field, exactness). Tiles are interchangeable through the visualization registry — any tile can be replaced with any other applicable view of the same object. The user composes their own bench; the system does not dictate a layout.</p>
+
+    <h3>Inspector (right)</h3>
+    <p>Properties of the focused object, organized in flat label-value pairs. Definition first (domain, codomain, field, basis), then computed properties (rank, nullity, det, trace, operator norm, condition number, structural flags like <em>self-adjoint?</em> with yes/no answers). Below that, a compact display of the minimal polynomial (or analogous symbolic invariant for the object), with provenance — <em>via SymPy · exact</em>. At the bottom, a list of "available visualizations" as pill links the user can drop into the canvas.</p>
+
+    <h3>Math input bar (bottom)</h3>
+    <p>A Symbolab-style two-row bar. Top row: a template palette of clickable insertions — fractions, powers, subscripts, roots, sums, integrals, matrix brackets, vector arrow, ⟨·,·⟩, ⊗, ⊕, ℝ, ℂ, λ, σ, ∈, ⊆, ∀. Bottom row: the live expression field, prefixed by a prompt glyph, with an <em>Evaluate</em> button on the right showing the return key affordance. The field renders math as math — italic STIX glyphs, real matrix brackets, real subscripts. It is not a text input that happens to contain math; it is a math input that happens to accept text.</p>
+  </section>
+
+  <!-- 08 -->
+  <section>
+    <h2 id="registry">08 — Visualization registry</h2>
+    <p class="h-sub">The architectural pattern that lets the design hold.</p>
+
+    <p>A core commitment of the system: visualizations are <strong>not</strong> hard-coded to mathematical types. Instead, a runtime registry maps each mathematical type to the set of representations that can honestly render it. A linear map can be viewed as a matrix heatmap, an action on the unit cube, a spectral plot, an abstract diagram, an SVD ellipsoid, or a Jordan-form matrix — and the user picks. A quotient space cannot be viewed as a matrix heatmap; the registry simply does not offer that option.</p>
+
+    <p>This pattern is what allows the design to <em>commit</em> to honesty. The UI never has to make case-by-case decisions about whether a view makes sense — the registry has already filtered. Every tile in the canvas, every viz frame in the side panel, every "available visualizations" list in the inspector is reading from the same registry. New concepts and new visualizations plug in by registering; nothing in the chrome layer changes.</p>
+
+    <p>Two implications for the design:</p>
+    <ul>
+      <li>Tile chrome is identical across visualization kinds. The kind badge is the only thing that signals what's inside. This consistency is load-bearing.</li>
+      <li>The user can swap any tile's visualization for another applicable one via the tile's overflow menu. The chrome stays put; the body changes.</li>
+    </ul>
+  </section>
+
+  <!-- 09 -->
+  <section>
+    <h2 id="flow">09 — Cross-mode flow</h2>
+    <p class="h-sub">How a user crosses from the editorial side to the working side without changing rooms.</p>
+
+    <p>The single most important interaction in the product. Browse mode's purpose, beyond being a catalog, is to <strong>seed</strong> the sandbox with concrete objects. Every concept's side panel has an <em>Open in Sandbox</em> action that does two things: switches the mode toggle to Sandbox and instantiates a fresh session pre-populated with the concept's canonical example (e.g. a concrete <em>T : ℝ³ → ℝ³</em> for the eigenvalue concept), with the relevant visualizations already tiled in the canvas.</p>
+
+    <p>The reverse direction also exists, more quietly: every object in the sandbox library carries a small affordance that opens the corresponding catalog entry in the side panel without leaving the sandbox. The user gets the definition; the workbench keeps its state.</p>
+
+    <p>This is what makes the two-mode structure work as a single product. Browse is not "the marketing site." It is the doorway to the sandbox, and the sandbox owes its examples to the catalog.</p>
+  </section>
+
+  <!-- 10 -->
+  <section>
+    <h2 id="dod">10 — Do &amp; don't</h2>
+    <p class="h-sub">The fastest way to drift away from the system. Watch for these.</p>
+
+    <div class="dod do">
+      <div class="col">
+        <h5>Do</h5>
+        <ul>
+          <li>Reach for a token before a hex value, always.</li>
+          <li>Set math in STIX Two Text italic, set everything else in Geist.</li>
+          <li>Show a kind badge on every visualization, every time.</li>
+          <li>Label exact vs approximate values wherever they surface.</li>
+          <li>Use the accent color sparingly — selection, active item, focus ring. That is the entire list.</li>
+          <li>Keep tile chrome identical across visualization kinds.</li>
+          <li>Let the side panel coexist with the catalog rather than overlay it.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h5>Don't</h5>
+        <ul>
+          <li>Don't use STIX italic for headings, section titles, or decoration.</li>
+          <li>Don't fill large surfaces with the accent.</li>
+          <li>Don't introduce additional accent hues for "categories" — use the kind chip colors instead.</li>
+          <li>Don't render a high-dimensional or abstract object as an arrow because "the user expects a picture." Switch representations.</li>
+          <li>Don't open concepts as modal overlays. They are siblings of the catalog, not dialogs.</li>
+          <li>Don't surface basis-dependent values without saying so.</li>
+          <li>Don't introduce new gradients, glows, shadows beyond the existing 1-px borders and the panel's barely-there elevation.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-rule">
+    <span>LADR Visualizer · Design language</span>
+    <span>v0.1 · bone palette</span>
+  </footer>
+
+</div>
+</body>
+</html>

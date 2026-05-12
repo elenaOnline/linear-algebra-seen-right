@@ -8,7 +8,17 @@ export type ConstraintKind =
   | 'non-direct-sum'
   | 'self-adjoint-with-spectrum'
   | 'unitary-but-not-orthogonal'
-  | 'linearly-dependent-set-with-property';
+  | 'linearly-dependent-set-with-property'
+  | 'rank-k-map'
+  | 'projection-operator'
+  | 'rotation-operator'
+  | 'diagonal-operator'
+  | 'shear-operator'
+  | 'scalar-multiple-of-identity'
+  | 'permutation-matrix'
+  | 'triangular-operator'
+  | 'full-rank-rectangular'
+  | 'symmetric-indefinite';
 
 export type Constraint = {
   readonly kind: ConstraintKind;

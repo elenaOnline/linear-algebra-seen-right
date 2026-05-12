@@ -97,7 +97,7 @@ function ConceptCard({ def, isOpen, onClick }: CardProps): JSX.Element {
           color: 'var(--ink)',
         }}
       >
-        {def.title}
+        <LatexText text={def.title} style={{ fontFamily: 'var(--font-mono)', fontWeight: 500 }} />
       </div>
 
       {/* Teaser */}
@@ -276,7 +276,10 @@ function SidePanel({ def, allDefs, onClose, onOpenInSandbox }: SidePanelProps): 
                 color: 'var(--ink)',
               }}
             >
-              {def.title}
+              <LatexText
+                text={def.title}
+                style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: '20px' }}
+              />
             </h2>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
               <KindBadge renderer={renderer} />

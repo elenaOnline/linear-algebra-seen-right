@@ -89,13 +89,18 @@ export function ViewCard({ view }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const portalRef = useRef<HTMLDivElement>(null);
   const session = useStore(defaultStore);
 
-  // Close menu on outside click
+  // Close menu on outside click — exclude both the trigger button and the portal content
+  // so that clicking a menu item in the portal fires its onClick before the menu closes.
   useEffect(() => {
     if (!menuOpen) return;
     const handler = (e: MouseEvent) => {
-      if (!menuBtnRef.current?.contains(e.target as Node)) setMenuOpen(false);
+      const target = e.target as Node;
+      if (!menuBtnRef.current?.contains(target) && !portalRef.current?.contains(target)) {
+        setMenuOpen(false);
+      }
     };
     window.addEventListener('mousedown', handler);
     return () => window.removeEventListener('mousedown', handler);
@@ -209,6 +214,7 @@ export function ViewCard({ view }: Props): JSX.Element {
               menuRect !== null &&
               createPortal(
                 <div
+                  ref={portalRef}
                   style={{
                     position: 'fixed',
                     top: menuRect.bottom + 4,

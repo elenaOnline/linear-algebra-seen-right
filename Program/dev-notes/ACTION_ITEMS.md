@@ -24,7 +24,105 @@ If an item turns out to be wrong or no longer applies, mark it `withdrawn (YYYY-
 
 ## Open items
 
-*None.*
+### AI-006 — Fix formula map evaluation in ObjectInput  (open)
+
+**What.** `ObjectInput.tsx:88` calls `mkLinearMapByFormula(space.id, space.id, (v) => v, fnLabel)` regardless of what the user typed — the identity function is always used. The parse result (`result.label`, `result.params`) is stored in the label but the formula body is never evaluated. Every formula map silently behaves as the identity.
+
+**Why.** This is a correctness failure. A user typing `T(x, y) = (x + y, x - y)` sees the expression reflected in the tile header but the grid-deformation and kernel-range views show the identity transformation. This is actively misleading — worse than unsupported, because it looks like it worked.
+
+**Where.** `src/ui/ObjectInput.tsx:81–95` (the `result.kind === 'formula'` branch). The parser in `src/interaction/parser/` produces `ParsedFormula` with `params: string[]` and `label: string` (the formula body as a string). The fix: evaluate the formula at standard basis vectors `e₁, e₂, …` to extract matrix columns — `T(eᵢ)` is a concrete vector, the columns stacked form `ℳ(T)`. This requires a small arithmetic expression evaluator for the formula body (substituting `x=1, y=0`, etc.), or alternatively sending the formula to the SymPy engine via `engine.formulaToMatrix`. ADR-014 acknowledged this was deferred; the engine is now fully operational and this is no longer acceptable as a placeholder.
+
+**Blocks.** Phase 10 / Connected Sandbox.
+
+**Status.** open
+
+---
+
+### AI-007 — Wire Inspector computed properties to the engine  (open)
+
+**What.** `Inspector.tsx:113–117` shows rank, nullity, and det for maps but displays "—" with "not yet computed" for all three. `useComputation` exists at `src/ui/hooks/useComputation.ts` and is used by renderers; it is not called anywhere in `Inspector.tsx`. Wire it up for the selected map.
+
+**Why.** The Inspector is the primary place where a user expects to learn properties of a mathematical object. Currently it is inert for every computed property — the entire "Computed" section is dead UI. Rank and nullity are especially important because the rank-nullity theorem is a central Chapter 3 result and the Inspector is where a user would verify it holds for their specific map.
+
+**Where.** `src/ui/Inspector.tsx:212–243` (the "Computed" section). Add `useComputation` calls for `{ operation: 'rank', objectId: selected.id }` and `{ operation: 'nullity', objectId: selected.id }` and `{ operation: 'determinant', objectId: selected.id }` (if square). Replace the `'—'` placeholders with the actual results once computed; show a loading indicator during computation.
+
+**Blocks.** Phase 10 / Connected Sandbox.
+
+**Status.** open
+
+---
+
+### AI-008 — Object deletion + ObjectLibrary selection wiring  (open)
+
+**What.** Two related gaps: (1) No way to delete an object from the session — the store has no `removeVector`, `removeMap`, or `removeSpace` actions, and neither the ObjectLibrary nor the Inspector has a delete affordance. Sessions accumulate objects with no recourse short of a full scene reset. (2) The `onSelect` callback is threaded from `App.tsx` through `ObjectLibrary` but it is unclear if clicking an item in `ObjectLibrary` actually calls it — the Inspector remains blank ("Select an object to inspect it.") unless the wiring is verified to work.
+
+**Why.** Without deletion, every input mistake or exploratory object permanently occupies the session. Combined with no editing affordance, this makes the sandbox feel write-only. Without Inspector selection working, the Inspector column is permanently empty for user-created objects, which means the computed properties fix (AI-007) won't be reachable in practice.
+
+**Where.** Store actions: add `removeVector(id)`, `removeMap(id)`, `removeSpace(id)` to `src/state/store.ts` (each removes the object and also closes any open views referencing it). ObjectLibrary: add delete button per item, call `onSelect` when an item is clicked. App.tsx/ObjectLibrary: verify the `onSelect → setSelected` chain reaches the Inspector.
+
+**Blocks.** Phase 10 / Connected Sandbox.
+
+**Status.** open
+
+---
+
+### AI-009 — Named-object referencing and derived (live) objects  (open)
+
+This is the architectural item for Phase 10. It has two coupled parts.
+
+**Part A — Named-object referencing in ObjectInput.**
+
+**What.** The expression parser (`src/interaction/parser/`) only handles literals: `(1, 2)`, `[[1,0],[0,1]]`, `T(x,y) = …`. It cannot resolve names. Typing `v + w` when `v` and `w` are named session objects produces a parse error or treats them as unknown identifiers. Naming is therefore purely cosmetic — a label that lives in `session.namedObjects` with no computational role.
+
+**Why.** This is the single largest gap between a static viewer and a sandbox. Named objects should be the primary unit of composition — the whole point of giving a vector a name is so you can reference it in later expressions. Without this, every object in the session is isolated; there is no way to express relationships between objects at all.
+
+**Where.** `src/interaction/parser/lexer.ts` (add name token type), `src/interaction/parser/parser.ts` (add name-reference production rules), `src/ui/ObjectInput.tsx` (thread `session.namedObjects` into `parseInput` so the parser can resolve names at parse time). Supported operations to start: `v + w` (vector sum), `v - w` (vector difference), `λ * v` or `2v` (scalar multiple where λ is a rational literal), `A(v)` or `A v` (map application), `A * B` (map composition), `A + B` (map sum). These are all closed-form rational arithmetic; no engine required.
+
+**Part B — Derived (live) objects in the session.**
+
+**What.** When Part A's named-object expressions are evaluated, they currently would produce a concrete vector (a one-shot evaluation that is immediately independent of its inputs). The stronger behavior — and the one that addresses Elena's specific complaint about templates producing disconnected objects — is to store the *expression* in the session, not just its evaluated value, and recompute the cached value whenever a dependency changes.
+
+**Concretely:** `w = v + u` creates a `DerivedVector` whose cached components are `v.components + u.components` at creation time, and are automatically recomputed whenever `v` or `u` change (e.g., via drag). Dragging `v` causes `w` to update in real time.
+
+**Session model addition:**
+```typescript
+type DerivedVector = {
+  readonly kind: 'derived'
+  readonly field: Field
+  readonly space: SpaceId
+  readonly expression: VectorExpression   // see ADR-018
+  components: readonly Scalar[]           // cached; recomputed on dep change
+}
+
+type VectorExpression =
+  | { readonly op: 'add';   readonly left: VectorId; readonly right: VectorId }
+  | { readonly op: 'sub';   readonly left: VectorId; readonly right: VectorId }
+  | { readonly op: 'scale'; readonly scalar: Scalar;  readonly vector: VectorId }
+  | { readonly op: 'apply'; readonly map: MapId;      readonly vector: VectorId }
+
+type DerivedMap = {
+  readonly kind: 'derived-map'
+  readonly expression: MapExpression
+  // … cached matrix entries
+}
+
+type MapExpression =
+  | { readonly op: 'compose'; readonly left: MapId; readonly right: MapId }
+  | { readonly op: 'sum';     readonly left: MapId; readonly right: MapId }
+  | { readonly op: 'scale';   readonly scalar: Scalar; readonly map: MapId }
+```
+
+Store mutations (`updateVector`, `addVector`, `addMap`) trigger a `recomputeDerived()` pass that topologically walks the dependency graph and updates cached values for all transitively dependent derived objects. Computation is pure rational arithmetic — no engine call needed for addition/subtraction/scaling/application.
+
+**Template updates:** All templates that currently hardcode compositional results (vector-addition-r2's `w`, linear-combination-builder's `combo`) should be updated to use `DerivedVector` expressions instead of concrete values.
+
+**Why the full derived-object model is worth the complexity.** One-shot evaluation (Part A alone) is easy but doesn't address the core complaint: static templates that don't respond to user manipulation. With Part B, dragging `v₁` in the vector-addition template causes `w = v₁ + v₂` to update in real time — the sandbox now illustrates a mathematical relationship, not just a collection of static objects. This is the difference between a diagram and an interactive system.
+
+**Where.** `src/state/types.ts` (new types), `src/state/store.ts` (new `DerivedVector`/`DerivedMap` handling in all mutation actions), `src/types/vector.ts` (factory for derived vectors), new `src/state/derivation.ts` (dependency graph walker and recomputation logic), `src/pedagogy/templates/starters.ts` (update compositional templates), `src/ui/ObjectInput.tsx` (create derived instead of concrete when expression references named objects).
+
+**Blocks.** Phase 10 / Connected Sandbox. Should land before Phase 9 content expansion is completed (derived objects make the templates substantially more pedagogically honest).
+
+**Status.** open
 
 ---
 

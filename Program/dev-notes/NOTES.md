@@ -28,6 +28,18 @@ Format template:
 **Implications.** Knock-on effects on other layers, conventions, or future work.
 ```
 
+### ADR-018 — Derived objects: expression-typed session values with cached recomputation  (2026-05-12)
+
+**Context.** Every object in the session (`ConcreteVector`, `LinearMap`) is currently an independent concrete value. Naming an object (adding it to `session.namedObjects`) is purely cosmetic — the parser cannot resolve names, and there is no representational category for "object whose value is defined relative to other objects." This makes the sandbox a static collection of diagrams rather than an interactive mathematical environment. Two specific failure modes: (a) formula maps typed as `T(x,y) = (x+y, x−y)` silently use an identity placeholder because the formula body is never evaluated; (b) compositional templates (e.g., vector addition) hardcode the derived value as a third independent vector, so dragging one of the inputs does not update the result.
+
+**Choice.** Introduce `DerivedVector` and `DerivedMap` types alongside the existing concrete types. A derived object stores an `expression` (a discriminated union of vector/map operations referencing other session object IDs) plus a `components`/matrix field caching the current evaluated value. All store mutation actions that can affect a derived object's dependencies trigger a `recomputeDerived()` pass that topologically walks the dependency graph and updates cached values. `ObjectInput` creates a derived object (not a concrete one) whenever the expression references named session objects. See AI-009 for the full type sketches.
+
+**Why.** The live recomputation model is substantially more pedagogically honest than one-shot evaluation. A derived object makes the mathematical relationship explicit in the session data — `w = v₁ + v₂` is not just a coincidentally matching concrete vector, it is a claim that w is the sum of v₁ and v₂, and that claim is enforced by the recomputation machinery. This directly addresses the project ethos: the sandbox should illustrate mathematical relationships, not present a fixed set of objects. The alternative — one-shot evaluation at input time, producing an independent concrete vector — addresses the naming gap but not the reactivity gap, and leaves templates still presenting relationships as coincidences.
+
+**Implications.** `SessionSnapshot` must include derived objects so that timeline interpolation works correctly. `interpolateSnapshots` should interpolate derived objects' cached values (not their expressions), which is already the right behavior since interpolation operates on the component arrays. The `DerivedVector` / `DerivedMap` types are additions to the `vectors` / `maps` records — existing consumers that handle `ConcreteVector` need to be updated to also handle `DerivedVector` (typically by reading `vector.components` which is the same field). The derivation graph must be acyclic (a derived object cannot reference itself transitively); the factory should enforce this. Formula map evaluation (AI-006) becomes a special case of expression evaluation: parse the formula body into a `MapExpression` by evaluating the formula at standard basis vectors. Recomputation is pure rational arithmetic for all current operation types (add, sub, scale, apply, compose) — the SymPy engine is not needed at this layer.
+
+---
+
 ### ADR-017 — Session replace (not accumulate) on Browse definition activation  (2026-05-11)
 
 **Context.** When the user clicks "Open in Sandbox" on a concept in Browse mode, two behaviors were possible: (a) replace — clear the current session and load the concept's canonical scene; (b) accumulate — add the concept's objects to the existing session.

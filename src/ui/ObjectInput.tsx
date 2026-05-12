@@ -1,6 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import type { JSX, KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { useStore } from 'zustand';
+import katex from 'katex';
 import { defaultStore } from '../state/index.ts';
 import { parseInput } from '../interaction/parser/index.ts';
 import type { ParseResult } from '../interaction/parser/index.ts';
@@ -13,8 +15,9 @@ import { rational, float } from '../types/scalar.ts';
 import type { Scalar } from '../types/index.ts';
 import type { BasisId, SpaceId } from '../types/ids.ts';
 import type { VectorExpression, MapExpression } from '../types/derivation.ts';
+import { scalarToLatex } from '../registry/helpers.ts';
 
-const PLACEHOLDER_EXAMPLES = ['[[1, 2], [3, 4]]', '(1, -2, 3)', 'T(x, y) = (x + y, x - y)'];
+// ── Logic helpers (unchanged from Phase 10) ──────────────────────────────
 
 function scalarToRational(v: number): Scalar {
   if (Number.isInteger(v)) return rational(v);
@@ -22,7 +25,6 @@ function scalarToRational(v: number): Scalar {
   return rational(Math.round(v * denom), denom);
 }
 
-// Helper: resolve space and dimension from a vector expression.
 function resolveVectorExprSpace(
   expr: VectorExpression,
   session: ReturnType<typeof defaultStore.getState>,
@@ -70,7 +72,6 @@ function applyVectorExpr(
   if (!resolved)
     return 'Could not resolve vector dimensions — check objects exist and are compatible';
   const { spaceId, dim } = resolved;
-  // Create with placeholder zeros; recomputeDerived (called by addVector) fills real values.
   const placeholder: Scalar[] = Array.from({ length: dim }, () => float(0));
   const derived = mkDerivedVector('R', spaceId, expr, placeholder);
   addVector(derived);
@@ -102,17 +103,14 @@ function applyMapExpr(
     codomainId = session.maps[expr.map]?.codomain;
   }
   if (!domainId || !codomainId) return 'Could not determine map dimensions for expression';
-
   const dId = domainId as SpaceId;
   const cId = codomainId as SpaceId;
   const domSpace = session.spaces[dId];
   const codSpace = session.spaces[cId];
   const domDim = domSpace?.kind === 'Fn' ? domSpace.n : 2;
   const codDim = codSpace?.kind === 'Fn' ? codSpace.n : 2;
-
   const domBid = dId as unknown as BasisId;
   const codBid = cId as unknown as BasisId;
-  // Zero-filled placeholder matrix; recomputeDerived fills real values.
   const zeroRows: Scalar[][] = Array.from({ length: codDim }, () =>
     Array.from({ length: domDim }, () => float(0)),
   );
@@ -133,25 +131,24 @@ function applyParseResult(
   session: ReturnType<typeof defaultStore.getState>,
 ): string | null {
   const { addSpace, addVector, addMap, nameObject, openView } = defaultStore.getState();
-
   if (result.kind === 'error') return result.message;
-
-  if (result.kind === 'ambiguous') {
+  if (result.kind === 'ambiguous')
     return applyParseResult(result.alternatives[0] ?? result, name, session);
-  }
 
   if (result.kind === 'vector') {
     const n = result.components.length;
     const space = mkVectorSpaceFn(result.field, n);
     if (!space.ok) return space.error.message;
-    let spaceId = space.value.id;
+    const spaceId = space.value.id;
     if (!session.spaces[spaceId]) addSpace(space.value);
     const scalars = result.components.map(scalarToRational);
     const vec = mkConcreteVector(result.field, spaceId, scalars);
     if (!vec.ok) return vec.error.message;
     addVector(vec.value);
-    const label = name || `v${Object.keys(session.vectors).length + 1}`;
-    nameObject(label, { kind: 'vector', id: vec.value.id });
+    nameObject(name || `v${Object.keys(session.vectors).length + 1}`, {
+      kind: 'vector',
+      id: vec.value.id,
+    });
     openView('symbolic', { kind: 'vector', id: vec.value.id });
     if (n === 2) openView('geometric_2d', { kind: 'vector', id: vec.value.id });
     if (n === 3) openView('geometric_3d', { kind: 'vector', id: vec.value.id });
@@ -159,8 +156,7 @@ function applyParseResult(
   }
 
   if (result.kind === 'matrix') {
-    const rows = result.matrix.rows;
-    const cols = result.matrix.cols;
+    const { rows, cols } = result.matrix;
     const field = result.field;
     const domainSpace = mkVectorSpaceFn(field, cols);
     const codomainSpace = mkVectorSpaceFn(field, rows);
@@ -168,19 +164,21 @@ function applyParseResult(
     if (!codomainSpace.ok) return codomainSpace.error.message;
     if (!session.spaces[domainSpace.value.id]) addSpace(domainSpace.value);
     if (!session.spaces[codomainSpace.value.id]) addSpace(codomainSpace.value);
-    const domainBasisId = domainSpace.value.id as unknown as BasisId;
-    const codomainBasisId = codomainSpace.value.id as unknown as BasisId;
+    const domBid = domainSpace.value.id as unknown as BasisId;
+    const codBid = codomainSpace.value.id as unknown as BasisId;
     const map = mkLinearMapByMatrix(
       domainSpace.value.id,
       codomainSpace.value.id,
       result.matrix,
-      domainBasisId,
-      codomainBasisId,
+      domBid,
+      codBid,
     );
     if (!map.ok) return map.error.message;
     addMap(map.value);
-    const label = name || `A${Object.keys(session.maps).length + 1}`;
-    nameObject(label, { kind: 'map', id: map.value.id });
+    nameObject(name || `A${Object.keys(session.maps).length + 1}`, {
+      kind: 'map',
+      id: map.value.id,
+    });
     openView('matrix', { kind: 'map', id: map.value.id });
     if (rows === 2 && cols === 2) {
       openView('geometric_2d', { kind: 'map', id: map.value.id });
@@ -191,9 +189,6 @@ function applyParseResult(
 
   if (result.kind === 'formula') {
     const n = result.params.length;
-    const field = 'R';
-
-    // Evaluate the formula body at each standard basis vector to recover the matrix columns.
     const body = extractFormulaBody(result.label);
     const columns: number[][] = [];
     for (let j = 0; j < n; j++) {
@@ -205,27 +200,22 @@ function applyParseResult(
       if (typeof col === 'string') return `Formula error: ${col}`;
       columns.push(col);
     }
-
-    // Infer codomain dimension from the output arity of the first column.
     const m = columns[0]?.length ?? n;
-    const domainSpace = mkVectorSpaceFn(field, n);
-    const codomainSpace = mkVectorSpaceFn(field, m);
+    const domainSpace = mkVectorSpaceFn('R', n);
+    const codomainSpace = mkVectorSpaceFn('R', m);
     if (!domainSpace.ok) return domainSpace.error.message;
     if (!codomainSpace.ok) return codomainSpace.error.message;
     if (!session.spaces[domainSpace.value.id]) addSpace(domainSpace.value);
     if (!session.spaces[codomainSpace.value.id]) addSpace(codomainSpace.value);
-
     const domBid = domainSpace.value.id as unknown as BasisId;
     const codBid = codomainSpace.value.id as unknown as BasisId;
-
-    // Build rows from columns: rows[i][j] = columns[j][i].
-    const rows: Scalar[][] = Array.from({ length: m }, (_, i) =>
+    const matRows: Scalar[][] = Array.from({ length: m }, (_, i) =>
       Array.from({ length: n }, (_, j) => {
         const v = columns[j]?.[i] ?? 0;
         return Number.isInteger(v) ? rational(v) : float(v);
       }),
     );
-    const mat = mkMatrix(field, rows, domBid, codBid);
+    const mat = mkMatrix('R', matRows, domBid, codBid);
     if (!mat.ok) return mat.error.message;
     const map = mkLinearMapByMatrix(
       domainSpace.value.id,
@@ -235,10 +225,8 @@ function applyParseResult(
       codBid,
     );
     if (!map.ok) return map.error.message;
-
     addMap(map.value);
-    const label = name || result.name || 'T';
-    nameObject(label, { kind: 'map', id: map.value.id });
+    nameObject(name || result.name || 'T', { kind: 'map', id: map.value.id });
     openView('matrix', { kind: 'map', id: map.value.id });
     if (n === 2 && m === 2) {
       openView('geometric_2d', { kind: 'map', id: map.value.id });
@@ -247,96 +235,269 @@ function applyParseResult(
     return null;
   }
 
-  if (result.kind === 'vector-expr') {
-    const err2 = applyVectorExpr(result.expression, name, session, addVector, nameObject, openView);
-    return err2;
-  }
-
-  if (result.kind === 'map-expr') {
-    const err2 = applyMapExpr(result.expression, name, session, addMap, nameObject, openView);
-    return err2;
-  }
+  if (result.kind === 'vector-expr')
+    return applyVectorExpr(result.expression, name, session, addVector, nameObject, openView);
+  if (result.kind === 'map-expr')
+    return applyMapExpr(result.expression, name, session, addMap, nameObject, openView);
 
   return 'Unhandled parse result';
 }
 
-const SYMBOL_PALETTE: Array<{ label: string; insert: string; title: string }> = [
-  { label: 'ℝ', insert: 'R', title: 'Real field' },
-  { label: 'ℂ', insert: 'C', title: 'Complex field' },
-  { label: 'λ', insert: 'λ', title: 'Eigenvalue' },
-  { label: 'σ', insert: 'σ', title: 'Singular value' },
-  { label: '∈', insert: '∈', title: 'Element of' },
-  { label: '⊆', insert: '⊆', title: 'Subspace of' },
-  { label: '⊕', insert: '⊕', title: 'Direct sum' },
-  { label: '⊗', insert: '⊗', title: 'Tensor product' },
-  { label: '⟨·,·⟩', insert: '⟨·,·⟩', title: 'Inner product' },
-  { label: '[ ]', insert: '[[, ], [, ]]', title: '2×2 matrix template' },
-  { label: '( )', insert: '(, )', title: 'Vector template' },
+// ── Live preview ─────────────────────────────────────────────────────────
+
+function buildPreviewLatex(result: ParseResult, rawText: string): string | null {
+  if (result.kind === 'error') return null;
+
+  if (result.kind === 'vector') {
+    const comps = result.components.map((c) =>
+      Number.isInteger(c) ? String(c) : parseFloat(c.toPrecision(5)).toString(),
+    );
+    if (comps.length === 0) return null;
+    if (comps.length === 1) return comps[0] ?? null;
+    return `\\begin{pmatrix} ${comps.join(' \\\\ ')} \\end{pmatrix}`;
+  }
+
+  if (result.kind === 'matrix') {
+    const rows = result.matrix.entries.map((row) => row.map((s) => scalarToLatex(s)).join(' & '));
+    return `\\begin{pmatrix} ${rows.join(' \\\\ ')} \\end{pmatrix}`;
+  }
+
+  if (result.kind === 'ambiguous') {
+    const first = result.alternatives[0];
+    if (first) return buildPreviewLatex(first, rawText);
+    return null;
+  }
+
+  // For formulas and named expressions, try rendering the raw text as KaTeX.
+  // Most formula syntax (T(x,y)=(x+y,x-y), v+w, A*B) renders legibly.
+  return rawText.trim();
+}
+
+function tryRenderKatex(latex: string): string | null {
+  try {
+    return katex.renderToString(latex, { throwOnError: false, displayMode: false, output: 'html' });
+  } catch {
+    return null;
+  }
+}
+
+// ── Symbol palette definition ─────────────────────────────────────────────
+
+type PaletteSymbol = { kind: 'symbol'; latex: string; insert: string; title: string };
+type PaletteAction = {
+  kind: 'action';
+  latex: string;
+  title: string;
+  action: 'fraction' | 'superscript' | 'subscript' | 'matrix';
+};
+type PaletteItem = PaletteSymbol | PaletteAction;
+
+const PALETTE_GROUPS: Array<{ label: string; items: PaletteItem[] }> = [
+  {
+    label: 'Sets',
+    items: [
+      { kind: 'symbol', latex: '\\mathbb{R}', insert: 'R', title: 'Real field ℝ' },
+      { kind: 'symbol', latex: '\\mathbb{C}', insert: 'C', title: 'Complex field ℂ' },
+    ],
+  },
+  {
+    label: 'Variables',
+    items: [
+      { kind: 'symbol', latex: '\\lambda', insert: 'λ', title: 'Eigenvalue λ' },
+      { kind: 'symbol', latex: '\\sigma', insert: 'σ', title: 'Singular value σ' },
+      { kind: 'symbol', latex: '\\alpha', insert: 'α', title: 'Alpha α' },
+      { kind: 'symbol', latex: '\\beta', insert: 'β', title: 'Beta β' },
+    ],
+  },
+  {
+    label: 'Relations',
+    items: [
+      { kind: 'symbol', latex: '\\in', insert: '∈', title: 'Element of ∈' },
+      { kind: 'symbol', latex: '\\subseteq', insert: '⊆', title: 'Subspace ⊆' },
+      { kind: 'symbol', latex: '\\oplus', insert: '⊕', title: 'Direct sum ⊕' },
+    ],
+  },
+  {
+    label: 'Structures',
+    items: [
+      { kind: 'action', latex: '\\tfrac{a}{b}', title: 'Fraction (inserts /)', action: 'fraction' },
+      {
+        kind: 'action',
+        latex: 'x^{n}',
+        title: 'Power / superscript (inserts ^)',
+        action: 'superscript',
+      },
+      { kind: 'action', latex: 'x_{n}', title: 'Subscript (inserts _)', action: 'subscript' },
+      {
+        kind: 'action',
+        latex: '\\begin{smallmatrix}\\cdot&\\cdot\\\\\\cdot&\\cdot\\end{smallmatrix}',
+        title: 'Matrix builder',
+        action: 'matrix',
+      },
+    ],
+  },
 ];
+
+const PALETTE_MORE: PaletteSymbol[] = [
+  { kind: 'symbol', latex: '\\otimes', insert: '⊗', title: 'Tensor product ⊗' },
+  {
+    kind: 'symbol',
+    latex: '\\langle\\cdot,\\cdot\\rangle',
+    insert: '⟨·,·⟩',
+    title: 'Inner product ⟨·,·⟩',
+  },
+  { kind: 'symbol', latex: '\\perp', insert: '⊥', title: 'Orthogonal ⊥' },
+  { kind: 'symbol', latex: '\\ker', insert: 'ker', title: 'Kernel ker' },
+  { kind: 'symbol', latex: '\\text{im}', insert: 'im', title: 'Image im' },
+  { kind: 'symbol', latex: '\\det', insert: 'det', title: 'Determinant det' },
+  { kind: 'symbol', latex: '\\text{tr}', insert: 'tr', title: 'Trace tr' },
+];
+
+// Pre-render palette latex to HTML at module load time.
+const PALETTE_RENDERED = new Map<string, string>();
+[...PALETTE_GROUPS.flatMap((g) => g.items), ...PALETTE_MORE].forEach((item) => {
+  const html = tryRenderKatex(item.latex);
+  if (html) PALETTE_RENDERED.set(item.latex, html);
+});
+
+// ── Matrix template builder ──────────────────────────────────────────────
+
+function buildMatrixTemplate(rows: number, cols: number): { text: string; cursorOffset: number } {
+  const rowStrs = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, () => '').join(', '),
+  );
+  const text = '[' + rowStrs.map((r) => `[${r}]`).join(', ') + ']';
+  // Place cursor inside the first [, i.e., at position 2 ([[)
+  return { text, cursorOffset: 2 };
+}
+
+// ── Component ────────────────────────────────────────────────────────────
+
+const PLACEHOLDER_EXAMPLES = ['[[1, 2], [3, 4]]', '(1, -2, 3)', 'T(x, y) = (x + y, x - y)'];
 
 export function ObjectInput(): JSX.Element {
   const [text, setText] = useState('');
   const [nameText, setNameText] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [katexHtml, setKatexHtml] = useState<string | null>(null);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const insertSymbol = (insert: string): void => {
-    const el = inputRef.current;
-    if (!el) {
-      handleChange(text + insert);
-      return;
-    }
-    const start = el.selectionStart ?? text.length;
-    const end = el.selectionEnd ?? text.length;
-    const next = text.slice(0, start) + insert + text.slice(end);
-    handleChange(next);
-    // Restore cursor after React re-render
-    requestAnimationFrame(() => {
-      el.focus();
-      const pos = start + insert.length;
-      el.setSelectionRange(pos, pos);
-    });
-  };
+  // More palette popover
+  const [showMore, setShowMore] = useState(false);
+  const [moreRect, setMoreRect] = useState<DOMRect | null>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  // Matrix picker popover
+  const [showMatrixPicker, setShowMatrixPicker] = useState(false);
+  const [matrixPickerRect, setMatrixPickerRect] = useState<DOMRect | null>(null);
+  const [matrixHover, setMatrixHover] = useState<[number, number] | null>(null);
+  const matrixButtonRef = useRef<HTMLButtonElement>(null);
+  const matrixMenuRef = useRef<HTMLDivElement>(null);
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const views = useStore(defaultStore, (s) => s.views);
   const placeholder = PLACEHOLDER_EXAMPLES[placeholderIdx % PLACEHOLDER_EXAMPLES.length] ?? '';
   const canSubmit = !!text.trim() && !error;
 
+  // Close more menu on outside click
+  useEffect(() => {
+    if (!showMore) return;
+    const handler = (e: MouseEvent): void => {
+      const t = e.target as Node;
+      if (!moreButtonRef.current?.contains(t) && !moreMenuRef.current?.contains(t))
+        setShowMore(false);
+    };
+    window.addEventListener('mousedown', handler);
+    return () => window.removeEventListener('mousedown', handler);
+  }, [showMore]);
+
+  // Close matrix picker on outside click
+  useEffect(() => {
+    if (!showMatrixPicker) return;
+    const handler = (e: MouseEvent): void => {
+      const t = e.target as Node;
+      if (!matrixButtonRef.current?.contains(t) && !matrixMenuRef.current?.contains(t))
+        setShowMatrixPicker(false);
+    };
+    window.addEventListener('mousedown', handler);
+    return () => window.removeEventListener('mousedown', handler);
+  }, [showMatrixPicker]);
+
+  // Debounced KaTeX live preview
+  useEffect(() => {
+    if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
+    if (!text.trim()) {
+      setKatexHtml(null);
+      return;
+    }
+    previewTimerRef.current = setTimeout(() => {
+      const namedObjects = defaultStore.getState().namedObjects;
+      const result = parseInput(text.trim(), namedObjects);
+      const latex = buildPreviewLatex(result, text.trim());
+      setKatexHtml(latex ? tryRenderKatex(latex) : null);
+    }, 80);
+    return () => {
+      if (previewTimerRef.current) clearTimeout(previewTimerRef.current);
+    };
+  }, [text]);
+
+  const insertAt = useCallback(
+    (insert: string, cursorAfterInsert?: number): void => {
+      const el = inputRef.current;
+      if (!el) {
+        setText((prev) => prev + insert);
+        return;
+      }
+      const start = el.selectionStart ?? text.length;
+      const end = el.selectionEnd ?? text.length;
+      const next = text.slice(0, start) + insert + text.slice(end);
+      setText(next);
+      setError(null);
+      requestAnimationFrame(() => {
+        el.focus();
+        const pos =
+          cursorAfterInsert !== undefined ? start + cursorAfterInsert : start + insert.length;
+        el.setSelectionRange(pos, pos);
+      });
+    },
+    [text],
+  );
+
+  const insertSymbol = (item: PaletteSymbol): void => insertAt(item.insert);
+
+  const insertAction = (action: PaletteAction['action']): void => {
+    if (action === 'fraction') {
+      insertAt('/');
+    } else if (action === 'superscript') {
+      insertAt('^');
+    } else if (action === 'subscript') {
+      insertAt('_');
+    } else if (action === 'matrix') {
+      const rect = matrixButtonRef.current?.getBoundingClientRect() ?? null;
+      setMatrixPickerRect(rect);
+      setShowMatrixPicker((s) => !s);
+      setShowMore(false);
+    }
+  };
+
+  const insertMatrix = (rows: number, cols: number): void => {
+    const { text: tmpl, cursorOffset } = buildMatrixTemplate(rows, cols);
+    insertAt(tmpl, cursorOffset);
+    setShowMatrixPicker(false);
+  };
+
   const handleChange = (val: string): void => {
     setText(val);
-    setError(null);
-    if (val.trim() === '') {
-      setPreview(null);
+    if (!val.trim()) {
+      setError(null);
       return;
     }
     const namedObjects = defaultStore.getState().namedObjects;
     const result = parseInput(val, namedObjects);
-    if (result.kind === 'error') {
-      setPreview(null);
-      setError(result.message);
-    } else if (result.kind === 'matrix') {
-      setPreview(
-        `${result.matrix.rows}×${result.matrix.cols} matrix (${result.field === 'R' ? 'ℝ' : 'ℂ'})`,
-      );
-      setError(null);
-    } else if (result.kind === 'vector') {
-      setPreview(`${result.components.length}-vector (${result.field === 'R' ? 'ℝ' : 'ℂ'})`);
-      setError(null);
-    } else if (result.kind === 'formula') {
-      setPreview(`Linear map — ${result.name}(${result.params.join(', ')})`);
-      setError(null);
-    } else if (result.kind === 'vector-expr') {
-      setPreview(`Derived vector expression`);
-      setError(null);
-    } else if (result.kind === 'map-expr') {
-      setPreview(`Derived map expression`);
-      setError(null);
-    } else if (result.kind === 'ambiguous') {
-      setPreview(`Ambiguous — interpreted as ${result.alternatives[0]?.kind ?? '?'}`);
-      setError(null);
-    }
+    setError(result.kind === 'error' ? result.message : null);
   };
 
   const handleSubmit = (): void => {
@@ -353,8 +514,8 @@ export function ObjectInput(): JSX.Element {
     } else {
       setText('');
       setNameText('');
-      setPreview(null);
       setError(null);
+      setKatexHtml(null);
       setPlaceholderIdx((i) => i + 1);
     }
   };
@@ -375,80 +536,158 @@ export function ObjectInput(): JSX.Element {
         flexShrink: 0,
         display: 'flex',
         flexDirection: 'column',
-        gap: '6px',
+        gap: '5px',
       }}
     >
-      {/* Symbol palette */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '3px', flexWrap: 'wrap' }}>
-        <span
-          style={{
-            fontSize: 'var(--t-micro)',
-            fontFamily: 'var(--font-mono)',
-            color: 'var(--ink-4)',
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
-            marginRight: '4px',
-          }}
-        >
-          Insert
-        </span>
-        {SYMBOL_PALETTE.map(({ label, insert, title }) => (
-          <button
-            key={label}
-            onClick={() => insertSymbol(insert)}
-            title={title}
+      {/* ── Symbol palette ─────────────────────────────────────────── */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1px',
+          flexWrap: 'nowrap',
+          overflowX: 'auto',
+        }}
+      >
+        {PALETTE_GROUPS.map((group, gi) => (
+          <div
+            key={group.label}
             style={{
-              height: '24px',
-              minWidth: '28px',
-              padding: '0 6px',
-              display: 'inline-flex',
+              display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              border: '1px solid var(--line-2)',
-              background: 'var(--panel)',
-              borderRadius: 'var(--radius)',
-              fontFamily: 'var(--font-math)',
-              fontStyle: 'italic',
-              fontSize: '13px',
-              color: 'var(--ink)',
-              cursor: 'pointer',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--line-3)';
-              e.currentTarget.style.background = 'var(--bg)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--line-2)';
-              e.currentTarget.style.background = 'var(--panel)';
+              gap: '1px',
+              paddingRight: gi < PALETTE_GROUPS.length - 1 ? '6px' : 0,
+              marginRight: gi < PALETTE_GROUPS.length - 1 ? '5px' : 0,
+              borderRight: gi < PALETTE_GROUPS.length - 1 ? '1px solid var(--line)' : 'none',
+              flexShrink: 0,
             }}
           >
-            {label}
-          </button>
+            {group.items.map((item) => {
+              const renderedHtml = PALETTE_RENDERED.get(item.latex);
+              if (item.kind === 'action' && item.action === 'matrix') {
+                return (
+                  <button
+                    key={item.latex}
+                    ref={matrixButtonRef}
+                    onClick={() => insertAction(item.action)}
+                    title={item.title}
+                    style={paletteButtonStyle}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--line-3)';
+                      e.currentTarget.style.background = 'var(--bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--line-2)';
+                      e.currentTarget.style.background = 'var(--panel)';
+                    }}
+                  >
+                    {renderedHtml ? (
+                      <span dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+                    ) : (
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>M</span>
+                    )}
+                  </button>
+                );
+              }
+              return (
+                <button
+                  key={item.latex}
+                  onClick={() =>
+                    item.kind === 'symbol' ? insertSymbol(item) : insertAction(item.action)
+                  }
+                  title={item.title}
+                  style={paletteButtonStyle}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--line-3)';
+                    e.currentTarget.style.background = 'var(--bg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--line-2)';
+                    e.currentTarget.style.background = 'var(--panel)';
+                  }}
+                >
+                  {renderedHtml ? (
+                    <span dangerouslySetInnerHTML={{ __html: renderedHtml }} />
+                  ) : (
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-math)',
+                        fontStyle: 'italic',
+                        fontSize: '12px',
+                      }}
+                    >
+                      {item.kind === 'symbol' ? item.insert : '?'}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         ))}
+
+        {/* More button */}
+        <button
+          ref={moreButtonRef}
+          onClick={() => {
+            const rect = moreButtonRef.current?.getBoundingClientRect() ?? null;
+            setMoreRect(rect);
+            setShowMore((s) => !s);
+          }}
+          title="More symbols"
+          style={{
+            ...paletteButtonStyle,
+            minWidth: '28px',
+            color: 'var(--ink-3)',
+            fontFamily: 'var(--font-mono)',
+            fontSize: '11px',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'var(--line-3)';
+            e.currentTarget.style.background = 'var(--bg)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'var(--line-2)';
+            e.currentTarget.style.background = 'var(--panel)';
+          }}
+        >
+          ···
+        </button>
       </div>
 
+      {/* ── Input row ──────────────────────────────────────────────── */}
       <div style={{ display: 'flex', gap: '6px', alignItems: 'flex-start' }}>
-        {/* Name input */}
-        <input
-          value={nameText}
-          onChange={(e) => setNameText(e.target.value)}
-          placeholder="name"
-          style={{
-            width: '60px',
-            padding: '6px 8px',
-            border: '1px solid var(--line-2)',
-            borderRadius: 'var(--radius)',
-            fontSize: 'var(--t-meta)',
-            fontFamily: 'var(--font-math)',
-            fontStyle: 'italic',
-            background: 'var(--panel)',
-            color: 'var(--ink)',
-            flexShrink: 0,
-            outline: 'none',
-          }}
-        />
+        {/* Label field */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flexShrink: 0 }}>
+          <input
+            value={nameText}
+            onChange={(e) => setNameText(e.target.value)}
+            placeholder="label"
+            style={{
+              width: '52px',
+              padding: '6px 8px',
+              border: '1px solid var(--line-2)',
+              borderRadius: 'var(--radius)',
+              fontSize: 'var(--t-meta)',
+              fontFamily: 'var(--font-math)',
+              fontStyle: 'italic',
+              background: 'var(--panel)',
+              color: 'var(--ink)',
+              outline: 'none',
+            }}
+          />
+          <span
+            style={{
+              fontSize: '10px',
+              fontFamily: 'var(--font-mono)',
+              color: 'var(--ink-4)',
+              paddingLeft: '2px',
+            }}
+          >
+            e.g. v₁, T, A
+          </span>
+        </div>
 
-        {/* Expression input */}
+        {/* Expression textarea */}
         <textarea
           ref={inputRef}
           value={text}
@@ -456,14 +695,16 @@ export function ObjectInput(): JSX.Element {
           onKeyDown={handleKey}
           placeholder={placeholder}
           rows={1}
+          spellCheck={false}
+          autoCorrect="off"
+          autoComplete="off"
           style={{
             flex: 1,
-            padding: '6px 8px',
+            padding: '7px 10px',
             border: `1px solid ${error ? 'var(--kind-spec)' : 'var(--line-2)'}`,
             borderRadius: 'var(--radius)',
-            fontSize: 'var(--t-meta)',
-            fontFamily: 'var(--font-math)',
-            fontStyle: 'italic',
+            fontSize: '14px',
+            fontFamily: 'var(--font-mono)',
             resize: 'none',
             background: 'var(--panel)',
             color: 'var(--ink)',
@@ -477,7 +718,7 @@ export function ObjectInput(): JSX.Element {
           onClick={handleSubmit}
           disabled={!canSubmit}
           style={{
-            padding: '6px 14px',
+            padding: '7px 14px',
             background: canSubmit ? 'var(--ink)' : 'var(--bg-3)',
             color: canSubmit ? 'var(--bg)' : 'var(--ink-4)',
             border: 'none',
@@ -487,41 +728,192 @@ export function ObjectInput(): JSX.Element {
             fontFamily: 'var(--font-sans)',
             flexShrink: 0,
             letterSpacing: '0.01em',
+            alignSelf: 'flex-start',
           }}
         >
           Add ↵
         </button>
       </div>
 
-      {/* Preview / error */}
-      {(preview ?? error) && (
+      {/* ── Live preview / error ────────────────────────────────────── */}
+      {error && (
         <div
           style={{
-            marginTop: '4px',
             fontSize: 'var(--t-micro)',
             fontFamily: 'var(--font-mono)',
-            color: error ? 'var(--kind-spec)' : 'var(--ink-3)',
-            paddingLeft: '66px',
+            color: 'var(--kind-spec)',
+            paddingLeft: '58px',
           }}
         >
-          {error ?? preview}
+          {error}
         </div>
+      )}
+      {!error && katexHtml && (
+        <div
+          style={{
+            paddingLeft: '58px',
+            display: 'flex',
+            alignItems: 'center',
+            minHeight: '28px',
+            color: 'var(--ink-2)',
+          }}
+          dangerouslySetInnerHTML={{ __html: katexHtml }}
+        />
       )}
 
       {/* Empty state hint */}
       {views.length === 0 && !text && (
         <div
           style={{
-            marginTop: '4px',
             fontSize: 'var(--t-micro)',
             fontFamily: 'var(--font-mono)',
             color: 'var(--ink-4)',
-            paddingLeft: '66px',
+            paddingLeft: '58px',
           }}
         >
           Try: [[1, 2], [3, 4]] · (1, -2) · T(x, y) = (x + y, x - y)
         </div>
       )}
+
+      {/* ── More symbols popover ────────────────────────────────────── */}
+      {showMore &&
+        moreRect &&
+        createPortal(
+          <div
+            ref={moreMenuRef}
+            style={{
+              position: 'fixed',
+              top: moreRect.top - 8,
+              transform: 'translateY(-100%)',
+              right: window.innerWidth - moreRect.right,
+              background: 'var(--panel)',
+              border: '1px solid var(--line-2)',
+              borderRadius: 'var(--radius)',
+              boxShadow: '0 4px 14px rgba(22,22,20,0.12)',
+              zIndex: 9999,
+              padding: '6px',
+              display: 'flex',
+              gap: '3px',
+              flexWrap: 'wrap',
+              maxWidth: '240px',
+            }}
+          >
+            {PALETTE_MORE.map((item) => {
+              const html = PALETTE_RENDERED.get(item.latex);
+              return (
+                <button
+                  key={item.latex}
+                  onClick={() => {
+                    insertSymbol(item);
+                    setShowMore(false);
+                  }}
+                  title={item.title}
+                  style={paletteButtonStyle}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--line-3)';
+                    e.currentTarget.style.background = 'var(--bg)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--line-2)';
+                    e.currentTarget.style.background = 'var(--panel)';
+                  }}
+                >
+                  {html ? (
+                    <span dangerouslySetInnerHTML={{ __html: html }} />
+                  ) : (
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-math)',
+                        fontStyle: 'italic',
+                        fontSize: '12px',
+                      }}
+                    >
+                      {item.insert}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>,
+          document.body,
+        )}
+
+      {/* ── Matrix size picker ─────────────────────────────────────── */}
+      {showMatrixPicker &&
+        matrixPickerRect &&
+        createPortal(
+          <div
+            ref={matrixMenuRef}
+            style={{
+              position: 'fixed',
+              top: matrixPickerRect.top - 8,
+              transform: 'translateY(-100%)',
+              left: matrixPickerRect.left,
+              background: 'var(--panel)',
+              border: '1px solid var(--line-2)',
+              borderRadius: 'var(--radius)',
+              boxShadow: '0 4px 14px rgba(22,22,20,0.12)',
+              zIndex: 9999,
+              padding: '8px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '2px',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '10px',
+                fontFamily: 'var(--font-mono)',
+                color: 'var(--ink-4)',
+                marginBottom: '4px',
+              }}
+            >
+              {matrixHover ? `${matrixHover[0]}×${matrixHover[1]} matrix` : 'Select size'}
+            </div>
+            {Array.from({ length: 4 }, (_, r) => (
+              <div key={r} style={{ display: 'flex', gap: '2px' }}>
+                {Array.from({ length: 4 }, (_, c) => {
+                  const rows = r + 1;
+                  const cols = c + 1;
+                  const isHovered =
+                    matrixHover !== null && rows <= matrixHover[0] && cols <= matrixHover[1];
+                  return (
+                    <div
+                      key={c}
+                      onMouseEnter={() => setMatrixHover([rows, cols])}
+                      onMouseLeave={() => setMatrixHover(null)}
+                      onClick={() => insertMatrix(rows, cols)}
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '2px',
+                        cursor: 'pointer',
+                        background: isHovered ? 'var(--ink)' : 'var(--line)',
+                        transition: 'background 0.08s',
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 }
+
+// Shared style for palette buttons
+const paletteButtonStyle: React.CSSProperties = {
+  height: '24px',
+  minWidth: '26px',
+  padding: '0 5px',
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  border: '1px solid var(--line-2)',
+  background: 'var(--panel)',
+  borderRadius: 'var(--radius)',
+  cursor: 'pointer',
+  flexShrink: 0,
+};

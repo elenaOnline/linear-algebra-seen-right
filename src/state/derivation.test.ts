@@ -48,15 +48,13 @@ describe('recomputeDerived — via store mutations', () => {
     store.getState().addVector(w);
 
     // Drag v1 to (2, 0) — w should become (5, -1)
-    store
-      .getState()
-      .updateVector({
-        kind: 'concrete',
-        id: v1.id,
-        field: 'R',
-        space: v1.space,
-        components: [rational(2), rational(0)],
-      });
+    store.getState().updateVector({
+      kind: 'concrete',
+      id: v1.id,
+      field: 'R',
+      space: v1.space,
+      components: [rational(2), rational(0)],
+    });
 
     const after = store.getState().vectors[w.id];
     if (!after || after.kind !== 'concrete') throw new Error('expected concrete');
@@ -101,15 +99,13 @@ describe('recomputeDerived — via store mutations', () => {
     store.getState().addVector(scaled);
 
     // Update v to (2, 1) — scaled should become (6, 3)
-    store
-      .getState()
-      .updateVector({
-        kind: 'concrete',
-        id: v.id,
-        field: 'R',
-        space: v.space,
-        components: [rational(2), rational(1)],
-      });
+    store.getState().updateVector({
+      kind: 'concrete',
+      id: v.id,
+      field: 'R',
+      space: v.space,
+      components: [rational(2), rational(1)],
+    });
 
     const result = store.getState().vectors[scaled.id];
     if (!result || result.kind !== 'concrete') throw new Error('expected concrete');

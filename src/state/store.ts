@@ -59,9 +59,19 @@ export type MathStore = MathSession & {
   redo: () => void;
 
   // Reset all mathematical objects and views to a clean state (ADR-017).
-  // Does NOT reset computation cache or history meta — those reset automatically
-  // because a clean session produces different cache keys.
   resetSession: () => void;
+
+  // Apply a scene build atomically — resets the session and adds all objects in
+  // one Immer transaction, avoiding any intermediate states that could cause
+  // React to see a half-populated session during re-renders.
+  applyScene: (build: {
+    spaces: readonly VectorSpace[];
+    bases: readonly Basis[];
+    vectors: readonly Vector[];
+    maps: readonly LinearMap[];
+    namedObjects: readonly { name: string; ref: MathObjectRef }[];
+    views: readonly { kind: ViewKind; objectId: string; refKind: MathObjectRef['kind'] }[];
+  }) => void;
 };
 
 // --- History helpers ---
@@ -311,6 +321,48 @@ export function createMathStore(): StoreApi<MathStore> {
             },
           ];
           draft.historyCursor = 0;
+        }),
+
+      applyScene: (build) =>
+        set((draft) => {
+          // Reset everything in the same Immer transaction to avoid React seeing
+          // intermediate states between resetSession and the subsequent addSpace/openView calls.
+          applySnapshot(draft, {
+            field: draft.field, // preserve current field
+            spaces: {},
+            subspaces: {},
+            maps: {},
+            vectors: {},
+            bases: {},
+            innerProducts: {},
+            selectedBasis: {},
+            namedObjects: {},
+          });
+          draft.views = [];
+          draft.computationCache = {};
+          draft.pendingComputations = {};
+
+          for (const space of build.spaces) draft.spaces[space.id] = castDraft(space);
+          for (const basis of build.bases) draft.bases[basis.id] = castDraft(basis);
+          for (const vector of build.vectors) draft.vectors[vector.id] = castDraft(vector);
+          for (const map of build.maps) draft.maps[map.id] = castDraft(map);
+          for (const { name, ref } of build.namedObjects) {
+            draft.namedObjects[name] = castDraft(ref);
+          }
+          for (const { kind, objectId, refKind } of build.views) {
+            const viewId = mkViewId();
+            draft.views.push(
+              castDraft<View>({
+                id: viewId,
+                kind,
+                objectRef: { kind: refKind, id: objectId } as MathObjectRef,
+                props: {},
+              }),
+            );
+          }
+
+          // Push one snapshot for the whole scene load.
+          pushSnapshot(draft);
         }),
     })),
   );

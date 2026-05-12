@@ -129,13 +129,19 @@ function AppInner(): JSX.Element {
   const [mode, setMode] = useState<Mode>('sandbox');
 
   const handleOpenInSandbox = useCallback((def: DefinitionRecord) => {
-    const firstExample = def.examples[0];
-    if (!firstExample) return;
-    const template = getTemplateById(firstExample.templateId);
-    if (!template) return;
-    const build = template.build(firstExample.parameters ?? {});
-    loadScene(build);
-    setMode('sandbox');
+    try {
+      const firstExample = def.examples[0];
+      if (!firstExample) return;
+      const template = getTemplateById(firstExample.templateId);
+      if (!template) return;
+      const build = template.build(firstExample.parameters ?? {});
+      loadScene(build);
+      setMode('sandbox');
+    } catch (e) {
+      // Template build failure — log and stay in Browse mode rather than
+      // silently resetting the session to an empty state.
+      console.error('[Open in Sandbox] scene template failed:', e);
+    }
   }, []);
 
   const historyCursor = useStore(defaultStore, (s) => s.historyCursor);

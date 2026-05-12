@@ -3,6 +3,7 @@ import type { JSX } from 'react';
 import { DEFINITIONS } from '../pedagogy/definitions/index.ts';
 import type { DefinitionRecord } from '../pedagogy/definitions/index.ts';
 import { KindBadge } from './KindBadge.tsx';
+import { LatexText } from './LatexText.tsx';
 import type { RendererKind } from '../registry/index.ts';
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -100,37 +101,40 @@ function ConceptCard({ def, isOpen, onClick }: CardProps): JSX.Element {
       </div>
 
       {/* Teaser */}
-      <p
+      <div
         style={{
-          fontFamily: 'var(--font-math)',
           fontSize: '12.5px',
           color: 'var(--ink-2)',
           lineHeight: 1.55,
-          margin: 0,
           display: expanded ? 'block' : '-webkit-box',
           WebkitLineClamp: expanded ? undefined : 2,
           WebkitBoxOrient: 'vertical',
           overflow: expanded ? 'visible' : 'hidden',
         }}
       >
-        {def.formalStatement}
-      </p>
+        <LatexText
+          text={def.formalStatement}
+          style={{ fontSize: '12.5px', color: 'var(--ink-2)' }}
+        />
+      </div>
 
       {/* Expanded formal definition */}
-      {expanded && def.plainStatement && (
+      {expanded && (
         <div
           style={{
             marginTop: '2px',
             padding: '10px 12px',
             background: 'var(--bg-2)',
             borderRadius: 'var(--radius)',
-            fontFamily: 'var(--font-math)',
             fontSize: '13px',
             lineHeight: 1.6,
             color: 'var(--ink)',
           }}
         >
-          {def.plainStatement}
+          <LatexText
+            text={def.plainStatement ?? def.formalStatement}
+            style={{ fontSize: '13px' }}
+          />
           <div
             style={{
               marginTop: '8px',
@@ -353,7 +357,10 @@ function SidePanel({ def, allDefs, onClose, onOpenInSandbox }: SidePanelProps): 
                 margin: 0,
               }}
             >
-              {def.formalStatement}
+              <LatexText
+                text={def.formalStatement}
+                style={{ fontSize: '15px', display: 'block', lineHeight: '1.6' }}
+              />
             </p>
             <div
               style={{

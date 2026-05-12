@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { JSX } from 'react';
+import { createPortal } from 'react-dom';
 import { useStore } from 'zustand';
 import { defaultStore, sessionViewFrom } from '../state/index.ts';
 import { visualizerRegistry, type MathObjectKind, type MathObject } from '../registry/index.ts';
@@ -86,7 +87,19 @@ type Props = {
 
 export function ViewCard({ view }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
   const session = useStore(defaultStore);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (!menuBtnRef.current?.contains(e.target as Node)) setMenuOpen(false);
+    };
+    window.addEventListener('mousedown', handler);
+    return () => window.removeEventListener('mousedown', handler);
+  }, [menuOpen]);
   const { closeView, openView } = defaultStore.getState();
   const sessionView = sessionViewFrom(session);
 
@@ -167,11 +180,16 @@ export function ViewCard({ view }: Props): JSX.Element {
           {activeVisualizer?.label ?? view.kind}
         </span>
 
-        {/* "View as…" menu */}
+        {/* "View as…" menu — portaled to document.body so it escapes tile overflow:hidden */}
         {otherVisualizers.length > 0 && (
-          <div style={{ position: 'relative', flexShrink: 0 }}>
+          <div style={{ flexShrink: 0 }}>
             <button
-              onClick={() => setMenuOpen((o) => !o)}
+              ref={menuBtnRef}
+              onClick={() => {
+                const rect = menuBtnRef.current?.getBoundingClientRect() ?? null;
+                setMenuRect(rect);
+                setMenuOpen((o) => !o);
+              }}
               title="View as…"
               style={{
                 background: 'none',
@@ -187,53 +205,55 @@ export function ViewCard({ view }: Props): JSX.Element {
             >
               + view
             </button>
-            {menuOpen && (
-              <div
-                style={{
-                  position: 'absolute',
-                  top: '100%',
-                  right: 0,
-                  marginTop: '4px',
-                  background: 'var(--panel)',
-                  border: '1px solid var(--line-2)',
-                  borderRadius: 'var(--radius)',
-                  boxShadow: '0 4px 14px rgba(22,22,20,0.08)',
-                  zIndex: 100,
-                  minWidth: '160px',
-                  overflow: 'hidden',
-                }}
-              >
-                {otherVisualizers.map((viz) => (
-                  <button
-                    key={viz.id}
-                    onClick={() => {
-                      openView(viz.renderer, view.objectRef);
-                      setMenuOpen(false);
-                    }}
-                    style={{
-                      display: 'block',
-                      width: '100%',
-                      textAlign: 'left',
-                      padding: '7px 12px',
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: 'var(--t-meta)',
-                      color: 'var(--ink)',
-                      fontFamily: 'var(--font-sans)',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--bg-2)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'none';
-                    }}
-                  >
-                    {viz.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            {menuOpen &&
+              menuRect !== null &&
+              createPortal(
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: menuRect.bottom + 4,
+                    right: window.innerWidth - menuRect.right,
+                    background: 'var(--panel)',
+                    border: '1px solid var(--line-2)',
+                    borderRadius: 'var(--radius)',
+                    boxShadow: '0 4px 14px rgba(22,22,20,0.12)',
+                    zIndex: 9999,
+                    minWidth: '160px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {otherVisualizers.map((viz) => (
+                    <button
+                      key={viz.id}
+                      onClick={() => {
+                        openView(viz.renderer, view.objectRef);
+                        setMenuOpen(false);
+                      }}
+                      style={{
+                        display: 'block',
+                        width: '100%',
+                        textAlign: 'left',
+                        padding: '7px 12px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontSize: 'var(--t-meta)',
+                        color: 'var(--ink)',
+                        fontFamily: 'var(--font-sans)',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'var(--bg-2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'none';
+                      }}
+                    >
+                      {viz.label}
+                    </button>
+                  ))}
+                </div>,
+                document.body,
+              )}
           </div>
         )}
 

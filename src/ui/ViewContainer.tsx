@@ -3,7 +3,6 @@ import type { JSX } from 'react';
 import { useStore } from 'zustand';
 import { defaultStore, sessionViewFrom } from '../state/index.ts';
 import { useTimeline } from '../interaction/timeline/TimelineContext.tsx';
-import { mkConcreteVector } from '../types/vector.ts';
 import { rational } from '../types/scalar.ts';
 import {
   visualizerRegistry,
@@ -144,11 +143,13 @@ export function ViewContainer({ view }: Props): JSX.Element {
       if (view.objectRef.kind !== 'vector') return;
       const vec = session.vectors[view.objectRef.id];
       if (!vec || vec.kind !== 'concrete' || vec.components.length !== 2) return;
-      const updated = mkConcreteVector(vec.field, vec.space, [
-        rational(Math.round(x * 100), 100),
-        rational(Math.round(y * 100), 100),
-      ]);
-      if (updated.ok) defaultStore.getState().updateVector(updated.value);
+      // Preserve the original vector ID — mkConcreteVector would generate a new one,
+      // which would be stored under a different key and leave the view's objectRef stale.
+      const updated: typeof vec = {
+        ...vec,
+        components: [rational(Math.round(x * 100), 100), rational(Math.round(y * 100), 100)],
+      };
+      defaultStore.getState().updateVector(updated);
     },
     [view.objectRef, session.vectors],
   );

@@ -28,20 +28,15 @@ A web-based mathematical sandbox for exploring concepts from Sheldon Axler's *Li
 
 ---
 
-## Where the project stands (2026-05-11)
+## Where the project stands (2026-05-12)
 
-**Phases 0–6 complete.** 304 tests passing (25 test files). Live at `https://linear-algebra-seen-right.netlify.app` (Netlify site ID: `8fef8434-8fc8-4f31-8b3e-e098a1d27134`).
+**Phases 0–8 complete.** 312 tests passing (25 test files). GitHub: `elenaOnline/linear-algebra-seen-right`. Live at `https://linear-algebra-seen-right.netlify.app` (Netlify site ID `8fef8434-8fc8-4f31-8b3e-e098a1d27134`; GitHub auto-deploy link pending — trigger deploys manually from Netlify dashboard until configured).
 
-**Phase 5 complete.** All six renderers ship: SymbolicRenderer (KaTeX), MatrixRenderer (CSS heatmap), DiagramRenderer (dagre), Geometric2DRenderer (D3/SVG, drag-to-edit), ChartRenderer (rank-nullity bar), Geometric3DRenderer (raw Three.js + useEffect — **NOT** R3F, see ADR-013). The `Geometric3DRenderer` lazy-loads via `React.lazy` in ViewContainer.
+**Phase 7 (Design System):** Bone palette (`#f2f1ef`); Geist/Geist Mono/STIX Two Text italic fonts; CSS tokens in `src/styles/tokens.css`; `KindBadge` + `ProvenanceBadge` on every tile; top-bar shell with Browse/Sandbox mode toggle; tile-head/body/foot structure; symbol palette in input bar. Zero hardcoded hex values in `src/ui/`.
 
-**Phase 6 complete.** All interaction layer features ship:
-- Stage 1 (view management): `ViewCard` with object name, visualizer label, "+ view" dropdown, ✕ close button.
-- Stage 2 (input parsing): hand-rolled recursive-descent parser in `src/interaction/parser/`. Accepts `[[1,2],[3,4]]` (matrix), `(1,-2,3)` (vector), `T(x,y) = (x+y, x-y)` (formula). `ObjectInput` component in App footer.
-- Stage 3 (direct manipulation): `Geometric2DProps.onArrowDrag` callback; `ViewContainer` wires it for vector refs; `updateVector` action in the store.
-- Stage 4 (parameter controls): `FieldToggle` (ℝ/ℂ) and undo/redo buttons in App header.
-- Stage 5 (animation timeline): `src/interaction/timeline/` — `TimelineKeyframe`/`TimelineState` types, `interpolateSnapshots(a, b, t)`, `TimelineContext` (RAF playback), `TimelineScrubBar` UI. `ViewContainer` injects interpolated snapshot; zero renderer changes (ADR-015).
+**Phase 8 (Pedagogy Layer):** Browse mode (catalog grid with KaTeX-rendered definitions, concept cards, side panel, "Open in Sandbox"); Sandbox three-column layout (ObjectLibrary + ViewGrid + Inspector); `applyScene` store action for atomic scene loading; `loadScene.ts` + 5 real scene templates + 14 placeholder stubs; 7 example-generator constraints in `GeneratorPanel`; `pnpm build:definitions` script (unified+remark-parse) generating `src/pedagogy/definitions/generated.ts` from `LADR_Definitions/`. **Four post-launch bugs fixed:** LaTeX rendering (`LatexText` component), Open-in-Sandbox empty session (`applyScene` atomic action), "+ view" dropdown clipped by tile stacking context (React portal), vector drag not updating (ID preservation bug in `onArrowDrag`).
 
-**No open action items.** AI-001 through AI-005 all resolved. **Phases 0–7 complete.** Phase 8 (Pedagogy Layer) is next. Read `PRD/08` and `Program/Design/DESIGN.md §Browse mode` before starting. No Phase 8 components may use hardcoded hex values — Phase 7 established the full CSS token system for this purpose.
+**No open action items.** Next phase is Phase 9 (Content Expansion). No new UI — pure content work.
 
 ---
 
@@ -82,25 +77,44 @@ All imports outside the registry use `from '../registry/index.ts'` — nothing c
 
 `src/demo.ts` is imported by `main.tsx` and populates the session with demo objects on every page load. It is marked for removal when Phase 6 is complete and users can create everything via `ObjectInput`. Current demo: ℝ² (symbolic + coord axes), ℝ³ (symbolic + geometric_3d axes), vector v = (3/4, -1/2) in ℝ² (symbolic + arrow-2d — draggable), vector w = (1, -1, 2) in ℝ³ (symbolic + arrow-3d), map A = [[1,2],[3,4]]: ℝ²→ℝ² (matrix heatmap + kernel/range diagram + grid-deformation-2d + rank/nullity chart), formula map T: T(x,y)=(x+y, x-y) (symbolic formula + kernel/range diagram).
 
-## Current src/ structure relevant to Phase 6 completion
+## Current src/ structure (Phase 8 complete)
 
 ```
 src/
+  styles/
+    tokens.css        CSS custom properties — Bone palette (default), 3 alternates, kind tints,
+                      type scale, spacing, font stacks. Import once in main.tsx.
   interaction/
     controls/         FieldToggle.tsx
     parser/           lexer, parser, types, index, parser.test
     timeline/         types.ts, interpolation.ts, TimelineContext.tsx (+ tests)
     index.ts          exports TimelineProvider, useTimeline
+  pedagogy/
+    definitions/      types.ts, overrides.ts, generated.ts (auto), index.ts
+    templates/        types.ts, starters.ts (5 real + 14 placeholder), index.ts + getTemplateById()
+    generator/        types.ts, constraints.ts (7 starter), index.ts
+    loadScene.ts      calls store.applyScene(build) — ADR-017
   ui/
-    App.tsx           TimelineProvider wrapper; header + ViewGrid + TimelineScrubBar + ObjectInput
-    ViewCard.tsx      per-view card with header controls
-    ViewContainer.tsx integration hub — injects interpolated sessionView when timeline active
+    App.tsx           top bar (brand, Browse/Sandbox toggle, field pill, undo/redo); SandboxLayout
+                      (three-column: ObjectLibrary|ViewGrid|Inspector); BrowseMode wired
+    BrowseMode.tsx    catalog grid, concept cards, side panel, "Open in Sandbox" CTA
+    ViewCard.tsx      tile-head/body/foot; "+" view dropdown via React portal (escapes overflow)
+    ViewContainer.tsx integration hub — onArrowDrag preserves original vector ID (bug fix)
     ViewGrid.tsx      grid layout using ViewCard
-    ObjectInput.tsx   expression parser input bar
+    ObjectInput.tsx   expression parser input bar + symbol palette
+    ObjectLibrary.tsx left column — grouped math objects, accent selection
+    Inspector.tsx     right column — kv properties, "Open as" pills, GeneratorPanel
+    GeneratorPanel.tsx constraint picker + 7 generator constraints
+    KindBadge.tsx     kind chip (geometric/abstract/matrix/spectral/symbolic)
+    LatexText.tsx     renders $...$  inline LaTeX via katex.renderToString
+    ProvenanceBadge.tsx  exactness chip (exact/approximate)
     ViewErrorBoundary.tsx  class error boundary
     TimelineScrubBar.tsx   play/pause, scrub track, ⊕ Keyframe button
+    LoadingState.tsx  rotating gerund messages
     hooks/
       useComputation.ts
+scripts/
+  build-definitions.ts  pnpm build:definitions — unified+remark-parse → generated.ts
 ```
 
 ---
@@ -123,12 +137,12 @@ Key decisions from the design session: **Bone palette** (near-neutral `#f2f1ef`)
 2. **`Program/Project Overview.md`** — framing.
 3. **`Program/Technical Architecture.md`** — binding technical spec.
 4. **`Program/PRD/00 — Development Standards.md`** — master PRD, working agreement.
-5. **`Program/PRD/08 — Layer 6 (Pedagogy Layer).md`** — Phase 8 sub-PRD (not started). Current phase.
-6. **`Program/Design/DESIGN.md`** — design language directives; read before any Phase 8 UI work.
-7. **`Program/PRD/09 — Design System Integration.md`** — Phase 7 sub-PRD (complete, for reference).
-7. **`dev-notes/DEVLOG.md`** — skim the most recent 5 entries.
-8. **`dev-notes/NOTES.md`** — skim end-to-end (ADRs 011–017, gotchas, open questions).
-9. **`dev-notes/ACTION_ITEMS.md`** — currently no open items.
+5. **`Program/Design/DESIGN.md`** — design language directives. All new components use CSS tokens.
+6. **`dev-notes/DEVLOG.md`** — skim the most recent 5 entries.
+7. **`dev-notes/NOTES.md`** — skim ADRs 011–017, gotchas (especially `mkConcreteVector` ID bug, Zustand selector, R3F crash), open questions.
+8. **`dev-notes/ACTION_ITEMS.md`** — no open items.
+9. **`Program/PRD/08 — Layer 6 (Pedagogy Layer).md`** — Phase 8 complete, for reference.
+10. **`Program/PRD/09 — Design System Integration.md`** — Phase 7 complete, for reference.
 
 ---
 

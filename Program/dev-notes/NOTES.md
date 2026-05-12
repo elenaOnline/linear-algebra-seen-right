@@ -384,6 +384,24 @@ Format:
 **Bites at.** `tsc --noEmit` — fails with dozens of errors in `node_modules` if `skipLibCheck: false`.
 **Workaround.** `skipLibCheck: true` in `tsconfig.json`. This is the canonical Vite + TypeScript setup; it does not relax strictness on our own code.
 
+### mkConcreteVector generates a new ID on every call
+
+**Constraint.** `mkConcreteVector` calls `vectorKey(space)` which calls `nextCounter()` — a module-level counter. Every call produces a unique `VectorId`. If you construct a vector with `mkConcreteVector` and then call `updateVector` with the result, it stores the new vector under the new ID, not the original ID.
+**Bites at.** `ViewContainer.tsx` `onArrowDrag` — was constructing a new vector via `mkConcreteVector` on every drag event. The view's `objectRef` pointed to the original ID, so the renderer always showed the original position.
+**Workaround.** When updating an existing vector (e.g. drag), spread the original and replace only `components`, preserving `vec.id`: `const updated = { ...vec, components: [...newComponents] }; store.updateVector(updated)`. Never use `mkConcreteVector` to create an "updated" version of an existing vector.
+
+### Multiple separate set() calls can expose intermediate store states
+
+**Constraint.** When `loadScene` previously called `resetSession()` then `addSpace()` then `openView()` as three separate Zustand `set()` calls, React 18's rendering could observe intermediate states — notably the post-reset, pre-add empty session.
+**Bites at.** Any code that performs reset-then-repopulate across multiple store actions. The Sandbox would briefly appear empty before objects were added, or worse, the mode switch would trigger a render against the empty intermediate state.
+**Workaround.** Use the `applyScene(build)` store action, which does reset + add + open-views in a single Immer transaction (one `set()` call). This is the pattern for any "replace the whole session" operation.
+
+### CSS stacking contexts clip position:absolute dropdowns
+
+**Constraint.** A tile with `overflow: hidden` (or any ancestor with transform/filter/will-change) creates a stacking context that clips `position: absolute` children regardless of `z-index`. The "+ view" dropdown was clipped by the tile's stacking context.
+**Bites at.** Any dropdown/tooltip/popover rendered inside a tile or panel that has `overflow: hidden`.
+**Workaround.** Use `ReactDOM.createPortal(element, document.body)` with `position: fixed` coordinates calculated from `getBoundingClientRect()`. Add a `window.addEventListener('mousedown', closeHandler)` for outside-click dismissal.
+
 ---
 
 ## Open Questions

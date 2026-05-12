@@ -21,6 +21,23 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 8 bug fixes (four issues post-launch)
+
+**Touched:** `src/ui/LatexText.tsx` (new), `src/ui/BrowseMode.tsx`, `src/ui/ViewCard.tsx`, `src/ui/ViewContainer.tsx`, `src/state/store.ts`, `src/pedagogy/loadScene.ts`, `src/ui/App.tsx`
+**Status:** complete
+
+Fixed four issues discovered after Phase 8 deployment.
+
+(1) **LaTeX not rendered in Browse mode.** New `LatexText` component splits text on `$...$` delimiters and runs math segments through `katex.renderToString` with `dangerouslySetInnerHTML`. Replaces raw text rendering in card teasers, expand blocks, and side-panel definition section.
+
+(2) **"Open in Sandbox" produced an empty session.** Root cause: `loadScene` called `resetSession()` then `addSpace()`/`openView()` as separate Zustand `set()` calls. React could see the intermediate empty state. Fix: new `applyScene(build)` store action does the full reset + object insertion + view opening atomically in one Immer transaction, one `set()` call. `handleOpenInSandbox` now has try/catch — build failure keeps the user in Browse rather than silently clearing the session.
+
+(3) **"+ view" dropdown obscured by renderer.** SVG/WebGL tile bodies create CSS stacking contexts that clip `position: absolute` children regardless of `z-index`. Fix: `createPortal(..., document.body)` with `position: fixed` coordinates from `getBoundingClientRect`. Outside-click handler via `window.addEventListener('mousedown')`.
+
+(4) **Vector drag registers movement but doesn't update visual.** Root cause: `onArrowDrag` in `ViewContainer.tsx` called `mkConcreteVector(...)` which calls `vectorKey(space)` — a counter-based ID generator. Every drag created a new vector under a new ID. `updateVector` stored it at the new key; the view's `objectRef` still pointed to the original key. Fix: spread the original vector and replace only `components`, preserving `vec.id`.
+
+**Next:** Phase 9 (Content Expansion). No new UI. Content work: definition records for Chapters 3–9, flesh out the 14 placeholder scene templates, expand generator constraints toward ~30.
+
 ## 2026-05-12 — Phase 8 complete: Pedagogy Layer
 
 **Touched:** `src/pedagogy/` (new), `src/ui/BrowseMode.tsx` (new), `src/ui/ObjectLibrary.tsx` (new), `src/ui/Inspector.tsx` (new), `src/ui/GeneratorPanel.tsx` (new), `src/state/store.ts` (resetSession), `scripts/build-definitions.ts` (new), `package.json`, `PRD/00`, `PRD/08`

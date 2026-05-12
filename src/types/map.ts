@@ -3,6 +3,7 @@ import type { Vector } from './vector.ts';
 import type { Matrix } from './matrix.ts';
 import type { Result } from './result.ts';
 import type { ConstructionError } from './errors.ts';
+import type { MapExpression } from './derivation.ts';
 import { mapKey } from './ids.ts';
 import { ok, err } from './result.ts';
 import { constructionError } from './errors.ts';
@@ -11,6 +12,8 @@ export type LinearMap = {
   readonly id: MapId;
   readonly domain: SpaceId;
   readonly codomain: SpaceId;
+  // Present only on derived maps — expression that produced the matrix.
+  readonly derivation?: MapExpression;
   readonly representation:
     | {
         readonly kind: 'matrix';
@@ -72,6 +75,28 @@ export function mkLinearMapByFormula(
     codomain,
     representation: { kind: 'formula', fn, label },
   };
+}
+
+// Creates a matrix-representation map tagged with a derivation expression.
+// `matrix` should be the already-evaluated matrix for this expression.
+export function mkDerivedMap(
+  domain: SpaceId,
+  codomain: SpaceId,
+  expression: MapExpression,
+  matrix: Matrix,
+  domainBasis: BasisId,
+  codomainBasis: BasisId,
+): Result<LinearMap, ConstructionError> {
+  if (matrix.domainBasis !== domainBasis || matrix.codomainBasis !== codomainBasis) {
+    return err(constructionError('INVALID_MAP_DIMENSIONS', 'Matrix basis references do not match'));
+  }
+  return ok({
+    id: mapKey(domain, codomain),
+    domain,
+    codomain,
+    derivation: expression,
+    representation: { kind: 'matrix', matrix, domainBasis, codomainBasis },
+  });
 }
 
 export function mkLinearMapByBasisAction(

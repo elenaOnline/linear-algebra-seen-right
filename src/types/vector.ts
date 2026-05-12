@@ -5,6 +5,7 @@ import type { Polynomial } from './polynomial.ts';
 import type { SymExpr } from './symexpr.ts';
 import type { Result } from './result.ts';
 import type { ConstructionError } from './errors.ts';
+import type { VectorExpression } from './derivation.ts';
 import { vectorKey } from './ids.ts';
 import { ok, err } from './result.ts';
 import { constructionError } from './errors.ts';
@@ -22,6 +23,8 @@ export type Vector =
       readonly field: Field;
       readonly space: SpaceId;
       readonly components: readonly Scalar[];
+      // Present only on derived vectors — expression that produced this value.
+      readonly derivation?: VectorExpression;
     }
   | {
       readonly kind: 'abstract';
@@ -70,6 +73,24 @@ export function mkPolynomialVector(space: SpaceId, poly: Polynomial): Vector {
 
 export function mkFunctionalVector(space: SpaceId, functional: LinearFunctional): Vector {
   return { kind: 'functional', id: vectorKey(space), space, functional };
+}
+
+// Creates a concrete vector tagged with a derivation expression.
+// `components` should be the already-evaluated value of the expression.
+export function mkDerivedVector(
+  field: Field,
+  space: SpaceId,
+  expression: VectorExpression,
+  components: readonly Scalar[],
+): Vector {
+  return {
+    kind: 'concrete',
+    id: vectorKey(space),
+    field,
+    space,
+    components: [...components],
+    derivation: expression,
+  };
 }
 
 export function componentCount(v: Vector): number | 'unknown' {

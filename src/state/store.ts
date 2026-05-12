@@ -7,6 +7,8 @@ import type {
   Field,
   SpaceId,
   BasisId,
+  VectorId,
+  MapId,
   VectorSpace,
   Subspace,
   LinearMap,
@@ -28,6 +30,7 @@ import type {
   CachedResult,
 } from './types.ts';
 import { INITIAL_SESSION, MAX_HISTORY, MAX_CACHE, mkComputationId, mkViewId } from './types.ts';
+import { recomputeDerived } from './derivation.ts';
 
 export type MathStore = MathSession & {
   addSpace: (space: VectorSpace) => void;
@@ -54,6 +57,10 @@ export type MathStore = MathSession & {
   openView: (kind: ViewKind, ref: MathObjectRef, props?: Record<string, unknown>) => ViewId;
   closeView: (id: ViewId) => void;
   setViewProps: (id: ViewId, props: Record<string, unknown>) => void;
+
+  removeVector: (id: VectorId) => void;
+  removeMap: (id: MapId) => void;
+  removeSpace: (id: SpaceId) => void;
 
   undo: () => void;
   redo: () => void;
@@ -158,12 +165,14 @@ export function createMathStore(): StoreApi<MathStore> {
       addMap: (map) =>
         set((draft) => {
           draft.maps[map.id] = castDraft(map);
+          recomputeDerived(draft);
           pushSnapshot(draft);
         }),
 
       addVector: (vector) =>
         set((draft) => {
           draft.vectors[vector.id] = castDraft(vector);
+          recomputeDerived(draft);
           pushSnapshot(draft);
         }),
 
@@ -171,6 +180,7 @@ export function createMathStore(): StoreApi<MathStore> {
       updateVector: (vector) =>
         set((draft) => {
           draft.vectors[vector.id] = castDraft(vector);
+          recomputeDerived(draft);
           // Invalidate any cached computations that depended on this vector.
           draft.computationCache = {};
         }),
@@ -273,6 +283,81 @@ export function createMathStore(): StoreApi<MathStore> {
           if (view) {
             (view as { props: Record<string, unknown> }).props = props;
           }
+        }),
+
+      removeVector: (id) =>
+        set((draft) => {
+          delete draft.vectors[id];
+          for (const name of Object.keys(draft.namedObjects)) {
+            if (draft.namedObjects[name]?.kind === 'vector' && draft.namedObjects[name]?.id === id)
+              delete draft.namedObjects[name];
+          }
+          draft.views = draft.views.filter(
+            (v) => !(v.objectRef.kind === 'vector' && v.objectRef.id === id),
+          );
+          draft.computationCache = {};
+          pushSnapshot(draft);
+        }),
+
+      removeMap: (id) =>
+        set((draft) => {
+          delete draft.maps[id];
+          for (const name of Object.keys(draft.namedObjects)) {
+            if (draft.namedObjects[name]?.kind === 'map' && draft.namedObjects[name]?.id === id)
+              delete draft.namedObjects[name];
+          }
+          draft.views = draft.views.filter(
+            (v) => !(v.objectRef.kind === 'map' && v.objectRef.id === id),
+          );
+          draft.computationCache = {};
+          pushSnapshot(draft);
+        }),
+
+      removeSpace: (id) =>
+        set((draft) => {
+          delete draft.spaces[id];
+          for (const name of Object.keys(draft.namedObjects)) {
+            if (draft.namedObjects[name]?.kind === 'space' && draft.namedObjects[name]?.id === id)
+              delete draft.namedObjects[name];
+          }
+          draft.views = draft.views.filter(
+            (v) => !(v.objectRef.kind === 'space' && v.objectRef.id === id),
+          );
+          // Cascade: remove vectors and maps that reference this space
+          for (const vid of Object.keys(draft.vectors)) {
+            const v = draft.vectors[vid];
+            if (v && 'space' in v && v.space === id) {
+              delete draft.vectors[vid];
+              for (const name of Object.keys(draft.namedObjects)) {
+                if (
+                  draft.namedObjects[name]?.kind === 'vector' &&
+                  draft.namedObjects[name]?.id === vid
+                )
+                  delete draft.namedObjects[name];
+              }
+              draft.views = draft.views.filter(
+                (view) => !(view.objectRef.kind === 'vector' && view.objectRef.id === vid),
+              );
+            }
+          }
+          for (const mid of Object.keys(draft.maps)) {
+            const m = draft.maps[mid];
+            if (m && (m.domain === id || m.codomain === id)) {
+              delete draft.maps[mid];
+              for (const name of Object.keys(draft.namedObjects)) {
+                if (
+                  draft.namedObjects[name]?.kind === 'map' &&
+                  draft.namedObjects[name]?.id === mid
+                )
+                  delete draft.namedObjects[name];
+              }
+              draft.views = draft.views.filter(
+                (view) => !(view.objectRef.kind === 'map' && view.objectRef.id === mid),
+              );
+            }
+          }
+          draft.computationCache = {};
+          pushSnapshot(draft);
         }),
 
       undo: () =>

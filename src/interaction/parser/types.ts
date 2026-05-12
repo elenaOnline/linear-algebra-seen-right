@@ -1,5 +1,7 @@
 import type { Matrix } from '../../types/index.ts';
 import type { Field } from '../../types/field.ts';
+import type { VectorExpression, MapExpression } from '../../types/derivation.ts';
+export type { VectorExpression, MapExpression };
 
 // Lexer tokens
 export type TokenKind =
@@ -57,6 +59,18 @@ export type ParsedFormula = {
   readonly label: string; // original formula string for display
 };
 
+// Named-object expression results
+
+export type ParsedVectorExpr = {
+  readonly kind: 'vector-expr';
+  readonly expression: VectorExpression;
+};
+
+export type ParsedMapExpr = {
+  readonly kind: 'map-expr';
+  readonly expression: MapExpression;
+};
+
 // When the same text is valid as multiple things
 export type ParsedAmbiguous = {
   readonly kind: 'ambiguous';
@@ -67,5 +81,7 @@ export type ParseResult =
   | ParsedMatrix
   | ParsedVector
   | ParsedFormula
+  | ParsedVectorExpr
+  | ParsedMapExpr
   | ParsedAmbiguous
   | ParseError;

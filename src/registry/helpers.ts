@@ -98,6 +98,26 @@ export function computeRank(matrix: Matrix): number {
   return rank;
 }
 
+// Determinant via cofactor expansion (float arithmetic).
+export function computeDet(matrix: Matrix): number {
+  const n = matrix.rows;
+  if (n !== matrix.cols) return NaN;
+  const rows = matrix.entries.map((row) => row.map(scalarToNumber));
+  return detRecursive(rows, n);
+}
+
+function detRecursive(rows: number[][], n: number): number {
+  if (n === 1) return rows[0]?.[0] ?? 0;
+  if (n === 2)
+    return (rows[0]?.[0] ?? 0) * (rows[1]?.[1] ?? 0) - (rows[0]?.[1] ?? 0) * (rows[1]?.[0] ?? 0);
+  let det = 0;
+  for (let c = 0; c < n; c++) {
+    const sub = rows.slice(1).map((row) => row.filter((_, j) => j !== c));
+    det += (rows[0]?.[c] ?? 0) * (c % 2 === 0 ? 1 : -1) * detRecursive(sub, n - 1);
+  }
+  return det;
+}
+
 // --- Space label helpers ---
 
 export function spaceDimLabel(d: number | 'infinite'): string {

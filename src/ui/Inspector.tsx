@@ -4,6 +4,7 @@ import { defaultStore, sessionViewFrom } from '../state/index.ts';
 import type { MathObjectRef } from '../state/types.ts';
 import { KindBadge } from './KindBadge.tsx';
 import { visualizerRegistry } from '../registry/index.ts';
+import { computeRank, computeDet } from '../registry/helpers.ts';
 import { defaultStore as store } from '../state/index.ts';
 import { GeneratorPanel } from './GeneratorPanel.tsx';
 
@@ -112,9 +113,18 @@ export function Inspector({ selected }: Props): JSX.Element {
       defProps.push(['codomain', `ℝ^${codDim}`]);
       defProps.push(['form', map.representation.kind]);
       if (map.representation.kind === 'matrix') {
-        computedProps.push(['rank', '—']);
-        computedProps.push(['nullity', '—']);
-        computedProps.push(['det', '—']);
+        const mat = map.representation.matrix;
+        const rank = computeRank(mat);
+        const nullity = mat.cols - rank;
+        computedProps.push(['rank', String(rank)]);
+        computedProps.push(['nullity', String(nullity)]);
+        if (mat.rows === mat.cols) {
+          const det = computeDet(mat);
+          computedProps.push([
+            'det',
+            Number.isFinite(det) ? parseFloat(det.toPrecision(5)).toString() : '—',
+          ]);
+        }
       }
     }
   }
@@ -228,16 +238,6 @@ export function Inspector({ selected }: Props): JSX.Element {
             {computedProps.map(([k, v]) => (
               <KVRow key={k} k={k} v={v} />
             ))}
-          </div>
-          <div
-            style={{
-              marginTop: '8px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 'var(--t-micro)',
-              color: 'var(--ink-4)',
-            }}
-          >
-            — not yet computed
           </div>
         </div>
       )}

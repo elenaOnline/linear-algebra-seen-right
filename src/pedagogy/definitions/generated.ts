@@ -4,2427 +4,2138 @@ import type { DefinitionRecord } from './types.ts';
 
 export const DEFINITIONS: readonly DefinitionRecord[] = [
   {
-    "id": "def-1.1-complex-numbers",
-    "axlerRef": "1.1",
-    "title": "complex numbers, $\\mathbb{C}$",
-    "chapter": 1,
-    "formalStatement": "• A complex number is an ordered pair ($a$, $b$), where $a$, $b$ ∈ $\\mathbb{R}$, but we will write this as $a$+ $b i$.\n• The set of all complex numbers is denoted by $\\mathbb{C}$: $\\mathbb{C} = {$a$+ $b i$∶$a$, $b$ ∈ $\\mathbb{R}$}.\n• Addition and multiplication on $\\mathbb{C}$ are defined by ($a$+ $b i$) + ($c$+ $d i$) = ($a$+ $c$) + ($b$+ $d$)$i$, ($a$+ $b i$)($c$+ $d i$) = ($a c$−$b d$) + ($a d$+ $b c$)$i$; here $a$, $b$, $c$, $d$ ∈ $\\mathbb{R}$.",
-    "section": "1.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [
+    id: 'def-1.1-complex-numbers',
+    axlerRef: '1.1',
+    title: 'complex numbers, $\\mathbb{C}$',
+    chapter: 1,
+    formalStatement:
+      '• A complex number is an ordered pair ($a$, $b$), where $a$, $b$ ∈ $\\mathbb{R}$, but we will write this as $a$+ $b i$.\n• The set of all complex numbers is denoted by $\\mathbb{C}$: $\\mathbb{C} = {$a$+ $b i$∶$a$, $b$ ∈ $\\mathbb{R}$}.\n• Addition and multiplication on $\\mathbb{C}$ are defined by ($a$+ $b i$) + ($c$+ $d i$) = ($a$+ $c$) + ($b$+ $d$)$i$, ($a$+ $b i$)($c$+ $d i$) = ($a c$−$b d$) + ($a d$+ $b c$)$i$; here $a$, $b$, $c$, $d$ ∈ $\\mathbb{R}$.',
+    section: '1.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [
       {
-        "templateId": "complex-arithmetic",
-        "description": "3 + 4i, addition and multiplication"
-      }
+        templateId: 'complex-arithmetic',
+        description: '3 + 4i, addition and multiplication',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-1.5-subtraction-division",
-    "axlerRef": "1.5",
-    "title": "−$\\alpha$, subtraction, 1/$\\alpha$, division",
-    "chapter": 1,
-    "formalStatement": "Suppose $\\alpha$, $\\beta$ ∈ $\\mathbb{C}$.\n• Let −$\\alpha$denote the additive inverse of $\\alpha$. Thus −$\\alpha$ is the unique complex number such that $\\alpha$+ (−$\\alpha$) = 0.\n• Subtraction on $\\mathbb{C}$ is defined by $\\beta$−$\\alpha$= $\\beta$+ (−$\\alpha$).\n• For $\\alpha$ ≠ 0, let 1/$\\alpha$ and 1/$\\alpha$ denote the multiplicative inverse of $\\alpha$. Thus 1/$\\alpha$ is the unique complex number such that $\\alpha$(1/$\\alpha$) = 1.\n• For $\\alpha$ ≠ 0, division by $\\alpha$ is defined by $\\beta$/$\\alpha$= $\\beta$(1/$\\alpha$).",
-    "section": "1.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.1-complex-numbers"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.5-subtraction-division',
+    axlerRef: '1.5',
+    title: '−$\\alpha$, subtraction, 1/$\\alpha$, division',
+    chapter: 1,
+    formalStatement:
+      'Suppose $\\alpha$, $\\beta$ ∈ $\\mathbb{C}$.\n• Let −$\\alpha$denote the additive inverse of $\\alpha$. Thus −$\\alpha$ is the unique complex number such that $\\alpha$+ (−$\\alpha$) = 0.\n• Subtraction on $\\mathbb{C}$ is defined by $\\beta$−$\\alpha$= $\\beta$+ (−$\\alpha$).\n• For $\\alpha$ ≠ 0, let 1/$\\alpha$ and 1/$\\alpha$ denote the multiplicative inverse of $\\alpha$. Thus 1/$\\alpha$ is the unique complex number such that $\\alpha$(1/$\\alpha$) = 1.\n• For $\\alpha$ ≠ 0, division by $\\alpha$ is defined by $\\beta$/$\\alpha$= $\\beta$(1/$\\alpha$).',
+    section: '1.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-1.1-complex-numbers'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.8-list-length",
-    "axlerRef": "1.8",
-    "title": "list, length",
-    "chapter": 1,
-    "formalStatement": "• Suppose $n$ is a nonnegative integer. A list of length $n$ is an ordered collection of $n$elements (which might be numbers, other lists, or more abstract objects).\n• Two lists are equal if and only if they have the same length and the same elements in the same order.",
-    "section": "1.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.8-list-length',
+    axlerRef: '1.8',
+    title: 'list, length',
+    chapter: 1,
+    formalStatement:
+      '• Suppose $n$ is a nonnegative integer. A list of length $n$ is an ordered collection of $n$elements (which might be numbers, other lists, or more abstract objects).\n• Two lists are equal if and only if they have the same length and the same elements in the same order.',
+    section: '1.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.11-fn-coordinate",
-    "axlerRef": "1.11",
-    "title": "$\\mathbb{F}^{n}$, coordinate",
-    "chapter": 1,
-    "formalStatement": "$\\mathbb{F}^n$ is the set of all lists of length $n$ of elements of $\\mathbb{F}$: $\\mathbb{F}^n = {($x_{1}$, … , $x_{n}$) ∶$x_{k}$ ∈ $\\mathbb{F}$ for $k$= 1, … , $n$}. For ($x_{1}$, … , $x_{n}$) ∈ $\\mathbb{F}^n$ and $k$ ∈ {1, … , $n$}, we say that $x_{k}$ is the $k$th coordinate of ($x_{1}$, … , $x_{n}$).",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "coordinate-axes-2d",
-      "coordinate-axes-3d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.1-complex-numbers",
-      "def-1.8-list-length"
-    ],
-    "examples": [
+    id: 'def-1.11-fn-coordinate',
+    axlerRef: '1.11',
+    title: '$\\mathbb{F}^{n}$, coordinate',
+    chapter: 1,
+    formalStatement:
+      '$\\mathbb{F}^n$ is the set of all lists of length $n$ of elements of $\\mathbb{F}$: $\\mathbb{F}^n = {($x_{1}$, … , $x_{n}$) ∶$x_{k}$ ∈ $\\mathbb{F}$ for $k$= 1, … , $n$}. For ($x_{1}$, … , $x_{n}$) ∈ $\\mathbb{F}^n$ and $k$ ∈ {1, … , $n$}, we say that $x_{k}$ is the $k$th coordinate of ($x_{1}$, … , $x_{n}$).',
+    section: '1.B',
+    linkedVisualizers: ['coordinate-axes-2d', 'coordinate-axes-3d', 'symbolic-formula'],
+    prerequisites: ['def-1.1-complex-numbers', 'def-1.8-list-length'],
+    examples: [
       {
-        "templateId": "rn-as-fn",
-        "description": "ℝ² as F² with n=2"
-      }
+        templateId: 'rn-as-fn',
+        description: 'ℝ² as F² with n=2',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-1.13-addition-in-fn",
-    "axlerRef": "1.13",
-    "title": "addition in $\\mathbb{F}^{n}$",
-    "chapter": 1,
-    "formalStatement": "Addition in $\\mathbb{F}^n$ is defined by adding corresponding coordinates: ($x_{1}$, … , $x_{n}$) + ($y_{1}$, … , $y_{n}$) = ($x_{1}$ + $y_{1}$, … , $x_{n}$+ $y_{n}$).",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.11-fn-coordinate"
-    ],
-    "examples": [
+    id: 'def-1.13-addition-in-fn',
+    axlerRef: '1.13',
+    title: 'addition in $\\mathbb{F}^{n}$',
+    chapter: 1,
+    formalStatement:
+      'Addition in $\\mathbb{F}^n$ is defined by adding corresponding coordinates: ($x_{1}$, … , $x_{n}$) + ($y_{1}$, … , $y_{n}$) = ($x_{1}$ + $y_{1}$, … , $x_{n}$+ $y_{n}$).',
+    section: '1.B',
+    linkedVisualizers: ['arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.11-fn-coordinate'],
+    examples: [
       {
-        "templateId": "vector-addition-r2",
-        "description": "(1,2) + (3,-1) = (4,1) in ℝ²"
-      }
+        templateId: 'vector-addition-r2',
+        description: '(1,2) + (3,-1) = (4,1) in ℝ²',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-1.17-additive-inverse-in-fn",
-    "axlerRef": "1.17",
-    "title": "additive inverse in $\\mathbb{F}^{n}$, −$x$",
-    "chapter": 1,
-    "formalStatement": "For $x$ ∈ $\\mathbb{F}^n$, the additive inverse of $x$, denoted by −$x$, is the vector −$x$ ∈ $\\mathbb{F}^n$ such that $x$+ (−$x$) = 0. Thus if $x$= ($x_{1}$, … , $x_{n}$), then −$x$= (−$x_{1}$, … , −$x_{n}$).",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.13-addition-in-fn"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.17-additive-inverse-in-fn',
+    axlerRef: '1.17',
+    title: 'additive inverse in $\\mathbb{F}^{n}$, −$x$',
+    chapter: 1,
+    formalStatement:
+      'For $x$ ∈ $\\mathbb{F}^n$, the additive inverse of $x$, denoted by −$x$, is the vector −$x$ ∈ $\\mathbb{F}^n$ such that $x$+ (−$x$) = 0. Thus if $x$= ($x_{1}$, … , $x_{n}$), then −$x$= (−$x_{1}$, … , −$x_{n}$).',
+    section: '1.B',
+    linkedVisualizers: ['arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.13-addition-in-fn'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.18-scalar-multiplication-in-fn",
-    "axlerRef": "1.18",
-    "title": "scalar multiplication in $\\mathbb{F}^{n}$",
-    "chapter": 1,
-    "formalStatement": "The product of a number $\\lambda$ and a vector in $\\mathbb{F}^n$ is computed by multiplying each coordinate of the vector by $\\lambda$: $\\lambda$($x_{1}$, … , $x_{n}$) = ($\\lambda x_{1}$, … , $\\lambda x_{n}$); here $\\lambda$ ∈ $\\mathbb{F}$ and ($x_{1}$, … , $x_{n}$) ∈ $\\mathbb{F}^n$.",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.11-fn-coordinate"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.18-scalar-multiplication-in-fn',
+    axlerRef: '1.18',
+    title: 'scalar multiplication in $\\mathbb{F}^{n}$',
+    chapter: 1,
+    formalStatement:
+      'The product of a number $\\lambda$ and a vector in $\\mathbb{F}^n$ is computed by multiplying each coordinate of the vector by $\\lambda$: $\\lambda$($x_{1}$, … , $x_{n}$) = ($\\lambda x_{1}$, … , $\\lambda x_{n}$); here $\\lambda$ ∈ $\\mathbb{F}$ and ($x_{1}$, … , $x_{n}$) ∈ $\\mathbb{F}^n$.',
+    section: '1.B',
+    linkedVisualizers: ['arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.11-fn-coordinate'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.19-addition-scalar-multiplication",
-    "axlerRef": "1.19",
-    "title": "addition, scalar multiplication",
-    "chapter": 1,
-    "formalStatement": "• An addition on a set $V$ is a function that assigns an element $u$+ $v$ ∈ $V$ to each pair of elements $u$, $v$ ∈ $V$.\n• A scalar multiplication on a set $V$ is a function that assigns an element $\\lambda v$ ∈ $V$ to each $\\lambda$ ∈ $\\mathbb{F}$ and each $v$ ∈ $V$.",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "basis-display",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.13-addition-in-fn",
-      "def-1.18-scalar-multiplication-in-fn"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.19-addition-scalar-multiplication',
+    axlerRef: '1.19',
+    title: 'addition, scalar multiplication',
+    chapter: 1,
+    formalStatement:
+      '• An addition on a set $V$ is a function that assigns an element $u$+ $v$ ∈ $V$ to each pair of elements $u$, $v$ ∈ $V$.\n• A scalar multiplication on a set $V$ is a function that assigns an element $\\lambda v$ ∈ $V$ to each $\\lambda$ ∈ $\\mathbb{F}$ and each $v$ ∈ $V$.',
+    section: '1.B',
+    linkedVisualizers: ['basis-display', 'symbolic-formula'],
+    prerequisites: ['def-1.13-addition-in-fn', 'def-1.18-scalar-multiplication-in-fn'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.20-vector-space",
-    "axlerRef": "1.20",
-    "title": "vector space",
-    "chapter": 1,
-    "formalStatement": "A vector space is a set $V$along with an addition on $V$ and a scalar multiplication on $V$such that the following properties hold.\ncommutativity: $u$+ $v$= $v$+ $u$ for all $u$, $v$ ∈ $V$.\nassociativity: ($u$+ $v$) + $w$= $u$+ ($v$+ $w$) and ($a b$)$v$= $a$($b v$) for all $u$, $v$, $w$ ∈ $V$ and for all $a$, $b$ ∈ $\\mathbb{F}$.\nadditive identity: There exists an element 0 ∈$V$such that $v$+ 0 = $v$ for all $v$ ∈ $V$.\nadditive inverse: For every $v$ ∈ $V$, there exists $w$ ∈ $V$such that $v$+ $w$= 0.\nmultiplicative identity: 1$v$= $v$ for all $v$ ∈ $V$.\ndistributive properties: $a$($u$+ $v$) = $a u$+ $a v$ and ($a$+ $b$)$v$= $a v$+ $b v$ for all $a$, $b$ ∈ $\\mathbb{F}$ and all $u$, $v$ ∈ $V$.",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "basis-display",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.19-addition-scalar-multiplication"
-    ],
-    "examples": [
+    id: 'def-1.20-vector-space',
+    axlerRef: '1.20',
+    title: 'vector space',
+    chapter: 1,
+    formalStatement:
+      'A vector space is a set $V$along with an addition on $V$ and a scalar multiplication on $V$such that the following properties hold.\ncommutativity: $u$+ $v$= $v$+ $u$ for all $u$, $v$ ∈ $V$.\nassociativity: ($u$+ $v$) + $w$= $u$+ ($v$+ $w$) and ($a b$)$v$= $a$($b v$) for all $u$, $v$, $w$ ∈ $V$ and for all $a$, $b$ ∈ $\\mathbb{F}$.\nadditive identity: There exists an element 0 ∈$V$such that $v$+ 0 = $v$ for all $v$ ∈ $V$.\nadditive inverse: For every $v$ ∈ $V$, there exists $w$ ∈ $V$such that $v$+ $w$= 0.\nmultiplicative identity: 1$v$= $v$ for all $v$ ∈ $V$.\ndistributive properties: $a$($u$+ $v$) = $a u$+ $a v$ and ($a$+ $b$)$v$= $a v$+ $b v$ for all $a$, $b$ ∈ $\\mathbb{F}$ and all $u$, $v$ ∈ $V$.',
+    section: '1.B',
+    linkedVisualizers: ['basis-display', 'symbolic-formula'],
+    prerequisites: ['def-1.19-addition-scalar-multiplication'],
+    examples: [
       {
-        "templateId": "rn-vector-space",
-        "description": "ℝⁿ with standard addition and scalar multiplication"
+        templateId: 'rn-vector-space',
+        description: 'ℝⁿ with standard addition and scalar multiplication',
       },
       {
-        "templateId": "polynomial-space",
-        "description": "𝒫(𝔽) — polynomials over 𝔽"
-      }
+        templateId: 'polynomial-space',
+        description: '𝒫(𝔽) — polynomials over 𝔽',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "A set V with addition and scalar multiplication satisfying 8 properties: commutativity, associativity, additive identity, additive inverse, multiplicative identity, and two distributive laws.",
-    "commonErrors": [
-      "Forgetting to verify the additive identity is unique to V, not just any set element.",
-      "Assuming F^n is the only vector space."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'A set V with addition and scalar multiplication satisfying 8 properties: commutativity, associativity, additive identity, additive inverse, multiplicative identity, and two distributive laws.',
+    commonErrors: [
+      'Forgetting to verify the additive identity is unique to V, not just any set element.',
+      'Assuming F^n is the only vector space.',
+    ],
   },
   {
-    "id": "def-1.21-vector-point",
-    "axlerRef": "1.21",
-    "title": "vector, point",
-    "chapter": 1,
-    "formalStatement": "Elements of a vector space are called vectors or points.",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "coordinate-axes-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.11-fn-coordinate"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.21-vector-point',
+    axlerRef: '1.21',
+    title: 'vector, point',
+    chapter: 1,
+    formalStatement: 'Elements of a vector space are called vectors or points.',
+    section: '1.B',
+    linkedVisualizers: ['arrow-2d', 'coordinate-axes-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.11-fn-coordinate'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.22-real-complex-vector-space",
-    "axlerRef": "1.22",
-    "title": "real vector space, complex vector space",
-    "chapter": 1,
-    "formalStatement": "• A vector space over $\\mathbb{R}$ is called a real vector space.\n• A vector space over $\\mathbb{C}$ is called a complex vector space.",
-    "section": "1.B",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-1.22-real-complex-vector-space',
+    axlerRef: '1.22',
+    title: 'real vector space, complex vector space',
+    chapter: 1,
+    formalStatement:
+      '• A vector space over $\\mathbb{R}$ is called a real vector space.\n• A vector space over $\\mathbb{C}$ is called a complex vector space.',
+    section: '1.B',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-1.33-subspace",
-    "axlerRef": "1.33",
-    "title": "subspace",
-    "chapter": 1,
-    "formalStatement": "A subset $U$of $V$ is called a subspace of $V$if $U$ is also a vector space with the same additive identity, addition, and scalar multiplication as on $V$.",
-    "section": "1.C",
-    "linkedVisualizers": [
-      "subspace-lattice",
-      "coordinate-axes-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [
+    id: 'def-1.33-subspace',
+    axlerRef: '1.33',
+    title: 'subspace',
+    chapter: 1,
+    formalStatement:
+      'A subset $U$of $V$ is called a subspace of $V$if $U$ is also a vector space with the same additive identity, addition, and scalar multiplication as on $V$.',
+    section: '1.C',
+    linkedVisualizers: ['subspace-lattice', 'coordinate-axes-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [
       {
-        "templateId": "line-through-origin-r2",
-        "description": "A line through the origin in ℝ²"
+        templateId: 'line-through-origin-r2',
+        description: 'A line through the origin in ℝ²',
       },
       {
-        "templateId": "zero-subspace",
-        "description": "{0} — the trivial subspace of any V"
-      }
+        templateId: 'zero-subspace',
+        description: '{0} — the trivial subspace of any V',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "affine-line-r2",
-        "description": "A line not through the origin in ℝ²"
-      }
+        templateId: 'affine-line-r2',
+        description: 'A line not through the origin in ℝ²',
+      },
     ],
-    "plainStatement": "A subset U of V is a subspace if it is also a vector space under the same operations. Equivalently: U contains 0, is closed under addition, and closed under scalar multiplication.",
-    "commonErrors": [
-      "Forgetting to check that U contains the additive identity 0.",
-      "Assuming any subset of a vector space is a subspace."
-    ]
+    plainStatement:
+      'A subset U of V is a subspace if it is also a vector space under the same operations. Equivalently: U contains 0, is closed under addition, and closed under scalar multiplication.',
+    commonErrors: [
+      'Forgetting to check that U contains the additive identity 0.',
+      'Assuming any subset of a vector space is a subspace.',
+    ],
   },
   {
-    "id": "def-1.36-sum-of-subspaces",
-    "axlerRef": "1.36",
-    "title": "sum of subspaces",
-    "chapter": 1,
-    "formalStatement": "Suppose $V_{1}$, … , $V_{m}$ are subspaces of $V$. The sum of $V_{1}$, … , $V_{m}$, denoted by $V_{1}$ + ⋯+ $V_{m}$, is the set of all possible sums of elements of $V_{1}$, … , $V_{m}$. More precisely, $V_{1}$ + ⋯+ $V_{m}$= {$v_{1}$ + ⋯+ $v_{m}$∶$v_{1}$ ∈$V_{1}$, … , $v_{m}$ ∈ $V_{m}$}.",
-    "section": "1.C",
-    "linkedVisualizers": [
-      "subspace-lattice",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.33-subspace"
-    ],
-    "examples": [
+    id: 'def-1.36-sum-of-subspaces',
+    axlerRef: '1.36',
+    title: 'sum of subspaces',
+    chapter: 1,
+    formalStatement:
+      'Suppose $V_{1}$, … , $V_{m}$ are subspaces of $V$. The sum of $V_{1}$, … , $V_{m}$, denoted by $V_{1}$ + ⋯+ $V_{m}$, is the set of all possible sums of elements of $V_{1}$, … , $V_{m}$. More precisely, $V_{1}$ + ⋯+ $V_{m}$= {$v_{1}$ + ⋯+ $v_{m}$∶$v_{1}$ ∈$V_{1}$, … , $v_{m}$ ∈ $V_{m}$}.',
+    section: '1.C',
+    linkedVisualizers: ['subspace-lattice', 'symbolic-formula'],
+    prerequisites: ['def-1.33-subspace'],
+    examples: [
       {
-        "templateId": "sum-of-two-lines-r2",
-        "description": "Sum of two lines through origin = ℝ² when they are distinct"
-      }
+        templateId: 'sum-of-two-lines-r2',
+        description: 'Sum of two lines through origin = ℝ² when they are distinct',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-1.41-direct-sum",
-    "axlerRef": "1.41",
-    "title": "direct sum, ⊕",
-    "chapter": 2,
-    "formalStatement": "Suppose $V_{1}$, … , $V_{m}$ are subspaces of $V$.\n• The sum $V_{1}$ + ⋯+ $V_{m}$ is called a direct sum if each element of $V_{1}$ + ⋯+ $V_{m}$ can be written in only one way as a sum $v_{1}$ + ⋯+ $v_{m}$, where each $v_{k}$ ∈ $V_{k}$.\n• If $V_{1}$ + ⋯+ $V_{m}$ is a direct sum, then $V_{1}$ ⊕⋯⊕$V_{m}$ denotes $V_{1}$ + ⋯+ $V_{m}$, with the ⊕notation serving as an indication that this is a direct sum.",
-    "section": "1.C",
-    "linkedVisualizers": [
-      "subspace-lattice",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.36-sum-of-subspaces"
-    ],
-    "examples": [
+    id: 'def-1.41-direct-sum',
+    axlerRef: '1.41',
+    title: 'direct sum, ⊕',
+    chapter: 2,
+    formalStatement:
+      'Suppose $V_{1}$, … , $V_{m}$ are subspaces of $V$.\n• The sum $V_{1}$ + ⋯+ $V_{m}$ is called a direct sum if each element of $V_{1}$ + ⋯+ $V_{m}$ can be written in only one way as a sum $v_{1}$ + ⋯+ $v_{m}$, where each $v_{k}$ ∈ $V_{k}$.\n• If $V_{1}$ + ⋯+ $V_{m}$ is a direct sum, then $V_{1}$ ⊕⋯⊕$V_{m}$ denotes $V_{1}$ + ⋯+ $V_{m}$, with the ⊕notation serving as an indication that this is a direct sum.',
+    section: '1.C',
+    linkedVisualizers: ['subspace-lattice', 'symbolic-formula'],
+    prerequisites: ['def-1.36-sum-of-subspaces'],
+    examples: [
       {
-        "templateId": "direct-sum-two-lines",
-        "description": "Two complementary lines in ℝ²"
-      }
+        templateId: 'direct-sum-two-lines',
+        description: 'Two complementary lines in ℝ²',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "non-direct-sum",
-        "description": "U₁ = U₂ — sum is not direct since U₁ ∩ U₂ ≠ {0}"
-      }
+        templateId: 'non-direct-sum',
+        description: 'U₁ = U₂ — sum is not direct since U₁ ∩ U₂ ≠ {0}',
+      },
     ],
-    "plainStatement": "A sum V₁ + ⋯ + Vₘ is direct if every element has a unique decomposition. For two subspaces: V₁ ⊕ V₂ iff V₁ ∩ V₂ = {0}.",
-    "commonErrors": [
-      "Confusing V₁ + V₂ (may have non-unique decompositions) with V₁ ⊕ V₂ (unique decompositions)."
-    ]
+    plainStatement:
+      'A sum V₁ + ⋯ + Vₘ is direct if every element has a unique decomposition. For two subspaces: V₁ ⊕ V₂ iff V₁ ∩ V₂ = {0}.',
+    commonErrors: [
+      'Confusing V₁ + V₂ (may have non-unique decompositions) with V₁ ⊕ V₂ (unique decompositions).',
+    ],
   },
   {
-    "id": "def-2.2-linear-combination",
-    "axlerRef": "2.2",
-    "title": "linear combination",
-    "chapter": 2,
-    "formalStatement": "A linear combination of a list $v_{1}$, … , $v_{m}$ of vectors in $V$ is a vector of the form $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$, where $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [
+    id: 'def-2.2-linear-combination',
+    axlerRef: '2.2',
+    title: 'linear combination',
+    chapter: 2,
+    formalStatement:
+      'A linear combination of a list $v_{1}$, … , $v_{m}$ of vectors in $V$ is a vector of the form $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$, where $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$.',
+    section: '2.A',
+    linkedVisualizers: ['arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [
       {
-        "templateId": "linear-combination-builder",
-        "description": "3(1,0) + 2(0,1) = (3,2) in ℝ²"
-      }
+        templateId: 'linear-combination-builder',
+        description: '3(1,0) + 2(0,1) = (3,2) in ℝ²',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "A linear combination of v₁,…,vₘ is a₁v₁ + ⋯ + aₘvₘ for some scalars a₁,…,aₘ."
+    nonexamples: [],
+    plainStatement: 'A linear combination of v₁,…,vₘ is a₁v₁ + ⋯ + aₘvₘ for some scalars a₁,…,aₘ.',
   },
   {
-    "id": "def-2.4-span",
-    "axlerRef": "2.4",
-    "title": "span",
-    "chapter": 2,
-    "formalStatement": "The set of all linear combinations of a list of vectors $v_{1}$, … , $v_{m}$ in $V$ is called the span of $v_{1}$, … , $v_{m}$, denoted by span($v_{1}$, … , $v_{m}$). In other words, span($v_{1}$, … , $v_{m}$) = {$a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$∶$a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$}. The span of the empty list ( ) is defined to be {0}.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "coordinate-axes-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.2-linear-combination"
-    ],
-    "examples": [
+    id: 'def-2.4-span',
+    axlerRef: '2.4',
+    title: 'span',
+    chapter: 2,
+    formalStatement:
+      'The set of all linear combinations of a list of vectors $v_{1}$, … , $v_{m}$ in $V$ is called the span of $v_{1}$, … , $v_{m}$, denoted by span($v_{1}$, … , $v_{m}$). In other words, span($v_{1}$, … , $v_{m}$) = {$a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$∶$a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$}. The span of the empty list ( ) is defined to be {0}.',
+    section: '2.A',
+    linkedVisualizers: ['arrow-2d', 'coordinate-axes-2d', 'symbolic-formula'],
+    prerequisites: ['def-2.2-linear-combination'],
+    examples: [
       {
-        "templateId": "span-of-two-vectors-in-r2",
-        "description": "span of (1,0) and (0,1) = ℝ²"
-      }
+        templateId: 'span-of-two-vectors-in-r2',
+        description: 'span of (1,0) and (0,1) = ℝ²',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "span-one-vector",
-        "description": "span of a single nonzero vector is a line, not all of ℝ²"
-      }
+        templateId: 'span-one-vector',
+        description: 'span of a single nonzero vector is a line, not all of ℝ²',
+      },
     ],
-    "plainStatement": "The span of a list of vectors is the set of all their linear combinations. span() = {0}."
+    plainStatement:
+      'The span of a list of vectors is the set of all their linear combinations. span() = {0}.',
   },
   {
-    "id": "def-2.7-spans",
-    "axlerRef": "2.7",
-    "title": "spans",
-    "chapter": 2,
-    "formalStatement": "If span($v_{1}$, … , $v_{m}$) equals $V$, we say that the list $v_{1}$, … , $v_{m}$spans $V$.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "subspace-lattice",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.4-span"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-2.7-spans',
+    axlerRef: '2.7',
+    title: 'spans',
+    chapter: 2,
+    formalStatement:
+      'If span($v_{1}$, … , $v_{m}$) equals $V$, we say that the list $v_{1}$, … , $v_{m}$spans $V$.',
+    section: '2.A',
+    linkedVisualizers: ['subspace-lattice', 'symbolic-formula'],
+    prerequisites: ['def-2.4-span'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-2.9-finite-dimensional-vector-space",
-    "axlerRef": "2.9",
-    "title": "finite-dimensional vector space",
-    "chapter": 2,
-    "formalStatement": "A vector space is called finite-dimensional if some list of vectors in it spans the space.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "basis-display",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.4-span"
-    ],
-    "examples": [
+    id: 'def-2.9-finite-dimensional-vector-space',
+    axlerRef: '2.9',
+    title: 'finite-dimensional vector space',
+    chapter: 2,
+    formalStatement:
+      'A vector space is called finite-dimensional if some list of vectors in it spans the space.',
+    section: '2.A',
+    linkedVisualizers: ['basis-display', 'symbolic-formula'],
+    prerequisites: ['def-2.4-span'],
+    examples: [
       {
-        "templateId": "rn-vector-space",
-        "description": "ℝⁿ is spanned by its n standard basis vectors"
-      }
+        templateId: 'rn-vector-space',
+        description: 'ℝⁿ is spanned by its n standard basis vectors',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "polynomial-space",
-        "description": "𝒫(𝔽) — polynomials of all degrees — is infinite-dimensional"
-      }
-    ]
+        templateId: 'polynomial-space',
+        description: '𝒫(𝔽) — polynomials of all degrees — is infinite-dimensional',
+      },
+    ],
   },
   {
-    "id": "def-2.10-polynomial",
-    "axlerRef": "2.10",
-    "title": "polynomial, $\\mathcal{P}$($\\mathbb{F}$)",
-    "chapter": 2,
-    "formalStatement": "• A function $p:$\\mathbb{F}$→$\\mathbb{F}$ is called a polynomial with coefficients in $\\mathbb{F}$ if there exist $a_{0}$, … , $a_{m}$ ∈ $\\mathbb{F}$ such that $p$($z$) = $a_{0}$ + $a_{1} z$+ $a_{2} z^{2}$ + ⋯+ $a_{m} z^{m}$ for all $z$ ∈ $\\mathbb{F}$.\n• $\\mathcal{P}(\\mathbb{F})$ is the set of all polynomials with coefficients in $\\mathbb{F}$.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-2.10-polynomial',
+    axlerRef: '2.10',
+    title: 'polynomial, $\\mathcal{P}$($\\mathbb{F}$)',
+    chapter: 2,
+    formalStatement:
+      '• A function $p:$\\mathbb{F}$→$\\mathbb{F}$ is called a polynomial with coefficients in $\\mathbb{F}$ if there exist $a_{0}$, … , $a_{m}$ ∈ $\\mathbb{F}$ such that $p$($z$) = $a_{0}$ + $a_{1} z$+ $a_{2} z^{2}$ + ⋯+ $a_{m} z^{m}$ for all $z$ ∈ $\\mathbb{F}$.\n• $\\mathcal{P}(\\mathbb{F})$ is the set of all polynomials with coefficients in $\\mathbb{F}$.',
+    section: '2.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-2.11-degree-of-a-polynomial",
-    "axlerRef": "2.11",
-    "title": "degree of a polynomial, deg $p$",
-    "chapter": 2,
-    "formalStatement": "• A polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ is said to have degree $m$if there exist scalars $a_{0}$, $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$ with $a_{m}$ ≠ 0 such that for every $z$ ∈ $\\mathbb{F}$, we have $p$($z$) = $a_{0}$ + $a_{1} z$+ ⋯+ $a_{m} z^{m}$.\n• The polynomial that is identically 0 is said to have degree −∞.\n• The degree of a polynomial $p$ is denoted by deg $p$.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.10-polynomial"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-2.11-degree-of-a-polynomial',
+    axlerRef: '2.11',
+    title: 'degree of a polynomial, deg $p$',
+    chapter: 2,
+    formalStatement:
+      '• A polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ is said to have degree $m$if there exist scalars $a_{0}$, $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$ with $a_{m}$ ≠ 0 such that for every $z$ ∈ $\\mathbb{F}$, we have $p$($z$) = $a_{0}$ + $a_{1} z$+ ⋯+ $a_{m} z^{m}$.\n• The polynomial that is identically 0 is said to have degree −∞.\n• The degree of a polynomial $p$ is denoted by deg $p$.',
+    section: '2.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-2.10-polynomial'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-2.13-infinite-dimensional-vector-space",
-    "axlerRef": "2.13",
-    "title": "infinite-dimensional vector space",
-    "chapter": 2,
-    "formalStatement": "A vector space is called infinite-dimensional if it is not finite-dimensional.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.9-finite-dimensional-vector-space"
-    ],
-    "examples": [
+    id: 'def-2.13-infinite-dimensional-vector-space',
+    axlerRef: '2.13',
+    title: 'infinite-dimensional vector space',
+    chapter: 2,
+    formalStatement:
+      'A vector space is called infinite-dimensional if it is not finite-dimensional.',
+    section: '2.A',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-2.9-finite-dimensional-vector-space'],
+    examples: [
       {
-        "templateId": "polynomial-space",
-        "description": "𝒫(𝔽) requires infinitely many spanning vectors"
-      }
+        templateId: 'polynomial-space',
+        description: '𝒫(𝔽) requires infinitely many spanning vectors',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "rn-vector-space",
-        "description": "ℝⁿ is finite-dimensional for any finite n"
-      }
-    ]
+        templateId: 'rn-vector-space',
+        description: 'ℝⁿ is finite-dimensional for any finite n',
+      },
+    ],
   },
   {
-    "id": "def-2.15-linearly-independent",
-    "axlerRef": "2.15",
-    "title": "linearly independent",
-    "chapter": 2,
-    "formalStatement": "• A list $v_{1}$, … , $v_{m}$ of vectors in $V$ is called linearly independent if the only choice of $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$ that makes $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$= 0 is $a_{1}$ = ⋯= $a_{m}$= 0.\n• The empty list ( ) is also declared to be linearly independent.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "coordinate-axes-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.2-linear-combination"
-    ],
-    "examples": [
+    id: 'def-2.15-linearly-independent',
+    axlerRef: '2.15',
+    title: 'linearly independent',
+    chapter: 2,
+    formalStatement:
+      '• A list $v_{1}$, … , $v_{m}$ of vectors in $V$ is called linearly independent if the only choice of $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$ that makes $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$= 0 is $a_{1}$ = ⋯= $a_{m}$= 0.\n• The empty list ( ) is also declared to be linearly independent.',
+    section: '2.A',
+    linkedVisualizers: ['arrow-2d', 'coordinate-axes-2d', 'symbolic-formula'],
+    prerequisites: ['def-2.2-linear-combination'],
+    examples: [
       {
-        "templateId": "basis-as-coordinates",
-        "description": "Standard basis vectors (1,0) and (0,1) in ℝ²"
-      }
+        templateId: 'basis-as-coordinates',
+        description: 'Standard basis vectors (1,0) and (0,1) in ℝ²',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "linearly-dependent-pair",
-        "description": "(1,2) and (2,4) — second is a scalar multiple of first"
-      }
+        templateId: 'linearly-dependent-pair',
+        description: '(1,2) and (2,4) — second is a scalar multiple of first',
+      },
     ],
-    "plainStatement": "A list v₁,…,vₘ is linearly independent if the only way a₁v₁ + ⋯ + aₘvₘ = 0 is a₁ = ⋯ = aₘ = 0.",
-    "commonErrors": [
-      "Confusing linear independence of a list with the zero vector — any list containing 0 is linearly dependent."
-    ]
+    plainStatement:
+      'A list v₁,…,vₘ is linearly independent if the only way a₁v₁ + ⋯ + aₘvₘ = 0 is a₁ = ⋯ = aₘ = 0.',
+    commonErrors: [
+      'Confusing linear independence of a list with the zero vector — any list containing 0 is linearly dependent.',
+    ],
   },
   {
-    "id": "def-2.17-linearly-dependent",
-    "axlerRef": "2.17",
-    "title": "linearly dependent",
-    "chapter": 2,
-    "formalStatement": "• A list of vectors in $V$ is called linearly dependent if it is not linearly independent.\n• In other words, a list $v_{1}$, … , $v_{m}$ of vectors in $V$ is linearly dependent if there exist $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$, not all 0, such that $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$= 0.",
-    "section": "2.A",
-    "linkedVisualizers": [
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.15-linearly-independent"
-    ],
-    "examples": [
+    id: 'def-2.17-linearly-dependent',
+    axlerRef: '2.17',
+    title: 'linearly dependent',
+    chapter: 2,
+    formalStatement:
+      '• A list of vectors in $V$ is called linearly dependent if it is not linearly independent.\n• In other words, a list $v_{1}$, … , $v_{m}$ of vectors in $V$ is linearly dependent if there exist $a_{1}$, … , $a_{m}$ ∈ $\\mathbb{F}$, not all 0, such that $a_{1} v_{1}$ + ⋯+ $a_{m} v_{m}$= 0.',
+    section: '2.A',
+    linkedVisualizers: ['arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-2.15-linearly-independent'],
+    examples: [
       {
-        "templateId": "linearly-dependent-pair",
-        "description": "(1,2) and (2,4) in ℝ²"
-      }
+        templateId: 'linearly-dependent-pair',
+        description: '(1,2) and (2,4) in ℝ²',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-2.26-basis",
-    "axlerRef": "2.26",
-    "title": "basis",
-    "chapter": 2,
-    "formalStatement": "A basis of $V$ is a list of vectors in $V$that is linearly independent and spans $V$.",
-    "section": "2.B",
-    "linkedVisualizers": [
-      "basis-display",
-      "coordinate-axes-2d",
-      "arrow-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-2.15-linearly-independent",
-      "def-2.4-span"
-    ],
-    "examples": [
+    id: 'def-2.26-basis',
+    axlerRef: '2.26',
+    title: 'basis',
+    chapter: 2,
+    formalStatement:
+      'A basis of $V$ is a list of vectors in $V$that is linearly independent and spans $V$.',
+    section: '2.B',
+    linkedVisualizers: ['basis-display', 'coordinate-axes-2d', 'arrow-2d', 'symbolic-formula'],
+    prerequisites: ['def-2.15-linearly-independent', 'def-2.4-span'],
+    examples: [
       {
-        "templateId": "basis-as-coordinates",
-        "description": "Standard basis e₁=(1,0), e₂=(0,1) for ℝ²"
+        templateId: 'basis-as-coordinates',
+        description: 'Standard basis e₁=(1,0), e₂=(0,1) for ℝ²',
       },
       {
-        "templateId": "non-standard-basis",
-        "description": "(1,1) and (1,-1) — a non-standard basis for ℝ²"
-      }
+        templateId: 'non-standard-basis',
+        description: '(1,1) and (1,-1) — a non-standard basis for ℝ²',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "linearly-dependent-pair",
-        "description": "(1,0) and (2,0) — linearly dependent, not a basis"
-      }
+        templateId: 'linearly-dependent-pair',
+        description: '(1,0) and (2,0) — linearly dependent, not a basis',
+      },
     ],
-    "plainStatement": "A basis of V is a linearly independent list that spans V. Equivalently: every vector in V can be written uniquely as a linear combination of the basis vectors.",
-    "commonErrors": [
-      "A basis is an ordered list, not a set — order matters when computing coordinates.",
-      "The same space has many different bases; none is intrinsically preferred."
-    ]
+    plainStatement:
+      'A basis of V is a linearly independent list that spans V. Equivalently: every vector in V can be written uniquely as a linear combination of the basis vectors.',
+    commonErrors: [
+      'A basis is an ordered list, not a set — order matters when computing coordinates.',
+      'The same space has many different bases; none is intrinsically preferred.',
+    ],
   },
   {
-    "id": "def-2.35-dimension",
-    "axlerRef": "2.35",
-    "title": "dimension, dim $V$",
-    "chapter": 3,
-    "formalStatement": "• The dimension of a finite-dimensional vector space is the length of any basis of the vector space.\n• The dimension of a finite-dimensional vector space $V$ is denoted by dim $V$.",
-    "section": "3.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-2.35-dimension',
+    axlerRef: '2.35',
+    title: 'dimension, dim $V$',
+    chapter: 3,
+    formalStatement:
+      '• The dimension of a finite-dimensional vector space is the length of any basis of the vector space.\n• The dimension of a finite-dimensional vector space $V$ is denoted by dim $V$.',
+    section: '3.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-3.1-linear-map",
-    "axlerRef": "3.1",
-    "title": "linear map",
-    "chapter": 3,
-    "formalStatement": "A linear map from $V$ to $W$ is a function $T:$V$→$W$ with the following properties.\nadditivity: $T$($u$+ $v$) = $T u$+ $T v$ for all $u$, $v$ ∈ $V$.\nhomogeneity: $T$($\\lambda v$) = $\\lambda$($T v$) for all $\\lambda$ ∈ $\\mathbb{F}$ and all $v$ ∈ $V$.",
-    "section": "3.A",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "grid-deformation-2d",
-      "kernel-range-diagram",
-      "symbolic-formula"
+    id: 'def-3.1-linear-map',
+    axlerRef: '3.1',
+    title: 'linear map',
+    chapter: 3,
+    formalStatement:
+      'A linear map from $V$ to $W$ is a function $T:$V$→$W$ with the following properties.\nadditivity: $T$($u$+ $v$) = $T u$+ $T v$ for all $u$, $v$ ∈ $V$.\nhomogeneity: $T$($\\lambda v$) = $\\lambda$($T v$) for all $\\lambda$ ∈ $\\mathbb{F}$ and all $v$ ∈ $V$.',
+    section: '3.A',
+    linkedVisualizers: [
+      'matrix-heatmap',
+      'grid-deformation-2d',
+      'kernel-range-diagram',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [
       {
-        "templateId": "linear-map-matrix",
-        "description": "T(x,y) = (x+y, x−y) — a full-rank 2×2 map"
+        templateId: 'linear-map-matrix',
+        description: 'T(x,y) = (x+y, x−y) — a full-rank 2×2 map',
       },
       {
-        "templateId": "rank-nullity-2d",
-        "description": "Projection (x,y) ↦ (x,0) — rank 1, nullity 1"
-      }
+        templateId: 'rank-nullity-2d',
+        description: 'Projection (x,y) ↦ (x,0) — rank 1, nullity 1',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "A linear map T: V → W preserves the two operations of vector spaces: it distributes over addition (T(u+v) = Tu + Tv) and commutes with scalar multiplication (T(λv) = λTv). Equivalently, T(au + bv) = aTu + bTv for all scalars a, b.",
-    "commonErrors": [
-      "The zero map T = 0 is a linear map (T(v) = 0 for all v).",
-      "Linearity requires T(0) = 0; any map with T(0) ≠ 0 (e.g. a translation) is not linear."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'A linear map T: V → W preserves the two operations of vector spaces: it distributes over addition (T(u+v) = Tu + Tv) and commutes with scalar multiplication (T(λv) = λTv). Equivalently, T(au + bv) = aTu + bTv for all scalars a, b.',
+    commonErrors: [
+      'The zero map T = 0 is a linear map (T(v) = 0 for all v).',
+      'Linearity requires T(0) = 0; any map with T(0) ≠ 0 (e.g. a translation) is not linear.',
+    ],
   },
   {
-    "id": "def-3.5-addition-scalar-multiplication-on-l",
-    "axlerRef": "3.5",
-    "title": "addition and scalar multiplication on $\\mathcal{L}$($V$, $W$)",
-    "chapter": 3,
-    "formalStatement": "Suppose $S$, $T$ ∈ $\\mathcal{L}(V,W)$ and $\\lambda$ ∈ $\\mathbb{F}$. The sum $S$+ $T$and the product $\\lambda T$are the linear maps from $V$ to $W$defined by ($S$+ $T$)($v$) = $S v$+ $T v$  and  ($\\lambda T$)($v$) = $\\lambda$($T v$) for all $v$ ∈ $V$.",
-    "section": "3.A",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.1-linear-map",
-      "def-1.20-vector-space"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "plainStatement": "The set ℒ(V, W) of all linear maps from V to W is itself a vector space under pointwise addition (S+T)(v) = Sv + Tv and scalar multiplication (λT)(v) = λ(Tv)."
+    id: 'def-3.5-addition-scalar-multiplication-on-l',
+    axlerRef: '3.5',
+    title: 'addition and scalar multiplication on $\\mathcal{L}$($V$, $W$)',
+    chapter: 3,
+    formalStatement:
+      'Suppose $S$, $T$ ∈ $\\mathcal{L}(V,W)$ and $\\lambda$ ∈ $\\mathbb{F}$. The sum $S$+ $T$and the product $\\lambda T$are the linear maps from $V$ to $W$defined by ($S$+ $T$)($v$) = $S v$+ $T v$  and  ($\\lambda T$)($v$) = $\\lambda$($T v$) for all $v$ ∈ $V$.',
+    section: '3.A',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.1-linear-map', 'def-1.20-vector-space'],
+    examples: [],
+    nonexamples: [],
+    plainStatement:
+      'The set ℒ(V, W) of all linear maps from V to W is itself a vector space under pointwise addition (S+T)(v) = Sv + Tv and scalar multiplication (λT)(v) = λ(Tv).',
   },
   {
-    "id": "def-3.7-product-of-linear-maps",
-    "axlerRef": "3.7",
-    "title": "product of linear maps",
-    "chapter": 3,
-    "formalStatement": "If $T$ ∈ $\\mathcal{L}$($U$, $V$) and $S$ ∈ $\\mathcal{L}(V,W)$, then the product $S T$ ∈ $\\mathcal{L}$($U$, $W$) is defined by ($S T$)($u$) = $S$($T u$) for all $u$ ∈ $U$.",
-    "section": "3.A",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "grid-deformation-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.1-linear-map"
-    ],
-    "examples": [
+    id: 'def-3.7-product-of-linear-maps',
+    axlerRef: '3.7',
+    title: 'product of linear maps',
+    chapter: 3,
+    formalStatement:
+      'If $T$ ∈ $\\mathcal{L}$($U$, $V$) and $S$ ∈ $\\mathcal{L}(V,W)$, then the product $S T$ ∈ $\\mathcal{L}$($U$, $W$) is defined by ($S T$)($u$) = $S$($T u$) for all $u$ ∈ $U$.',
+    section: '3.A',
+    linkedVisualizers: ['matrix-heatmap', 'grid-deformation-2d', 'symbolic-formula'],
+    prerequisites: ['def-3.1-linear-map'],
+    examples: [
       {
-        "templateId": "matrix-product-r2",
-        "description": "A = x-scaling, B = shear; AB = scale-then-shear"
-      }
+        templateId: 'matrix-product-r2',
+        description: 'A = x-scaling, B = shear; AB = scale-then-shear',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "The product ST of linear maps S ∈ ℒ(V, W) and T ∈ ℒ(U, V) is their composition: (ST)(u) = S(Tu). This is the same as function composition, and the matrix of ST is the matrix product M(S)M(T).",
-    "commonErrors": [
-      "Matrix multiplication is not commutative in general: AB ≠ BA."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'The product ST of linear maps S ∈ ℒ(V, W) and T ∈ ℒ(U, V) is their composition: (ST)(u) = S(Tu). This is the same as function composition, and the matrix of ST is the matrix product M(S)M(T).',
+    commonErrors: ['Matrix multiplication is not commutative in general: AB ≠ BA.'],
   },
   {
-    "id": "def-3.11-null-space",
-    "axlerRef": "3.11",
-    "title": "null space, null $T$",
-    "chapter": 3,
-    "formalStatement": "For $T$ ∈ $\\mathcal{L}(V,W)$, the null space of $T$, denoted by null $T$, is the subset of $V$ consisting of those vectors that $T$maps to 0: null $T$= {$v$ ∈ $V$∶$T v$= 0}.",
-    "section": "3.B",
-    "linkedVisualizers": [
-      "kernel-range-diagram",
-      "dimension-bars",
-      "matrix-heatmap",
-      "symbolic-formula"
+    id: 'def-3.11-null-space',
+    axlerRef: '3.11',
+    title: 'null space, null $T$',
+    chapter: 3,
+    formalStatement:
+      'For $T$ ∈ $\\mathcal{L}(V,W)$, the null space of $T$, denoted by null $T$, is the subset of $V$ consisting of those vectors that $T$maps to 0: null $T$= {$v$ ∈ $V$∶$T v$= 0}.',
+    section: '3.B',
+    linkedVisualizers: [
+      'kernel-range-diagram',
+      'dimension-bars',
+      'matrix-heatmap',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-3.1-linear-map",
-      "def-1.33-subspace"
-    ],
-    "examples": [
+    prerequisites: ['def-3.1-linear-map', 'def-1.33-subspace'],
+    examples: [
       {
-        "templateId": "null-space-demo",
-        "description": "P(x,y) = (x,0): null P = y-axis, dim null P = 1"
+        templateId: 'null-space-demo',
+        description: 'P(x,y) = (x,0): null P = y-axis, dim null P = 1',
       },
       {
-        "templateId": "rank-nullity-2d",
-        "description": "Same projection — rank 1, nullity 1"
-      }
+        templateId: 'rank-nullity-2d',
+        description: 'Same projection — rank 1, nullity 1',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "injective-map-r2",
-        "description": "Shear: null T = {0}, nullity = 0"
-      }
+        templateId: 'injective-map-r2',
+        description: 'Shear: null T = {0}, nullity = 0',
+      },
     ],
-    "plainStatement": "The null space (kernel) of T is the set of vectors T sends to zero. It is always a subspace of the domain V. By the rank-nullity theorem (Axler §3.21), dim null T + dim range T = dim V.",
-    "commonErrors": [
-      "null T is a subspace of the domain V, not of the codomain W.",
-      "null T = {0} is exactly the condition for T to be injective (Axler §3.15)."
-    ]
+    plainStatement:
+      'The null space (kernel) of T is the set of vectors T sends to zero. It is always a subspace of the domain V. By the rank-nullity theorem (Axler §3.21), dim null T + dim range T = dim V.',
+    commonErrors: [
+      'null T is a subspace of the domain V, not of the codomain W.',
+      'null T = {0} is exactly the condition for T to be injective (Axler §3.15).',
+    ],
   },
   {
-    "id": "def-3.14-injective",
-    "axlerRef": "3.14",
-    "title": "injective",
-    "chapter": 3,
-    "formalStatement": "A function $T:$V$→$W$ is called injective if $T u$= $T v$implies $u$= $v$.",
-    "section": "3.B",
-    "linkedVisualizers": [
-      "kernel-range-diagram",
-      "dimension-bars",
-      "grid-deformation-2d",
-      "symbolic-formula"
+    id: 'def-3.14-injective',
+    axlerRef: '3.14',
+    title: 'injective',
+    chapter: 3,
+    formalStatement: 'A function $T:$V$→$W$ is called injective if $T u$= $T v$implies $u$= $v$.',
+    section: '3.B',
+    linkedVisualizers: [
+      'kernel-range-diagram',
+      'dimension-bars',
+      'grid-deformation-2d',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-3.11-null-space"
-    ],
-    "examples": [
+    prerequisites: ['def-3.11-null-space'],
+    examples: [
       {
-        "templateId": "injective-map-r2",
-        "description": "Shear T(x,y)=(x+y,y): null T = {0}, injective"
+        templateId: 'injective-map-r2',
+        description: 'Shear T(x,y)=(x+y,y): null T = {0}, injective',
       },
       {
-        "templateId": "invertible-map-r2",
-        "description": "Rotation: full rank, injective"
-      }
+        templateId: 'invertible-map-r2',
+        description: 'Rotation: full rank, injective',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "null-space-demo",
-        "description": "Projection: null P ≠ {0}, not injective"
-      }
+        templateId: 'null-space-demo',
+        description: 'Projection: null P ≠ {0}, not injective',
+      },
     ],
-    "plainStatement": "T is injective (one-to-one) if distinct vectors map to distinct images: Tu = Tv implies u = v. Equivalently (Axler §3.15), T is injective iff null T = {0}.",
-    "commonErrors": [
-      "For operators on a finite-dimensional space, injective ⟺ surjective ⟺ invertible."
-    ]
+    plainStatement:
+      'T is injective (one-to-one) if distinct vectors map to distinct images: Tu = Tv implies u = v. Equivalently (Axler §3.15), T is injective iff null T = {0}.',
+    commonErrors: [
+      'For operators on a finite-dimensional space, injective ⟺ surjective ⟺ invertible.',
+    ],
   },
   {
-    "id": "def-3.16-range",
-    "axlerRef": "3.16",
-    "title": "range",
-    "chapter": 3,
-    "formalStatement": "For $T$ ∈ $\\mathcal{L}(V,W)$, the range of $T$is the subset of $W$consisting of those vectors that are equal to $T v$ for some $v$ ∈ $V$: range $T$= {$T v$∶$v$ ∈ $V$}.",
-    "section": "3.B",
-    "linkedVisualizers": [
-      "kernel-range-diagram",
-      "dimension-bars",
-      "matrix-heatmap",
-      "symbolic-formula"
+    id: 'def-3.16-range',
+    axlerRef: '3.16',
+    title: 'range',
+    chapter: 3,
+    formalStatement:
+      'For $T$ ∈ $\\mathcal{L}(V,W)$, the range of $T$is the subset of $W$consisting of those vectors that are equal to $T v$ for some $v$ ∈ $V$: range $T$= {$T v$∶$v$ ∈ $V$}.',
+    section: '3.B',
+    linkedVisualizers: [
+      'kernel-range-diagram',
+      'dimension-bars',
+      'matrix-heatmap',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-3.1-linear-map",
-      "def-1.33-subspace"
-    ],
-    "examples": [
+    prerequisites: ['def-3.1-linear-map', 'def-1.33-subspace'],
+    examples: [
       {
-        "templateId": "null-space-demo",
-        "description": "P(x,y)=(x,0): range P = x-axis, dim range P = 1"
+        templateId: 'null-space-demo',
+        description: 'P(x,y)=(x,0): range P = x-axis, dim range P = 1',
       },
       {
-        "templateId": "injective-map-r2",
-        "description": "Shear: range T = ℝ², dim range T = 2"
-      }
+        templateId: 'injective-map-r2',
+        description: 'Shear: range T = ℝ², dim range T = 2',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "The range (image) of T is the set of all outputs Tv as v ranges over V. It is always a subspace of the codomain W. dim range T = rank T.",
-    "commonErrors": [
-      "range T is a subspace of the codomain W, not of the domain V."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'The range (image) of T is the set of all outputs Tv as v ranges over V. It is always a subspace of the codomain W. dim range T = rank T.',
+    commonErrors: ['range T is a subspace of the codomain W, not of the domain V.'],
   },
   {
-    "id": "def-3.19-surjective",
-    "axlerRef": "3.19",
-    "title": "surjective",
-    "chapter": 3,
-    "formalStatement": "A function $T:$V$→$W$ is called surjective if its range equals $W$.",
-    "section": "3.B",
-    "linkedVisualizers": [
-      "kernel-range-diagram",
-      "dimension-bars",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.16-range"
-    ],
-    "examples": [
+    id: 'def-3.19-surjective',
+    axlerRef: '3.19',
+    title: 'surjective',
+    chapter: 3,
+    formalStatement: 'A function $T:$V$→$W$ is called surjective if its range equals $W$.',
+    section: '3.B',
+    linkedVisualizers: ['kernel-range-diagram', 'dimension-bars', 'symbolic-formula'],
+    prerequisites: ['def-3.16-range'],
+    examples: [
       {
-        "templateId": "invertible-map-r2",
-        "description": "Rotation: range T = ℝ², surjective"
+        templateId: 'invertible-map-r2',
+        description: 'Rotation: range T = ℝ², surjective',
       },
       {
-        "templateId": "injective-map-r2",
-        "description": "Shear: full rank, surjective"
-      }
+        templateId: 'injective-map-r2',
+        description: 'Shear: full rank, surjective',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "null-space-demo",
-        "description": "Projection: range P = x-axis ≠ ℝ²"
-      }
+        templateId: 'null-space-demo',
+        description: 'Projection: range P = x-axis ≠ ℝ²',
+      },
     ],
-    "plainStatement": "T is surjective (onto) if every element of W is in the range of T: range T = W. For operators on a finite-dimensional space, surjective ⟺ injective ⟺ invertible.",
-    "commonErrors": [
-      "A map from ℝ³ to ℝ² can be surjective (rank 2) but never injective.",
-      "A map from ℝ² to ℝ³ can be injective (nullity 0) but never surjective."
-    ]
+    plainStatement:
+      'T is surjective (onto) if every element of W is in the range of T: range T = W. For operators on a finite-dimensional space, surjective ⟺ injective ⟺ invertible.',
+    commonErrors: [
+      'A map from ℝ³ to ℝ² can be surjective (rank 2) but never injective.',
+      'A map from ℝ² to ℝ³ can be injective (nullity 0) but never surjective.',
+    ],
   },
   {
-    "id": "def-3.29-matrix",
-    "axlerRef": "3.29",
-    "title": "matrix, $A_{j,k}$",
-    "chapter": 3,
-    "formalStatement": "Suppose $m$ and $n$ are nonnegative integers. An $m$-by-$n$ matrix $A$ is a rectangular array of elements of $\\mathbb{F}$ with $m$ rows and $n$ columns: $A=\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}$. The notation $A_{j,k}$ denotes the entry in row $j$, column $k$ of $A$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.8-list-length"
-    ],
-    "examples": [
+    id: 'def-3.29-matrix',
+    axlerRef: '3.29',
+    title: 'matrix, $A_{j,k}$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $m$ and $n$ are nonnegative integers. An $m$-by-$n$ matrix $A$ is a rectangular array of elements of $\\mathbb{F}$ with $m$ rows and $n$ columns: $A=\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}$. The notation $A_{j,k}$ denotes the entry in row $j$, column $k$ of $A$.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-1.8-list-length'],
+    examples: [
       {
-        "templateId": "linear-map-matrix",
-        "description": "2×2 matrix [[1,1],[1,−1]] from T(x,y)=(x+y,x−y)"
-      }
+        templateId: 'linear-map-matrix',
+        description: '2×2 matrix [[1,1],[1,−1]] from T(x,y)=(x+y,x−y)',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-3.31-matrix-of-a-linear-map",
-    "axlerRef": "3.31",
-    "title": "matrix of a linear map, $\\mathcal{M}(T)$",
-    "chapter": 3,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V,W)$ and $v_1,\\ldots,v_n$ is a basis of $V$ and $w_1,\\ldots,w_m$ is a basis of $W$. The matrix of $T$ with respect to these bases is the $m$-by-$n$ matrix $\\mathcal{M}(T)$ whose entries $A_{j,k}$ are defined by $Tv_k=A_{1,k}w_1+\\cdots+A_{m,k}w_m$. If the bases $v_1,\\ldots,v_n$ and $w_1,\\ldots,w_m$ are not clear from the context, then the notation $\\mathcal{M}(T,(v_1,\\ldots,v_n),(w_1,\\ldots,w_m))$ is used.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix",
-      "def-2.26-basis",
-      "def-3.1-linear-map"
-    ],
-    "examples": [
+    id: 'def-3.31-matrix-of-a-linear-map',
+    axlerRef: '3.31',
+    title: 'matrix of a linear map, $\\mathcal{M}(T)$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V,W)$ and $v_1,\\ldots,v_n$ is a basis of $V$ and $w_1,\\ldots,w_m$ is a basis of $W$. The matrix of $T$ with respect to these bases is the $m$-by-$n$ matrix $\\mathcal{M}(T)$ whose entries $A_{j,k}$ are defined by $Tv_k=A_{1,k}w_1+\\cdots+A_{m,k}w_m$. If the bases $v_1,\\ldots,v_n$ and $w_1,\\ldots,w_m$ are not clear from the context, then the notation $\\mathcal{M}(T,(v_1,\\ldots,v_n),(w_1,\\ldots,w_m))$ is used.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix', 'def-2.26-basis', 'def-3.1-linear-map'],
+    examples: [
       {
-        "templateId": "linear-map-matrix",
-        "description": "T(x,y)=(x+y,x−y) → ℳ(T)=[[1,1],[1,−1]]"
+        templateId: 'linear-map-matrix',
+        description: 'T(x,y)=(x+y,x−y) → ℳ(T)=[[1,1],[1,−1]]',
       },
       {
-        "templateId": "rank-nullity-2d",
-        "description": "Projection → ℳ(P)=[[1,0],[0,0]]"
-      }
+        templateId: 'rank-nullity-2d',
+        description: 'Projection → ℳ(P)=[[1,0],[0,0]]',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "Given bases for V and W, the matrix ℳ(T) encodes T by recording where each basis vector goes: the k-th column is the coordinate vector of Tvₖ in the W-basis.",
-    "commonErrors": [
-      "The matrix of T depends on the chosen bases; the same T has different matrices relative to different bases."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'Given bases for V and W, the matrix ℳ(T) encodes T by recording where each basis vector goes: the k-th column is the coordinate vector of Tvₖ in the W-basis.',
+    commonErrors: [
+      'The matrix of T depends on the chosen bases; the same T has different matrices relative to different bases.',
+    ],
   },
   {
-    "id": "def-3.34-matrix-addition",
-    "axlerRef": "3.34",
-    "title": "matrix addition",
-    "chapter": 3,
-    "formalStatement": "The sum of two matrices of the same size is the matrix obtained by adding corresponding entries in the matrices: $\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}+\\begin{pmatrix} C_{1,1} & \\cdots & C_{1,n} \\ \\vdots & & \\vdots \\ C_{m,1} & \\cdots & C_{m,n} \\end{pmatrix}=\\begin{pmatrix} A_{1,1}+C_{1,1} & \\cdots & A_{1,n}+C_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1}+C_{m,1} & \\cdots & A_{m,n}+C_{m,n} \\end{pmatrix}$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-3.34-matrix-addition',
+    axlerRef: '3.34',
+    title: 'matrix addition',
+    chapter: 3,
+    formalStatement:
+      'The sum of two matrices of the same size is the matrix obtained by adding corresponding entries in the matrices: $\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}+\\begin{pmatrix} C_{1,1} & \\cdots & C_{1,n} \\ \\vdots & & \\vdots \\ C_{m,1} & \\cdots & C_{m,n} \\end{pmatrix}=\\begin{pmatrix} A_{1,1}+C_{1,1} & \\cdots & A_{1,n}+C_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1}+C_{m,1} & \\cdots & A_{m,n}+C_{m,n} \\end{pmatrix}$.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-3.36-scalar-multiplication-of-a-matrix",
-    "axlerRef": "3.36",
-    "title": "scalar multiplication of a matrix",
-    "chapter": 3,
-    "formalStatement": "The product of a scalar and a matrix is the matrix obtained by multiplying each entry in the matrix by the scalar: $\\lambda\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}=\\begin{pmatrix} \\lambda A_{1,1} & \\cdots & \\lambda A_{1,n} \\ \\vdots & & \\vdots \\ \\lambda A_{m,1} & \\cdots & \\lambda A_{m,n} \\end{pmatrix}$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-3.36-scalar-multiplication-of-a-matrix',
+    axlerRef: '3.36',
+    title: 'scalar multiplication of a matrix',
+    chapter: 3,
+    formalStatement:
+      'The product of a scalar and a matrix is the matrix obtained by multiplying each entry in the matrix by the scalar: $\\lambda\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{m,1} & \\cdots & A_{m,n} \\end{pmatrix}=\\begin{pmatrix} \\lambda A_{1,1} & \\cdots & \\lambda A_{1,n} \\ \\vdots & & \\vdots \\ \\lambda A_{m,1} & \\cdots & \\lambda A_{m,n} \\end{pmatrix}$.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-3.41-matrix-multiplication",
-    "axlerRef": "3.41",
-    "title": "matrix multiplication",
-    "chapter": 3,
-    "formalStatement": "Suppose $A$ is an $m$-by-$n$ matrix and $B$ is an $n$-by-$p$ matrix. Then $AB$ is defined to be the $m$-by-$p$ matrix whose entry in row $j$, column $k$, is given by $(AB){j,k}=\\sum{r=1}^{n} A_{j,r}B_{r,k}$. Thus the entry in row $j$, column $k$, of $AB$ is computed by taking row $j$ of $A$ and column $k$ of $B$, multiplying together corresponding entries, and then summing.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix",
-      "def-3.7-product-of-linear-maps"
-    ],
-    "examples": [
+    id: 'def-3.41-matrix-multiplication',
+    axlerRef: '3.41',
+    title: 'matrix multiplication',
+    chapter: 3,
+    formalStatement:
+      'Suppose $A$ is an $m$-by-$n$ matrix and $B$ is an $n$-by-$p$ matrix. Then $AB$ is defined to be the $m$-by-$p$ matrix whose entry in row $j$, column $k$, is given by $(AB){j,k}=\\sum{r=1}^{n} A_{j,r}B_{r,k}$. Thus the entry in row $j$, column $k$, of $AB$ is computed by taking row $j$ of $A$ and column $k$ of $B$, multiplying together corresponding entries, and then summing.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix', 'def-3.7-product-of-linear-maps'],
+    examples: [
       {
-        "templateId": "matrix-product-r2",
-        "description": "A (scaling) · B (shear) = AB (compound transformation)"
-      }
+        templateId: 'matrix-product-r2',
+        description: 'A (scaling) · B (shear) = AB (compound transformation)',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "The (j,k) entry of AB is the dot product of the j-th row of A with the k-th column of B. Matrix multiplication corresponds exactly to composition of linear maps: ℳ(ST) = ℳ(S)ℳ(T).",
-    "commonErrors": [
-      "AB is defined only when the number of columns of A equals the number of rows of B.",
-      "AB ≠ BA in general — matrix multiplication is not commutative."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'The (j,k) entry of AB is the dot product of the j-th row of A with the k-th column of B. Matrix multiplication corresponds exactly to composition of linear maps: ℳ(ST) = ℳ(S)ℳ(T).',
+    commonErrors: [
+      'AB is defined only when the number of columns of A equals the number of rows of B.',
+      'AB ≠ BA in general — matrix multiplication is not commutative.',
+    ],
   },
   {
-    "id": "def-3.52-column-rank-row-rank",
-    "axlerRef": "3.52",
-    "title": "column rank, row rank",
-    "chapter": 3,
-    "formalStatement": "Suppose $A$ is an $m$-by-$n$ matrix with entries in $\\mathbb{F}$. The column rank of $A$ is the dimension of the span of the columns of $A$ in $\\mathbb{F}^{m,1}$. The row rank of $A$ is the dimension of the span of the rows of $A$ in $\\mathbb{F}^{1,n}$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "dimension-bars",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix",
-      "def-2.4-span"
-    ],
-    "examples": [
+    id: 'def-3.52-column-rank-row-rank',
+    axlerRef: '3.52',
+    title: 'column rank, row rank',
+    chapter: 3,
+    formalStatement:
+      'Suppose $A$ is an $m$-by-$n$ matrix with entries in $\\mathbb{F}$. The column rank of $A$ is the dimension of the span of the columns of $A$ in $\\mathbb{F}^{m,1}$. The row rank of $A$ is the dimension of the span of the rows of $A$ in $\\mathbb{F}^{1,n}$.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'dimension-bars', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix', 'def-2.4-span'],
+    examples: [
       {
-        "templateId": "rank-nullity-2d",
-        "description": "Projection [[1,0],[0,0]]: column rank = 1 = row rank"
-      }
+        templateId: 'rank-nullity-2d',
+        description: 'Projection [[1,0],[0,0]]: column rank = 1 = row rank',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-3.54-transpose",
-    "axlerRef": "3.54",
-    "title": "transpose, $A^t$",
-    "chapter": 3,
-    "formalStatement": "The transpose of a matrix $A$, denoted by $A^t$, is the matrix obtained from $A$ by interchanging rows and columns. Specifically, if $A$ is an $m$-by-$n$ matrix, then $A^t$ is the $n$-by-$m$ matrix whose entries are given by $(A^t){k,j}=A{j,k}$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "commonErrors": [
-      "(AB)ᵗ = BᵗAᵗ — transpose reverses the order of a product."
-    ]
+    id: 'def-3.54-transpose',
+    axlerRef: '3.54',
+    title: 'transpose, $A^t$',
+    chapter: 3,
+    formalStatement:
+      'The transpose of a matrix $A$, denoted by $A^t$, is the matrix obtained from $A$ by interchanging rows and columns. Specifically, if $A$ is an $m$-by-$n$ matrix, then $A^t$ is the $n$-by-$m$ matrix whose entries are given by $(A^t){k,j}=A{j,k}$.',
+    section: '3.C',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix'],
+    examples: [],
+    nonexamples: [],
+    commonErrors: ['(AB)ᵗ = BᵗAᵗ — transpose reverses the order of a product.'],
   },
   {
-    "id": "def-3.58-rank",
-    "axlerRef": "3.58",
-    "title": "rank",
-    "chapter": 3,
-    "formalStatement": "The rank of a matrix $A \\in \\mathbb{F}^{m,n}$ is the column rank of $A$.",
-    "section": "3.C",
-    "linkedVisualizers": [
-      "dimension-bars",
-      "kernel-range-diagram",
-      "matrix-heatmap",
-      "symbolic-formula"
+    id: 'def-3.58-rank',
+    axlerRef: '3.58',
+    title: 'rank',
+    chapter: 3,
+    formalStatement: 'The rank of a matrix $A \\in \\mathbb{F}^{m,n}$ is the column rank of $A$.',
+    section: '3.C',
+    linkedVisualizers: [
+      'dimension-bars',
+      'kernel-range-diagram',
+      'matrix-heatmap',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-3.52-column-rank-row-rank",
-      "def-3.16-range"
-    ],
-    "examples": [
+    prerequisites: ['def-3.52-column-rank-row-rank', 'def-3.16-range'],
+    examples: [
       {
-        "templateId": "rank-nullity-2d",
-        "description": "Projection: rank 1 (range = x-axis)"
+        templateId: 'rank-nullity-2d',
+        description: 'Projection: rank 1 (range = x-axis)',
       },
       {
-        "templateId": "invertible-map-r2",
-        "description": "Rotation: rank 2 (range = ℝ²)"
-      }
+        templateId: 'invertible-map-r2',
+        description: 'Rotation: rank 2 (range = ℝ²)',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "The rank of a matrix A equals the dimension of its column space (= row space by Axler §3.57). For a linear map T, rank T = dim range T.",
-    "commonErrors": [
-      "Rank is a property of both the linear map and its matrix (they agree given a choice of bases)."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'The rank of a matrix A equals the dimension of its column space (= row space by Axler §3.57). For a linear map T, rank T = dim range T.',
+    commonErrors: [
+      'Rank is a property of both the linear map and its matrix (they agree given a choice of bases).',
+    ],
   },
   {
-    "id": "def-3.59-invertible-inverse-linear-map",
-    "axlerRef": "3.59",
-    "title": "invertible, inverse",
-    "chapter": 3,
-    "formalStatement": "A linear map $T \\in \\mathcal{L}(V,W)$ is called invertible if there exists a linear map $S \\in \\mathcal{L}(W,V)$ such that $ST$ equals the identity operator on $V$ and $TS$ equals the identity operator on $W$. A linear map $S \\in \\mathcal{L}(W,V)$ satisfying $ST=I$ and $TS=I$ is called an inverse of $T$ (note that the first $I$ is the identity operator on $V$ and the second $I$ is the identity operator on $W$).",
-    "section": "3.D",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "grid-deformation-2d",
-      "kernel-range-diagram",
-      "symbolic-formula"
+    id: 'def-3.59-invertible-inverse-linear-map',
+    axlerRef: '3.59',
+    title: 'invertible, inverse',
+    chapter: 3,
+    formalStatement:
+      'A linear map $T \\in \\mathcal{L}(V,W)$ is called invertible if there exists a linear map $S \\in \\mathcal{L}(W,V)$ such that $ST$ equals the identity operator on $V$ and $TS$ equals the identity operator on $W$. A linear map $S \\in \\mathcal{L}(W,V)$ satisfying $ST=I$ and $TS=I$ is called an inverse of $T$ (note that the first $I$ is the identity operator on $V$ and the second $I$ is the identity operator on $W$).',
+    section: '3.D',
+    linkedVisualizers: [
+      'matrix-heatmap',
+      'grid-deformation-2d',
+      'kernel-range-diagram',
+      'symbolic-formula',
     ],
-    "prerequisites": [
-      "def-3.14-injective",
-      "def-3.19-surjective"
-    ],
-    "examples": [
+    prerequisites: ['def-3.14-injective', 'def-3.19-surjective'],
+    examples: [
       {
-        "templateId": "invertible-map-r2",
-        "description": "Rotation by 60°: det = 1, T⁻¹ = rotation by −60°"
+        templateId: 'invertible-map-r2',
+        description: 'Rotation by 60°: det = 1, T⁻¹ = rotation by −60°',
       },
       {
-        "templateId": "injective-map-r2",
-        "description": "Shear [[1,1],[0,1]]: det = 1, invertible"
-      }
+        templateId: 'injective-map-r2',
+        description: 'Shear [[1,1],[0,1]]: det = 1, invertible',
+      },
     ],
-    "nonexamples": [
+    nonexamples: [
       {
-        "templateId": "null-space-demo",
-        "description": "Projection [[1,0],[0,0]]: det = 0, not invertible"
-      }
+        templateId: 'null-space-demo',
+        description: 'Projection [[1,0],[0,0]]: det = 0, not invertible',
+      },
     ],
-    "plainStatement": "A linear map T ∈ ℒ(V, W) is invertible if there exists a linear map S ∈ ℒ(W, V) with ST = I_V and TS = I_W. The inverse S is unique and denoted T⁻¹. For operators on finite-dimensional spaces: invertible ⟺ injective ⟺ surjective.",
-    "commonErrors": [
-      "Not every linear map is invertible — a map is invertible only if it is both injective and surjective.",
-      "For an n×n matrix A: det(A) ≠ 0 ⟺ A is invertible."
-    ]
+    plainStatement:
+      'A linear map T ∈ ℒ(V, W) is invertible if there exists a linear map S ∈ ℒ(W, V) with ST = I_V and TS = I_W. The inverse S is unique and denoted T⁻¹. For operators on finite-dimensional spaces: invertible ⟺ injective ⟺ surjective.',
+    commonErrors: [
+      'Not every linear map is invertible — a map is invertible only if it is both injective and surjective.',
+      'For an n×n matrix A: det(A) ≠ 0 ⟺ A is invertible.',
+    ],
   },
   {
-    "id": "def-3.69-isomorphism-isomorphic",
-    "axlerRef": "3.69",
-    "title": "isomorphism, isomorphic",
-    "chapter": 3,
-    "formalStatement": "• An isomorphism is an invertible linear map.\n• Two vector spaces are called isomorphic if there is an isomorphism from one vector space onto the other one.",
-    "section": "3.D",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "grid-deformation-2d",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.59-invertible-inverse-linear-map"
-    ],
-    "examples": [
+    id: 'def-3.69-isomorphism-isomorphic',
+    axlerRef: '3.69',
+    title: 'isomorphism, isomorphic',
+    chapter: 3,
+    formalStatement:
+      '• An isomorphism is an invertible linear map.\n• Two vector spaces are called isomorphic if there is an isomorphism from one vector space onto the other one.',
+    section: '3.D',
+    linkedVisualizers: ['matrix-heatmap', 'grid-deformation-2d', 'symbolic-formula'],
+    prerequisites: ['def-3.59-invertible-inverse-linear-map'],
+    examples: [
       {
-        "templateId": "invertible-map-r2",
-        "description": "Any invertible T: ℝ² → ℝ² is an isomorphism"
-      }
+        templateId: 'invertible-map-r2',
+        description: 'Any invertible T: ℝ² → ℝ² is an isomorphism',
+      },
     ],
-    "nonexamples": [],
-    "plainStatement": "An isomorphism is an invertible linear map. Two vector spaces are isomorphic (V ≅ W) iff they have the same dimension — over the same field, every n-dimensional space is isomorphic to 𝔽ⁿ.",
-    "commonErrors": [
-      "Isomorphic spaces are structurally identical as vector spaces; however they may look different as geometric objects."
-    ]
+    nonexamples: [],
+    plainStatement:
+      'An isomorphism is an invertible linear map. Two vector spaces are isomorphic (V ≅ W) iff they have the same dimension — over the same field, every n-dimensional space is isomorphic to 𝔽ⁿ.',
+    commonErrors: [
+      'Isomorphic spaces are structurally identical as vector spaces; however they may look different as geometric objects.',
+    ],
   },
   {
-    "id": "def-3.73-matrix-of-a-vector",
-    "axlerRef": "3.73",
-    "title": "matrix of a vector, $\\mathcal{M}(v)$",
-    "chapter": 3,
-    "formalStatement": "Suppose $v \\in V$ and $v_1,\\ldots,v_n$ is a basis of $V$. The matrix of $v$ with respect to this basis is the $n$-by-1 matrix $\\mathcal{M}(v)=\\begin{pmatrix} b_1 \\ \\vdots \\ b_n \\end{pmatrix}$, where $b_1,\\ldots,b_n$ are the scalars such that $v=b_1v_1+\\cdots+b_nv_n$.",
-    "section": "3.D",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix",
-      "def-2.26-basis"
-    ],
-    "examples": [
+    id: 'def-3.73-matrix-of-a-vector',
+    axlerRef: '3.73',
+    title: 'matrix of a vector, $\\mathcal{M}(v)$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $v \\in V$ and $v_1,\\ldots,v_n$ is a basis of $V$. The matrix of $v$ with respect to this basis is the $n$-by-1 matrix $\\mathcal{M}(v)=\\begin{pmatrix} b_1 \\ \\vdots \\ b_n \\end{pmatrix}$, where $b_1,\\ldots,b_n$ are the scalars such that $v=b_1v_1+\\cdots+b_nv_n$.',
+    section: '3.D',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.29-matrix', 'def-2.26-basis'],
+    examples: [
       {
-        "templateId": "basis-as-coordinates",
-        "description": "v = (3/4, −1/2) → column vector [3/4; −1/2]"
-      }
+        templateId: 'basis-as-coordinates',
+        description: 'v = (3/4, −1/2) → column vector [3/4; −1/2]',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-3.79-identity-matrix",
-    "axlerRef": "3.79",
-    "title": "identity matrix, $I$",
-    "chapter": 3,
-    "formalStatement": "Suppose $n$ is a positive integer. The $n$-by-$n$ matrix $\\begin{pmatrix}1 & & 0 \\ & \\ddots & \\ \\ 0 & & 1\\end{pmatrix}$ with 1's on the diagonal (the entries where the row number equals the column number) and 0's elsewhere is called the identity matrix and is denoted by $I$.",
-    "section": "3.D",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.29-matrix"
-    ],
-    "examples": [],
-    "nonexamples": []
+    id: 'def-3.79-identity-matrix',
+    axlerRef: '3.79',
+    title: 'identity matrix, $I$',
+    chapter: 3,
+    formalStatement:
+      "Suppose $n$ is a positive integer. The $n$-by-$n$ matrix $\\begin{pmatrix}1 & & 0 \\ & \\ddots & \\ \\ 0 & & 1\\end{pmatrix}$ with 1's on the diagonal (the entries where the row number equals the column number) and 0's elsewhere is called the identity matrix and is denoted by $I$.",
+    section: '3.D',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.29-matrix'],
+    examples: [],
+    nonexamples: [],
   },
   {
-    "id": "def-3.80-invertible-inverse-matrix",
-    "axlerRef": "3.80",
-    "title": "invertible, inverse, $A^{-1}$",
-    "chapter": 3,
-    "formalStatement": "A square matrix $A$ is called invertible if there is a square matrix $B$ of the same size such that $AB=BA=I$; we call $B$ the inverse of $A$ and denote it by $A^{-1}$.",
-    "section": "3.D",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.79-identity-matrix",
-      "def-3.59-invertible-inverse-linear-map"
-    ],
-    "examples": [
+    id: 'def-3.80-invertible-inverse-matrix',
+    axlerRef: '3.80',
+    title: 'invertible, inverse, $A^{-1}$',
+    chapter: 3,
+    formalStatement:
+      'A square matrix $A$ is called invertible if there is a square matrix $B$ of the same size such that $AB=BA=I$; we call $B$ the inverse of $A$ and denote it by $A^{-1}$.',
+    section: '3.D',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.79-identity-matrix', 'def-3.59-invertible-inverse-linear-map'],
+    examples: [
       {
-        "templateId": "invertible-map-r2",
-        "description": "Rotation matrix: A⁻¹ = transpose (since AᵗA = I)"
-      }
+        templateId: 'invertible-map-r2',
+        description: 'Rotation matrix: A⁻¹ = transpose (since AᵗA = I)',
+      },
     ],
-    "nonexamples": [],
-    "commonErrors": [
-      "(AB)⁻¹ = B⁻¹A⁻¹ — inverse reverses the order of a product."
-    ]
+    nonexamples: [],
+    commonErrors: ['(AB)⁻¹ = B⁻¹A⁻¹ — inverse reverses the order of a product.'],
   },
   {
-    "id": "def-3.87-product-of-vector-spaces",
-    "axlerRef": "3.87",
-    "title": "product of vector spaces",
-    "chapter": 3,
-    "formalStatement": "Suppose $V_{1}$, … , $V_{m}$ are vector spaces over $\\mathbb{F}$.\n• The product $V_{1}$ × ⋯× $V_{m}$ is defined by $V_{1}$ × ⋯× $V_{m}$= {($v_{1}$, … , $v_{m}$) ∶$v_{1}$ ∈$V_{1}$, … , $v_{m}$ ∈ $V_{m}$}.\n• Addition on $V_{1}$ × ⋯× $V_{m}$ is defined by ($u_{1}$, … , $u_{m}$) + ($v_{1}$, … , $v_{m}$) = ($u_{1}$ + $v_{1}$, … , $u_{m}$+ $v_{m}$).\n• Scalar multiplication on $V_{1}$ × ⋯× $V_{m}$ is defined by $\\lambda$($v_{1}$, … , $v_{m}$) = ($\\lambda v_{1}$, … , $\\lambda v_{m}$).",
-    "section": "3.E",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.20-vector-space"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "plainStatement": "The product V₁ × ⋯ × Vₘ is a new vector space whose elements are m-tuples (v₁,…,vₘ) with componentwise operations. dim(V₁ × ⋯ × Vₘ) = dim V₁ + ⋯ + dim Vₘ."
+    id: 'def-3.87-product-of-vector-spaces',
+    axlerRef: '3.87',
+    title: 'product of vector spaces',
+    chapter: 3,
+    formalStatement:
+      'Suppose $V_{1}$, … , $V_{m}$ are vector spaces over $\\mathbb{F}$.\n• The product $V_{1}$ × ⋯× $V_{m}$ is defined by $V_{1}$ × ⋯× $V_{m}$= {($v_{1}$, … , $v_{m}$) ∶$v_{1}$ ∈$V_{1}$, … , $v_{m}$ ∈ $V_{m}$}.\n• Addition on $V_{1}$ × ⋯× $V_{m}$ is defined by ($u_{1}$, … , $u_{m}$) + ($v_{1}$, … , $v_{m}$) = ($u_{1}$ + $v_{1}$, … , $u_{m}$+ $v_{m}$).\n• Scalar multiplication on $V_{1}$ × ⋯× $V_{m}$ is defined by $\\lambda$($v_{1}$, … , $v_{m}$) = ($\\lambda v_{1}$, … , $\\lambda v_{m}$).',
+    section: '3.E',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-1.20-vector-space'],
+    examples: [],
+    nonexamples: [],
+    plainStatement:
+      'The product V₁ × ⋯ × Vₘ is a new vector space whose elements are m-tuples (v₁,…,vₘ) with componentwise operations. dim(V₁ × ⋯ × Vₘ) = dim V₁ + ⋯ + dim Vₘ.',
   },
   {
-    "id": "def-3.97-translate",
-    "axlerRef": "3.97",
-    "title": "translate",
-    "chapter": 3,
-    "formalStatement": "For $v$ ∈ $V$ and $U$a subset of $V$, the set $v$+ $U$ is said to be a translate of $U$.",
-    "section": "3.E",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-1.33-subspace"
-    ],
-    "examples": [
+    id: 'def-3.97-translate',
+    axlerRef: '3.97',
+    title: 'translate',
+    chapter: 3,
+    formalStatement:
+      'For $v$ ∈ $V$ and $U$a subset of $V$, the set $v$+ $U$ is said to be a translate of $U$.',
+    section: '3.E',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-1.33-subspace'],
+    examples: [
       {
-        "templateId": "affine-line-r2",
-        "description": "The coset (1,1) + span{(1,0)} — a horizontal line at y=1"
-      }
+        templateId: 'affine-line-r2',
+        description: 'The coset (1,1) + span{(1,0)} — a horizontal line at y=1',
+      },
     ],
-    "nonexamples": []
+    nonexamples: [],
   },
   {
-    "id": "def-3.99-quotient-space",
-    "axlerRef": "3.99",
-    "title": "quotient space, $V$/$U$",
-    "chapter": 3,
-    "formalStatement": "Suppose $U$ is a subspace of $V$. Then the quotient space $V$/$U$ is the set of all translates of $U$. Thus $V$/$U$= {$v$+ $U$∶$v$ ∈ $V$}.",
-    "section": "3.E",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.97-translate",
-      "def-1.33-subspace"
-    ],
-    "examples": [
+    id: 'def-3.99-quotient-space',
+    axlerRef: '3.99',
+    title: 'quotient space, $V$/$U$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $U$ is a subspace of $V$. Then the quotient space $V$/$U$ is the set of all translates of $U$. Thus $V$/$U$= {$v$+ $U$∶$v$ ∈ $V$}.',
+    section: '3.E',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.97-translate', 'def-1.33-subspace'],
+    examples: [
       {
-        "templateId": "affine-line-r2",
-        "description": "ℝ²/{y-axis}: each coset is a vertical line"
-      }
-    ],
-    "nonexamples": [],
-    "plainStatement": "The quotient space V/U has elements that are cosets v + U of U in V. Two vectors v, w define the same coset iff v − w ∈ U. dim(V/U) = dim V − dim U.",
-    "commonErrors": [
-      "Elements of V/U are sets (cosets), not individual vectors."
-    ]
-  },
-  {
-    "id": "def-3.102-addition-scalar-multiplication-on-quotient",
-    "axlerRef": "3.102",
-    "title": "addition and scalar multiplication on $V$/$U$",
-    "chapter": 3,
-    "formalStatement": "Suppose $U$ is a subspace of $V$. Then addition and scalar multiplication are defined on $V$/$U$by ($v$+ $U$) + ($w$+ $U$) = ($v$+ $w$) + $U$ $\\lambda$($v$+ $U$) = ($\\lambda v$) + $U$ for all $v$, $w$ ∈ $V$ and all $\\lambda$ ∈ $\\mathbb{F}$.",
-    "section": "3.E",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.99-quotient-space"
-    ],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-3.104-quotient-map",
-    "axlerRef": "3.104",
-    "title": "quotient map, 𝜋",
-    "chapter": 3,
-    "formalStatement": "Suppose $U$ is a subspace of $V$. The quotient map 𝜋∶$V$→$V$/$U$ is the linear map defined by 𝜋($v$) = $v$+ $U$ for each $v$ ∈ $V$.",
-    "section": "3.E",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.99-quotient-space",
-      "def-3.1-linear-map"
-    ],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-3.108-linear-functional",
-    "axlerRef": "3.108",
-    "title": "linear functional",
-    "chapter": 3,
-    "formalStatement": "A linear functional on $V$ is a linear map from $V$ to $\\mathbb{F}$. In other words, a linear functional is an element of $\\mathcal{L}$($V$, $\\mathbb{F}$).",
-    "section": "3.F",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.1-linear-map"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "plainStatement": "A linear functional is a linear map φ: V → 𝔽 (scalar-valued). Examples: dot product with a fixed vector, definite integral on a function space, evaluation of a polynomial at a point."
-  },
-  {
-    "id": "def-3.110-dual-space",
-    "axlerRef": "3.110",
-    "title": "dual space, $V^\\prime$",
-    "chapter": 3,
-    "formalStatement": "The dual space of $V$, denoted by $V^\\prime$, is the vector space of all linear functionals on $V$. In other words, $V^\\prime$ = $\\mathcal{L}$($V$, $\\mathbb{F}$).",
-    "section": "3.F",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.108-linear-functional",
-      "def-3.5-addition-scalar-multiplication-on-l"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "plainStatement": "The dual space V' = ℒ(V, 𝔽) is the vector space of all linear functionals on V. dim V' = dim V."
-  },
-  {
-    "id": "def-3.112-dual-basis",
-    "axlerRef": "3.112",
-    "title": "dual basis",
-    "chapter": 3,
-    "formalStatement": "If $v_{1}$, … , $v_{n}$ is a basis of $V$, then the dual basis of $v_{1}$, … , $v_{n}$ is the list $\\varphi_{1}$, … , $\\varphi_{n}$ of elements of $V^\\prime$, where each $\\varphi_{j}$ is the linear functional on $V$such that ⎧{ 1   if $k$= $j$, $\\varphi_{j}$($v_{k}$) =                                0   if $k$ ≠ $j$.                                                                              ⎨{⎩",
-    "section": "3.F",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.110-dual-space",
-      "def-2.26-basis"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "commonErrors": [
-      "The dual basis φ₁,…,φₙ satisfies φⱼ(vₖ) = 1 if j=k, else 0 — it is the unique basis of V' dual to v₁,…,vₙ."
-    ]
-  },
-  {
-    "id": "def-3.118-dual-map",
-    "axlerRef": "3.118",
-    "title": "dual map, $T^\\prime$",
-    "chapter": 3,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The dual map of $T$is the linear map $T^\\prime$ ∈$\\mathcal{L}$($W^\\prime$, $V^\\prime$) defined for each $\\varphi$ ∈ $W^\\prime$by $T^\\prime$($\\varphi$) = $\\varphi$∘$T$.",
-    "section": "3.F",
-    "linkedVisualizers": [
-      "matrix-heatmap",
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.110-dual-space",
-      "def-3.1-linear-map"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "plainStatement": "The dual map T' ∈ ℒ(W', V') is defined by T'(φ) = φ ∘ T. Its matrix (in dual bases) is the transpose of the matrix of T."
-  },
-  {
-    "id": "def-3.121-annihilator",
-    "axlerRef": "3.121",
-    "title": "annihilator, $U_{0}$",
-    "chapter": 4,
-    "formalStatement": "For $U$⊆$V$, the annihilator of $U$, denoted by $U_{0}$, is defined by $U_{0}$ = {$\\varphi$ ∈ $V^\\prime$ ∶$\\varphi$($u$) = 0 for all $u$ ∈ $U$}.",
-    "section": "3.F",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [
-      "def-3.110-dual-space",
-      "def-1.33-subspace"
-    ],
-    "examples": [],
-    "nonexamples": [],
-    "commonErrors": [
-      "The annihilator U⁰ ⊆ V' consists of all linear functionals that vanish on U. dim U⁰ = dim V − dim U."
-    ]
-  },
-  {
-    "id": "def-4.1-real-part-imaginary-part",
-    "axlerRef": "4.1",
-    "title": "real part, Re $z$, imaginary part, Im $z$",
-    "chapter": 4,
-    "formalStatement": "Suppose $z$= $a$+ $b i$, where $a$ and $b$ are real numbers.\n• The real part of $z$, denoted by Re $z$, is defined by Re $z$= $a$.\n• The imaginary part of $z$, denoted by Im $z$, is defined by Im $z$= $b$.",
-    "section": "4.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-4.2-complex-conjugate-absolute-value",
-    "axlerRef": "4.2",
-    "title": "complex conjugate, $z$, absolute value, |$z$|",
-    "chapter": 4,
-    "formalStatement": "Suppose $z$ ∈ $\\mathbb{C}$.\n• The complex conjugate of $z$ ∈ $\\mathbb{C}$, denoted by $z$, is defined by $z$= Re $z$−(Im $z$)$i$.\n• The absolute value of a complex number $z$, denoted by |$z$|, is defined by |$z$| = √(Re $z$)2 + (Im $z$)2.",
-    "section": "4.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-4.5-zero-of-a-polynomial",
-    "axlerRef": "4.5",
-    "title": "zero of a polynomial",
-    "chapter": 5,
-    "formalStatement": "A number $\\lambda$ ∈ $\\mathbb{F}$ is called a zero (or root) of a polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ if $p$($\\lambda$) = 0.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.1-operator",
-    "axlerRef": "5.1",
-    "title": "operator",
-    "chapter": 5,
-    "formalStatement": "A linear map from a vector space to itself is called an operator.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.2-invariant-subspace",
-    "axlerRef": "5.2",
-    "title": "invariant subspace",
-    "chapter": 5,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V)$. A subspace $U$of $V$ is called invariant under $T$if $T u$ ∈ $U$ for every $u$ ∈ $U$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.5-eigenvalue",
-    "axlerRef": "5.5",
-    "title": "eigenvalue",
-    "chapter": 5,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V)$. A number $\\lambda$ ∈ $\\mathbb{F}$ is called an eigenvalue of $T$if there exists $v$ ∈ $V$such that $v$ ≠ 0 and $T v$= $\\lambda v$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.8-eigenvector",
-    "axlerRef": "5.8",
-    "title": "eigenvector",
-    "chapter": 5,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V)$ and $\\lambda$ ∈ $\\mathbb{F}$ is an eigenvalue of $T$. A vector $v$ ∈ $V$ is called an eigenvector of $T$ corresponding to $\\lambda$if $v$ ≠ 0 and $T v$= $\\lambda v$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.16-product-of-polynomials",
-    "axlerRef": "5.16",
-    "title": "product of polynomials",
-    "chapter": 5,
-    "formalStatement": "If $p$, $q$ ∈ $\\mathcal{P}(\\mathbb{F})$, then $p q$ ∈ $\\mathcal{P}(\\mathbb{F})$ is the polynomial defined by ($p q$)($z$) = $p$($z$)$q$($z$) for all $z$ ∈ $\\mathbb{F}$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.21-monic-polynomial",
-    "axlerRef": "5.21",
-    "title": "monic polynomial",
-    "chapter": 5,
-    "formalStatement": "A monic polynomial is a polynomial whose highest-degree coefficient equals 1.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.24-minimal-polynomial",
-    "axlerRef": "5.24",
-    "title": "minimal polynomial",
-    "chapter": 5,
-    "formalStatement": "Suppose $V$ is finite-dimensional and $T$ ∈ $\\mathcal{L}(V)$. Then the minimal polynomial of $T$is the unique monic polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ of smallest degree such that $p$($T$) = 0.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.35-matrix-of-an-operator",
-    "axlerRef": "5.35",
-    "title": "matrix of an operator, $\\mathcal{M}(T)$",
-    "chapter": 5,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$. The matrix of $T$ with respect to a basis $v_1,\\ldots,v_n$ of $V$ is the $n$-by-$n$ matrix $\\mathcal{M}(T)=\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{n,1} & \\cdots & A_{n,n} \\end{pmatrix}$ whose entries $A_{j,k}$ are defined by $Tv_k=A_{1,k}v_1+\\cdots+A_{n,k}v_n$. The notation $\\mathcal{M}(T,(v_1,\\ldots,v_n))$ is used if the basis is not clear from the context.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.37-diagonal-of-a-matrix",
-    "axlerRef": "5.37",
-    "title": "diagonal of a matrix",
-    "chapter": 5,
-    "formalStatement": "The diagonal of a square matrix consists of the entries on the line from the upper left corner to the bottom right corner.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.38-upper-triangular-matrix",
-    "axlerRef": "5.38",
-    "title": "upper-triangular matrix",
-    "chapter": 5,
-    "formalStatement": "A square matrix is called upper triangular if all entries below the diagonal are 0.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.48-diagonal-matrix",
-    "axlerRef": "5.48",
-    "title": "diagonal matrix",
-    "chapter": 5,
-    "formalStatement": "A diagonal matrix is a square matrix that is 0 everywhere except possibly on the diagonal.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.50-diagonalizable",
-    "axlerRef": "5.50",
-    "title": "diagonalizable",
-    "chapter": 5,
-    "formalStatement": "An operator on $V$ is called diagonalizable if the operator has a diagonal matrix with respect to some basis of $V$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.52-eigenspace",
-    "axlerRef": "5.52",
-    "title": "eigenspace, $E(\\lambda,T)$",
-    "chapter": 5,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda \\in \\mathbb{F}$. The eigenspace of $T$ corresponding to $\\lambda$ is the subspace $E(\\lambda,T)$ of $V$ defined by $E(\\lambda,T)=\\operatorname{null}(T-\\lambda I)=\\{v \\in V: Tv=\\lambda v\\}$. Hence $E(\\lambda,T)$ is the set of all eigenvectors of $T$ corresponding to $\\lambda$, along with the 0 vector.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.66-gershgorin-disks",
-    "axlerRef": "5.66",
-    "title": "Gershgorin disks",
-    "chapter": 5,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$ and $v_1,\\ldots,v_n$ is a basis of $V$. Let $A$ denote the matrix of $T$ with respect to this basis. A Gershgorin disk of $T$ with respect to the basis $v_1,\\ldots,v_n$ is a set of the form $\\{z \\in \\mathbb{F}: |z-A_{j,j}| \\le \\sum_{\\substack{k=1\\\\k\\ne j}}^{n}|A_{j,k}|\\}$, where $j \\in \\{1,\\ldots,n\\}$.",
-    "section": "5.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-5.71-commute",
-    "axlerRef": "5.71",
-    "title": "commute",
-    "chapter": 6,
-    "formalStatement": "• Two operators $S$and $T$on the same vector space commute if $S T$= $T S$.\n• Two square matrices $A$and $B$of the same size commute if $A$$B$= $B$$A$.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.1-dot-product",
-    "axlerRef": "6.1",
-    "title": "dot product",
-    "chapter": 6,
-    "formalStatement": "For $x$, $y$ ∈ $\\mathbb{R}^n$, the dot product of $x$ and $y$, denoted by $x$⋅$y$, is defined by $x$⋅$y$= $x_{1} y_{1}$ + ⋯+ $x_{n} y_{n}$, where $x$= ($x_{1}$, … , $x_{n}$) and $y$= ($y_{1}$, … , $y_{n}$).",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.2-inner-product",
-    "axlerRef": "6.2",
-    "title": "inner product",
-    "chapter": 6,
-    "formalStatement": "An inner product on $V$ is a function that takes each ordered pair ($u$, $v$) of elements of $V$ to a number ⟨$u$, $v$⟩ ∈ $\\mathbb{F}$ and has the following properties.\npositivity: ⟨$v$, $v$⟩≥0 for all $v$ ∈ $V$.\ndefiniteness: ⟨$v$, $v$⟩= 0 if and only if $v$= 0. additivity in first slot ⟨$u$+ $v$, $w$⟩= ⟨$u$, $w$⟩+ ⟨$v$, $w$⟩for all $u$, $v$, $w$ ∈ $V$. homogeneity in first slot ⟨$\\lambda u$, $v$⟩= $\\lambda$⟨$u$, $v$⟩for all $\\lambda$ ∈ $\\mathbb{F}$ and all $u$, $v$ ∈ $V$.\nconjugate symmetry: ⟨$u$, $v$⟩= ⟨$v$, $u$⟩for all $u$, $v$ ∈ $V$.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.4-inner-product-space",
-    "axlerRef": "6.4",
-    "title": "inner product space",
-    "chapter": 6,
-    "formalStatement": "An inner product space is a vector space $V$along with an inner product on $V$.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.7-norm",
-    "axlerRef": "6.7",
-    "title": "norm, ‖$v$‖",
-    "chapter": 6,
-    "formalStatement": "For $v$ ∈ $V$, the norm of $v$, denoted by ‖$v$‖, is defined by ‖$v$‖ = √⟨$v$, $v$⟩.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.10-orthogonal",
-    "axlerRef": "6.10",
-    "title": "orthogonal",
-    "chapter": 6,
-    "formalStatement": "Two vectors $u$, $v$ ∈ $V$are called orthogonal if ⟨$u$, $v$⟩= 0.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.22-orthonormal",
-    "axlerRef": "6.22",
-    "title": "orthonormal",
-    "chapter": 6,
-    "formalStatement": "• A list of vectors is called orthonormal if each vector in the list has norm 1 and is orthogonal to all the other vectors in the list.\n• In other words, a list $e_{1}$, … , $e_{m}$ of vectors in $V$ is orthonormal if ⎧{1   if $j$= $k$, ⟨$e_{j}$, $e_{k}$⟩=                                 0   if $j$ ≠ $k$                                                                                ⎨{⎩ for all $j$, $k$ ∈ {1, … , $m$}.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.27-orthonormal-basis",
-    "axlerRef": "6.27",
-    "title": "orthonormal basis",
-    "chapter": 6,
-    "formalStatement": "An orthonormal basis of $V$ is an orthonormal list of vectors in $V$that is also a basis of $V$.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.39-linear-functional-dual-space",
-    "axlerRef": "6.39",
-    "title": "linear functional, dual space, $V^\\prime$",
-    "chapter": 6,
-    "formalStatement": "• A linear functional on $V$ is a linear map from $V$ to $\\mathbb{F}$.\n• The dual space of $V$, denoted by $V^\\prime$, is the vector space of all linear functionals on $V$. In other words, $V^\\prime$ = $\\mathcal{L}$($V$, $\\mathbb{F}$).",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.46-orthogonal-complement",
-    "axlerRef": "6.46",
-    "title": "orthogonal complement, $U^\\perp$",
-    "chapter": 6,
-    "formalStatement": "If $U$ is a subset of $V$, then the orthogonal complement of $U$, denoted by $U^\\perp$, is the set of all vectors in $V$that are orthogonal to every vector in $U$: $U^\\perp$= {$v$ ∈ $V$∶⟨$u$, $v$⟩= 0 for every $u$ ∈ $U$}.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.55-orthogonal-projection",
-    "axlerRef": "6.55",
-    "title": "orthogonal projection, $P_U$",
-    "chapter": 6,
-    "formalStatement": "Suppose $U$ is a finite-dimensional subspace of $V$. The orthogonal projection of $V$ onto $U$ is the operator $P_U \\in \\mathcal{L}(V)$ defined as follows: For each $v \\in V$, write $v=u+w$, where $u \\in U$ and $w \\in U^\\perp$. Then let $P_Uv=u$.",
-    "section": "6.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-6.68-pseudoinverse",
-    "axlerRef": "6.68",
-    "title": "pseudoinverse, $T^\\dagger$",
-    "chapter": 7,
-    "formalStatement": "Suppose that $V$ is finite-dimensional and $T \\in \\mathcal{L}(V,W)$. The pseudoinverse $T^\\dagger \\in \\mathcal{L}(W,V)$ of $T$ is the linear map from $W$ to $V$ defined by $T^\\dagger w=(T|{(\\operatorname{null}T)^\\perp})^{-1}P{\\operatorname{range}T}w$ for each $w \\in W$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.1-adjoint",
-    "axlerRef": "7.1",
-    "title": "adjoint, $T^*$",
-    "chapter": 7,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The adjoint of $T$is the function $T^$∶$W$→$V$such that ⟨$T v$, $w$⟩= ⟨$v$, $T^$$w$⟩ for every $v$ ∈ $V$ and every $w$ ∈ $W$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.7-conjugate-transpose",
-    "axlerRef": "7.7",
-    "title": "conjugate transpose, $A^*$",
-    "chapter": 7,
-    "formalStatement": "The conjugate transpose of an $m$-by-$n$ matrix $A$ is the $n$-by-$m$ matrix $A^$ obtained by interchanging the rows and columns and then taking the complex conjugate of each entry. In other words, if $j \\in \\{1,\\ldots,n\\}$ and $k \\in \\{1,\\ldots,m\\}$, then $(A^){j,k}=\\overline{A{k,j}}$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.10-self-adjoint",
-    "axlerRef": "7.10",
-    "title": "self-adjoint",
-    "chapter": 7,
-    "formalStatement": "An operator $T$ ∈ $\\mathcal{L}(V)$ is called self-adjoint if $T$= $T^*$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.18-normal",
-    "axlerRef": "7.18",
-    "title": "normal",
-    "chapter": 7,
-    "formalStatement": "• An operator on an inner product space is called normal if it commutes with its adjoint.\n• In other words, $T$ ∈ $\\mathcal{L}(V)$ is normal if $T T$∗= $T^*$$T$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.34-positive-operator",
-    "axlerRef": "7.34",
-    "title": "positive operator",
-    "chapter": 7,
-    "formalStatement": "An operator $T$ ∈ $\\mathcal{L}(V)$ is called positive if $T$is self-adjoint and ⟨$T v$, $v$⟩≥0 for all $v$ ∈ $V$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.36-square-root",
-    "axlerRef": "7.36",
-    "title": "square root",
-    "chapter": 7,
-    "formalStatement": "An operator $R$ is called a square root of an operator $T$ if $R^2=T$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.44-isometry",
-    "axlerRef": "7.44",
-    "title": "isometry",
-    "chapter": 7,
-    "formalStatement": "A linear map $S$ ∈ $\\mathcal{L}(V,W)$ is called an isometry if ‖$S v$‖ = ‖$v$‖ for every $v$ ∈ $V$. In other words, a linear map is an isometry if it preserves norms.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.51-unitary-operator",
-    "axlerRef": "7.51",
-    "title": "unitary operator",
-    "chapter": 7,
-    "formalStatement": "An operator $S$ ∈ $\\mathcal{L}(V)$ is called unitary if $S$is an invertible isometry.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.56-unitary-matrix",
-    "axlerRef": "7.56",
-    "title": "unitary matrix",
-    "chapter": 7,
-    "formalStatement": "An $n$-by-$n$ matrix is called unitary if its columns form an orthonormal list in $\\mathbb{F}^n$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.62-positive-definite",
-    "axlerRef": "7.62",
-    "title": "positive definite",
-    "chapter": 7,
-    "formalStatement": "A matrix $B \\in \\mathbb{F}^{n,n}$ is called positive definite if $B^*=B$ and $\\langle Bx,x\\rangle>0$ for every nonzero $x \\in \\mathbb{F}^n$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.65-singular-values",
-    "axlerRef": "7.65",
-    "title": "singular values",
-    "chapter": 7,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The singular values of $T$are the nonnegative square roots of the eigenvalues of $T^$$T$, listed in decreasing order, each included as many times as the dimension of the corresponding eigenspace of $T^$$T$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.74-diagonal-matrix",
-    "axlerRef": "7.74",
-    "title": "diagonal matrix",
-    "chapter": 7,
-    "formalStatement": "An $M$-by-$N$matrix $A$is called a diagonal matrix if all entries of the matrix are 0 except possibly $A$$k$,$k$ for $k$= 1, … , min{$M$, $N$}.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.86-norm-of-a-linear-map",
-    "axlerRef": "7.86",
-    "title": "norm of a linear map, ‖⋅‖",
-    "chapter": 7,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V,W)$. Then the norm of $T$, denoted by ‖$T$‖, is defined by ‖$T$‖ = max{‖$T v$‖ ∶$v$ ∈ $V$ and ‖$v$‖ ≤1}.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.95-ball",
-    "axlerRef": "7.95",
-    "title": "ball, $B$",
-    "chapter": 7,
-    "formalStatement": "The ball in $V$of radius 1 centered at 0, denoted by $B$, is defined by $B$= {$v$ ∈ $V$∶‖$v$‖ < 1}.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.96-ellipsoid-principal-axes",
-    "axlerRef": "7.96",
-    "title": "$E(s_1f_1,\\ldots,s_nf_n)$, principal axes",
-    "chapter": 7,
-    "formalStatement": "Suppose that $f_1,\\ldots,f_n$ is an orthonormal basis of $V$ and $s_1,\\ldots,s_n$ are positive numbers. The ellipsoid $E(s_1f_1,\\ldots,s_nf_n)$ with principal axes $s_1f_1,\\ldots,s_nf_n$ is defined by $E(s_1f_1,\\ldots,s_nf_n)=\\{v \\in V: |\\langle v,f_1\\rangle|^2/s_1^2+\\cdots+|\\langle v,f_n\\rangle|^2/s_n^2<1\\}$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.102-parallelepiped",
-    "axlerRef": "7.102",
-    "title": "$P(v_1,\\ldots,v_n)$, parallelepiped",
-    "chapter": 7,
-    "formalStatement": "Suppose $v_1,\\ldots,v_n$ is a basis of $V$. Let $P(v_1,\\ldots,v_n)=\\{a_1v_1+\\cdots+a_nv_n: a_1,\\ldots,a_n \\in (0,1)\\}$. A parallelepiped is a set of the form $u+P(v_1,\\ldots,v_n)$ for some $u \\in V$. The vectors $v_1,\\ldots,v_n$ are called the edges of this parallelepiped.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.105-box",
-    "axlerRef": "7.105",
-    "title": "box",
-    "chapter": 7,
-    "formalStatement": "A box in $V$ is a set of the form $u+P(r_1e_1,\\ldots,r_ne_n)$, where $u \\in V$, $r_1,\\ldots,r_n$ are positive numbers, and $e_1,\\ldots,e_n$ is an orthonormal basis of $V$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.108-volume-of-a-box",
-    "axlerRef": "7.108",
-    "title": "volume of a box",
-    "chapter": 7,
-    "formalStatement": "Suppose $\\mathbb{F}=\\mathbb{R}$. If $u \\in V$, $r_1,\\ldots,r_n$ are positive numbers, and $e_1,\\ldots,e_n$ is an orthonormal basis of $V$, then $\\operatorname{volume}(u+P(r_1e_1,\\ldots,r_ne_n))=r_1\\times\\cdots\\times r_n$.",
-    "section": "7.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-7.109-volume",
-    "axlerRef": "7.109",
-    "title": "volume",
-    "chapter": 8,
-    "formalStatement": "Suppose $\\mathbb{F}$= $\\mathbb{R}$ and $\\Omega$ ⊆$V$. Then the volume of $\\Omega$, denoted by volume $\\Omega$, is approximately the sum of the volumes of a collection of disjoint boxes that approximate $\\Omega$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.8-generalized-eigenvector",
-    "axlerRef": "8.8",
-    "title": "generalized eigenvector",
-    "chapter": 8,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda$ is an eigenvalue of $T$. A vector $v \\in V$ is called a generalized eigenvector of $T$ corresponding to $\\lambda$ if $v \\ne 0$ and $(T-\\lambda I)^kv=0$ for some positive integer $k$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.14-nilpotent",
-    "axlerRef": "8.14",
-    "title": "nilpotent",
-    "chapter": 8,
-    "formalStatement": "An operator is called nilpotent if some power of it equals 0.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.19-generalized-eigenspace",
-    "axlerRef": "8.19",
-    "title": "generalized eigenspace, $G(\\lambda,T)$",
-    "chapter": 8,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda \\in \\mathbb{F}$. The generalized eigenspace of $T$ corresponding to $\\lambda$, denoted by $G(\\lambda,T)$, is defined by $G(\\lambda,T)=\\{v \\in V:(T-\\lambda I)^kv=0$ for some positive integer $k\\}$. Thus $G(\\lambda,T)$ is the set of generalized eigenvectors of $T$ corresponding to $\\lambda$, along with the 0 vector.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.23-multiplicity",
-    "axlerRef": "8.23",
-    "title": "multiplicity",
-    "chapter": 8,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$. The multiplicity of an eigenvalue $\\lambda$ of $T$ is defined to be the dimension of the corresponding generalized eigenspace $G(\\lambda,T)$. In other words, the multiplicity of an eigenvalue $\\lambda$ of $T$ equals $\\dim \\operatorname{null}(T-\\lambda I)^{\\dim V}$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.26-characteristic-polynomial-complex",
-    "axlerRef": "8.26",
-    "title": "characteristic polynomial",
-    "chapter": 8,
-    "formalStatement": "Suppose $\\mathbb{F}=\\mathbb{C}$ and $T \\in \\mathcal{L}(V)$. Let $\\lambda_1,\\ldots,\\lambda_m$ denote the distinct eigenvalues of $T$, with multiplicities $d_1,\\ldots,d_m$. The polynomial $(z-\\lambda_1)^{d_1}\\cdots(z-\\lambda_m)^{d_m}$ is called the characteristic polynomial of $T$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.35-block-diagonal-matrix",
-    "axlerRef": "8.35",
-    "title": "block diagonal matrix",
-    "chapter": 8,
-    "formalStatement": "A block diagonal matrix is a square matrix of the form $\\begin{pmatrix} A_1 & & 0 \\ & \\ddots & \\ \\ 0 & & A_m \\end{pmatrix}$, where $A_1,\\ldots,A_m$ are square matrices lying along the diagonal and all other entries of the matrix equal 0.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.44-jordan-basis",
-    "axlerRef": "8.44",
-    "title": "Jordan basis",
-    "chapter": 8,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$. A basis of $V$ is called a Jordan basis for $T$ if with respect to this basis $T$ has a block diagonal matrix $\\begin{pmatrix} A_1 & & 0 \\ & \\ddots & \\ \\ 0 & & A_p \\end{pmatrix}$ in which each $A_k$ is an upper-triangular matrix of the form $A_k=\\begin{pmatrix} \\lambda_k & 1 & & 0 \\ & \\ddots & \\ddots & \\ \\ & & \\ddots & 1 \\ 0 & & & \\lambda_k \\end{pmatrix}$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.47-trace-of-a-matrix",
-    "axlerRef": "8.47",
-    "title": "trace of a matrix",
-    "chapter": 8,
-    "formalStatement": "Suppose $A$is a square matrix with entries in $\\mathbb{F}$. The trace of $A$, denoted tr $A$, is defined to be the sum of the diagonal entries of $A$.",
-    "section": "8.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-8.51-trace-of-an-operator",
-    "axlerRef": "8.51",
-    "title": "trace of an operator",
-    "chapter": 9,
-    "formalStatement": "Suppose $T$ ∈ $\\mathcal{L}(V)$. The trace of $T$, denoted tr $T$, is defined by tr $T$= tr $\\mathcal{M}$($T$, ($v_{1}$, … , $v_{n}$)), where $v_{1}$, … , $v_{n}$ is any basis of $V$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.1-bilinear-form",
-    "axlerRef": "9.1",
-    "title": "bilinear form",
-    "chapter": 9,
-    "formalStatement": "A bilinear form on $V$ is a function $\\beta$∶$V$× $V$→$\\mathbb{F}$ such that $v$↦$\\beta$($v$, $u$)  and  $v$↦$\\beta$($u$, $v$) are both linear functionals on $V$for every $u$ ∈ $V$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.3-v2",
-    "axlerRef": "9.3",
-    "title": "$V$(2)",
-    "chapter": 9,
-    "formalStatement": "The set of bilinear forms on $V$ is denoted by $V$(2).",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.4-matrix-of-a-bilinear-form",
-    "axlerRef": "9.4",
-    "title": "matrix of a bilinear form, $\\mathcal{M}(\\beta)$",
-    "chapter": 9,
-    "formalStatement": "Suppose $\\beta$ is a bilinear form on $V$ and $e_1,\\ldots,e_n$ is a basis of $V$. The matrix of $\\beta$ with respect to this basis is the $n$-by-$n$ matrix $\\mathcal{M}(\\beta)$ whose entry $\\mathcal{M}(\\beta){j,k}$ in row $j$, column $k$ is given by $\\mathcal{M}(\\beta){j,k}=\\beta(e_j,e_k)$. If the basis $e_1,\\ldots,e_n$ is not clear from the context, then the notation $\\mathcal{M}(\\beta,(e_1,\\ldots,e_n))$ is used.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.9-symmetric-bilinear-form",
-    "axlerRef": "9.9",
-    "title": "symmetric bilinear form, $V$(2)sym",
-    "chapter": 9,
-    "formalStatement": "A bilinear form $\\rho$ ∈ $V$(2) is called symmetric if $\\rho$($u$, $w$) = $\\rho$($w$, $u$) for all $u$, $w$ ∈ $V$. The set of symmetric bilinear forms on $V$ is denoted by $V$(2)sym.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.11-symmetric-matrix",
-    "axlerRef": "9.11",
-    "title": "symmetric matrix",
-    "chapter": 9,
-    "formalStatement": "A square matrix $A$is called symmetric if it equals its transpose.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.14-alternating-bilinear-form",
-    "axlerRef": "9.14",
-    "title": "alternating bilinear form, $V$(2)alt",
-    "chapter": 9,
-    "formalStatement": "A bilinear form $\\alpha$ ∈ $V$(2) is called alternating if $\\alpha$($v$, $v$) = 0 for all $v$ ∈ $V$. The set of alternating bilinear forms on $V$ is denoted by $V$(2)alt .",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.18-quadratic-form",
-    "axlerRef": "9.18",
-    "title": "quadratic form associated with a bilinear form, $q \\beta$",
-    "chapter": 9,
-    "formalStatement": "For $\\beta$a bilinear form on $V$, define a function $q \\beta$∶$V$→$\\mathbb{F}$ by $q \\beta$($v$) = $\\beta$($v$, $v$). A function $q:$V$→$\\mathbb{F}$ is called a quadratic form on $V$if there exists a bilinear form $\\beta$on $V$such that $q$= $q \\beta$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.24-vm",
-    "axlerRef": "9.24",
-    "title": "$V_{m}$",
-    "chapter": 9,
-    "formalStatement": "For $m$a positive integer, define $V_{m}$by $V_{m}$= $V$×⏟⋯× $V$ . $m$times",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.25-m-linear-form",
-    "axlerRef": "9.25",
-    "title": "$m$-linear form, $V$($m$), multilinear form",
-    "chapter": 9,
-    "formalStatement": "• For $m$a positive integer, an $m$-linear form on $V$ is a function $\\beta$∶$V_{m}$→$\\mathbb{F}$ that is linear in each slot when the other slots are held fixed. This means that for each $k$ ∈ {1, … , $m$} and all $u_{1}$, … , $u_{m}$ ∈ $V$, the function $v$↦$\\beta$($u_{1}$, … , $u_{k}$−1, $v$, $u_{k}$ + 1, … , $u_{m}$) is a linear map from $V$ to $\\mathbb{F}$.\n• The set of $m$-linear forms on $V$ is denoted by $V$($m$).\n• A function $\\beta$ is called a multilinear form on $V$if it is an $m$-linear form on $V$for some positive integer $m$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.27-alternating-forms",
-    "axlerRef": "9.27",
-    "title": "alternating forms, $V$($m$)alt",
-    "chapter": 9,
-    "formalStatement": "Suppose $m$ is a positive integer.\n• An $m$-linear form $\\alpha$on $V$ is called alternating if $\\alpha$($v_{1}$, … , $v_{m}$) = 0 whenever $v_{1}$, … , $v_{m}$ is a list of vectors in $V$ with $v_{j}$= $v_{k}$ for some two distinct values of $j$ and $k$ in {1, … , $m$}.\n• $V$($m$)alt = {$\\alpha$ ∈ $V$($m$) ∶$\\alpha$ is an alternating $m$-linear form on $V$}.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.31-permutation",
-    "axlerRef": "9.31",
-    "title": "permutation, perm $m$",
-    "chapter": 9,
-    "formalStatement": "Suppose $m$ is a positive integer.\n• A permutation of (1, … , $m$) is a list ($j_{1}$, … , $j_{m}$) that contains each of the numbers 1, … , $m$exactly once.\n• The set of all permutations of (1, … , $m$) is denoted by perm $m$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.32-sign-of-a-permutation",
-    "axlerRef": "9.32",
-    "title": "sign of a permutation",
-    "chapter": 9,
-    "formalStatement": "The sign of a permutation ($j_{1}$, … , $j_{m}$) is defined by sign($j_{1}$, … , $j_{m}$) = (−1)$N$, where $N$is the number of pairs of integers ($k$, ℓ) with 1 ≤$k$< ℓ≤$m$ such that $k$appears after ℓin the list ($j_{1}$, … , $j_{m}$).",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.40-alpha-t",
-    "axlerRef": "9.40",
-    "title": "$\\alpha T$",
-    "chapter": 9,
-    "formalStatement": "Suppose that $m$ is a positive integer and $T$ ∈ $\\mathcal{L}(V)$. For $\\alpha$ ∈ $V$($m$)alt  , define $\\alpha T$ ∈ $V$($m$)alt  by $\\alpha T$($v_{1}$, … , $v_{m}$) = $\\alpha$($T v_{1}$, … , $T v_{m}$) for each list $v_{1}$, … , $v_{m}$ of vectors in $V$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.41-determinant-of-an-operator",
-    "axlerRef": "9.41",
-    "title": "determinant of an operator, $\\det T$",
-    "chapter": 9,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$. The determinant of $T$, denoted by $\\det T$, is defined to be the unique number in $\\mathbb{F}$ such that $\\alpha_T=(\\det T)\\alpha$ for all $\\alpha \\in V^{(\\dim V)}_{\\mathrm{alt}}$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.43-determinant-of-a-matrix",
-    "axlerRef": "9.43",
-    "title": "determinant of a matrix, det $A$",
-    "chapter": 9,
-    "formalStatement": "Suppose that $n$ is a positive integer and $A$is an $n$-by-$n$square matrix with entries in $\\mathbb{F}$. Let $T$ ∈ $\\mathcal{L}$($\\mathbb{F}^n$) be the operator whose matrix with respect to the standard basis of $\\mathbb{F}^n$ equals $A$. The determinant of $A$, denoted by det $A$, is defined by det $A$= det $T$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.63-characteristic-polynomial",
-    "axlerRef": "9.63",
-    "title": "characteristic polynomial",
-    "chapter": 9,
-    "formalStatement": "Suppose $T \\in \\mathcal{L}(V)$. The polynomial defined by $z\\mapsto\\det(zI-T)$ is called the characteristic polynomial of $T$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.68-bilinear-functional",
-    "axlerRef": "9.68",
-    "title": "bilinear functional on $V$× $W$, the vector space $\\mathcal{B}$($V$, $W$)",
-    "chapter": 9,
-    "formalStatement": "• A bilinear functional on $V$× $W$ is a function $\\beta$∶$V$× $W$→$\\mathbb{F}$ such that $v$↦$\\beta$($v$, $w$) is a linear functional on $V$for each $w$ ∈ $W$and $w$↦$\\beta$($v$, $w$) is a linear functional on $W$for each $v$ ∈ $V$.\n• The vector space of bilinear functionals on $V$× $W$ is denoted by $\\mathcal{B}$($V$, $W$).",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.71-tensor-product-vw",
-    "axlerRef": "9.71",
-    "title": "tensor product, $V$⊗$W$, $v$⊗$w$",
-    "chapter": 9,
-    "formalStatement": "• The tensor product $V$⊗$W$ is defined to be $\\mathcal{B}$($V^\\prime$, $W^\\prime$).\n• For $v$ ∈ $V$ and $w$ ∈ $W$, the tensor product $v$⊗$w$ is the element of $V$⊗$W$ defined by ($v$⊗$w$)($\\varphi$, $\\tau$) = $\\varphi$($v$)$\\tau$($w$) for all ($\\varphi$, $\\tau$) ∈$V^\\prime$× $W^\\prime$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.77-bilinear-map",
-    "axlerRef": "9.77",
-    "title": "bilinear map",
-    "chapter": 9,
-    "formalStatement": "A bilinear map from $V$× $W$to a vector space $U$ is a function Γ∶$V$× $W$→$U$ such that $v$↦Γ($v$, $w$) is a linear map from $V$ to $U$for each $w$ ∈ $W$and $w$↦Γ($v$, $w$) is a linear map from $W$to $U$for each $v$ ∈ $V$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.82-inner-product-on-tensor-product",
-    "axlerRef": "9.82",
-    "title": "inner product on tensor product of two inner product spaces",
-    "chapter": 9,
-    "formalStatement": "Suppose $V$ and $W$are inner product spaces. The inner product on $V$⊗$W$ is the unique function ⟨⋅, ⋅⟩from ($V$⊗$W$) × ($V$⊗$W$) to $\\mathbb{F}$ such that ⟨$v$⊗$w$, $u$⊗$x$⟩= ⟨$v$, $u$⟩⟨$w$, $x$⟩ for all $v$, $u$ ∈ $V$ and $w$, $x$ ∈ $W$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.85-m-linear-functional",
-    "axlerRef": "9.85",
-    "title": "$m$-linear functional, the vector space $\\mathcal{B}$($V_{1}$, … , $V_{m}$)",
-    "chapter": 9,
-    "formalStatement": "• An $m$-linear functional on $V_{1}$ × ⋯× $V_{m}$ is a function $\\beta$∶$V_{1}$ × ⋯× $V_{m}$→$\\mathbb{F}$ that is a linear functional in each slot when the other slots are held fixed.\n• The vector space of $m$-linear functionals on $V_{1}$ × ⋯× $V_{m}$ is denoted by $\\mathcal{B}$($V_{1}$, … , $V_{m}$).",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.88-tensor-product-general",
-    "axlerRef": "9.88",
-    "title": "tensor product, $V_1\\otimes\\cdots\\otimes V_m$, $v_1\\otimes\\cdots\\otimes v_m$",
-    "chapter": 9,
-    "formalStatement": "The tensor product $V_1\\otimes\\cdots\\otimes V_m$ is defined to be $\\mathcal{B}(V_1^$prime$,\\ldots,V_m^\\prime)$. For $v_1 \\in V_1,\\ldots,v_m \\in V_m$, the tensor product $v_1\\otimes\\cdots\\otimes v_m$ is the element of $V_1\\otimes\\cdots\\otimes V_m$ defined by $(v_1\\otimes\\cdots\\otimes v_m)(\\varphi_1,\\ldots,\\varphi_m)=\\varphi_1(v_1)\\cdots\\varphi_m(v_m)$ for all $(\\varphi_1,\\ldots,\\varphi_m) \\in V_1^\\prime\\times\\cdots\\times V_m^\\prime$.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  },
-  {
-    "id": "def-9.91-m-linear-map",
-    "axlerRef": "9.91",
-    "title": "$m$-linear map",
-    "chapter": 9,
-    "formalStatement": "An $m$-linear map from $V_{1}$ × ⋯× $V_{m}$ to a vector space $U$ is a function Γ∶$V_{1}$ × ⋯× $V_{m}$→$U$that is a linear map in each slot when the other slots are held fixed.",
-    "section": "9.?",
-    "linkedVisualizers": [
-      "symbolic-formula"
-    ],
-    "prerequisites": [],
-    "examples": [],
-    "nonexamples": []
-  }
+        templateId: 'affine-line-r2',
+        description: 'ℝ²/{y-axis}: each coset is a vertical line',
+      },
+    ],
+    nonexamples: [],
+    plainStatement:
+      'The quotient space V/U has elements that are cosets v + U of U in V. Two vectors v, w define the same coset iff v − w ∈ U. dim(V/U) = dim V − dim U.',
+    commonErrors: ['Elements of V/U are sets (cosets), not individual vectors.'],
+  },
+  {
+    id: 'def-3.102-addition-scalar-multiplication-on-quotient',
+    axlerRef: '3.102',
+    title: 'addition and scalar multiplication on $V$/$U$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $U$ is a subspace of $V$. Then addition and scalar multiplication are defined on $V$/$U$by ($v$+ $U$) + ($w$+ $U$) = ($v$+ $w$) + $U$ $\\lambda$($v$+ $U$) = ($\\lambda v$) + $U$ for all $v$, $w$ ∈ $V$ and all $\\lambda$ ∈ $\\mathbb{F}$.',
+    section: '3.E',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.99-quotient-space'],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-3.104-quotient-map',
+    axlerRef: '3.104',
+    title: 'quotient map, 𝜋',
+    chapter: 3,
+    formalStatement:
+      'Suppose $U$ is a subspace of $V$. The quotient map 𝜋∶$V$→$V$/$U$ is the linear map defined by 𝜋($v$) = $v$+ $U$ for each $v$ ∈ $V$.',
+    section: '3.E',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.99-quotient-space', 'def-3.1-linear-map'],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-3.108-linear-functional',
+    axlerRef: '3.108',
+    title: 'linear functional',
+    chapter: 3,
+    formalStatement:
+      'A linear functional on $V$ is a linear map from $V$ to $\\mathbb{F}$. In other words, a linear functional is an element of $\\mathcal{L}$($V$, $\\mathbb{F}$).',
+    section: '3.F',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.1-linear-map'],
+    examples: [],
+    nonexamples: [],
+    plainStatement:
+      'A linear functional is a linear map φ: V → 𝔽 (scalar-valued). Examples: dot product with a fixed vector, definite integral on a function space, evaluation of a polynomial at a point.',
+  },
+  {
+    id: 'def-3.110-dual-space',
+    axlerRef: '3.110',
+    title: 'dual space, $V^\\prime$',
+    chapter: 3,
+    formalStatement:
+      'The dual space of $V$, denoted by $V^\\prime$, is the vector space of all linear functionals on $V$. In other words, $V^\\prime$ = $\\mathcal{L}$($V$, $\\mathbb{F}$).',
+    section: '3.F',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.108-linear-functional', 'def-3.5-addition-scalar-multiplication-on-l'],
+    examples: [],
+    nonexamples: [],
+    plainStatement:
+      "The dual space V' = ℒ(V, 𝔽) is the vector space of all linear functionals on V. dim V' = dim V.",
+  },
+  {
+    id: 'def-3.112-dual-basis',
+    axlerRef: '3.112',
+    title: 'dual basis',
+    chapter: 3,
+    formalStatement:
+      'If $v_{1}$, … , $v_{n}$ is a basis of $V$, then the dual basis of $v_{1}$, … , $v_{n}$ is the list $\\varphi_{1}$, … , $\\varphi_{n}$ of elements of $V^\\prime$, where each $\\varphi_{j}$ is the linear functional on $V$such that ⎧{ 1   if $k$= $j$, $\\varphi_{j}$($v_{k}$) =                                0   if $k$ ≠ $j$.                                                                              ⎨{⎩',
+    section: '3.F',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.110-dual-space', 'def-2.26-basis'],
+    examples: [],
+    nonexamples: [],
+    commonErrors: [
+      "The dual basis φ₁,…,φₙ satisfies φⱼ(vₖ) = 1 if j=k, else 0 — it is the unique basis of V' dual to v₁,…,vₙ.",
+    ],
+  },
+  {
+    id: 'def-3.118-dual-map',
+    axlerRef: '3.118',
+    title: 'dual map, $T^\\prime$',
+    chapter: 3,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The dual map of $T$is the linear map $T^\\prime$ ∈$\\mathcal{L}$($W^\\prime$, $V^\\prime$) defined for each $\\varphi$ ∈ $W^\\prime$by $T^\\prime$($\\varphi$) = $\\varphi$∘$T$.',
+    section: '3.F',
+    linkedVisualizers: ['matrix-heatmap', 'symbolic-formula'],
+    prerequisites: ['def-3.110-dual-space', 'def-3.1-linear-map'],
+    examples: [],
+    nonexamples: [],
+    plainStatement:
+      "The dual map T' ∈ ℒ(W', V') is defined by T'(φ) = φ ∘ T. Its matrix (in dual bases) is the transpose of the matrix of T.",
+  },
+  {
+    id: 'def-3.121-annihilator',
+    axlerRef: '3.121',
+    title: 'annihilator, $U_{0}$',
+    chapter: 4,
+    formalStatement:
+      'For $U$⊆$V$, the annihilator of $U$, denoted by $U_{0}$, is defined by $U_{0}$ = {$\\varphi$ ∈ $V^\\prime$ ∶$\\varphi$($u$) = 0 for all $u$ ∈ $U$}.',
+    section: '3.F',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: ['def-3.110-dual-space', 'def-1.33-subspace'],
+    examples: [],
+    nonexamples: [],
+    commonErrors: [
+      "The annihilator U⁰ ⊆ V' consists of all linear functionals that vanish on U. dim U⁰ = dim V − dim U.",
+    ],
+  },
+  {
+    id: 'def-4.1-real-part-imaginary-part',
+    axlerRef: '4.1',
+    title: 'real part, Re $z$, imaginary part, Im $z$',
+    chapter: 4,
+    formalStatement:
+      'Suppose $z$= $a$+ $b i$, where $a$ and $b$ are real numbers.\n• The real part of $z$, denoted by Re $z$, is defined by Re $z$= $a$.\n• The imaginary part of $z$, denoted by Im $z$, is defined by Im $z$= $b$.',
+    section: '4.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-4.2-complex-conjugate-absolute-value',
+    axlerRef: '4.2',
+    title: 'complex conjugate, $z$, absolute value, |$z$|',
+    chapter: 4,
+    formalStatement:
+      'Suppose $z$ ∈ $\\mathbb{C}$.\n• The complex conjugate of $z$ ∈ $\\mathbb{C}$, denoted by $z$, is defined by $z$= Re $z$−(Im $z$)$i$.\n• The absolute value of a complex number $z$, denoted by |$z$|, is defined by |$z$| = √(Re $z$)2 + (Im $z$)2.',
+    section: '4.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-4.5-zero-of-a-polynomial',
+    axlerRef: '4.5',
+    title: 'zero of a polynomial',
+    chapter: 5,
+    formalStatement:
+      'A number $\\lambda$ ∈ $\\mathbb{F}$ is called a zero (or root) of a polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ if $p$($\\lambda$) = 0.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.1-operator',
+    axlerRef: '5.1',
+    title: 'operator',
+    chapter: 5,
+    formalStatement: 'A linear map from a vector space to itself is called an operator.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.2-invariant-subspace',
+    axlerRef: '5.2',
+    title: 'invariant subspace',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V)$. A subspace $U$of $V$ is called invariant under $T$if $T u$ ∈ $U$ for every $u$ ∈ $U$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.5-eigenvalue',
+    axlerRef: '5.5',
+    title: 'eigenvalue',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V)$. A number $\\lambda$ ∈ $\\mathbb{F}$ is called an eigenvalue of $T$if there exists $v$ ∈ $V$such that $v$ ≠ 0 and $T v$= $\\lambda v$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.8-eigenvector',
+    axlerRef: '5.8',
+    title: 'eigenvector',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V)$ and $\\lambda$ ∈ $\\mathbb{F}$ is an eigenvalue of $T$. A vector $v$ ∈ $V$ is called an eigenvector of $T$ corresponding to $\\lambda$if $v$ ≠ 0 and $T v$= $\\lambda v$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.16-product-of-polynomials',
+    axlerRef: '5.16',
+    title: 'product of polynomials',
+    chapter: 5,
+    formalStatement:
+      'If $p$, $q$ ∈ $\\mathcal{P}(\\mathbb{F})$, then $p q$ ∈ $\\mathcal{P}(\\mathbb{F})$ is the polynomial defined by ($p q$)($z$) = $p$($z$)$q$($z$) for all $z$ ∈ $\\mathbb{F}$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.21-monic-polynomial',
+    axlerRef: '5.21',
+    title: 'monic polynomial',
+    chapter: 5,
+    formalStatement:
+      'A monic polynomial is a polynomial whose highest-degree coefficient equals 1.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.24-minimal-polynomial',
+    axlerRef: '5.24',
+    title: 'minimal polynomial',
+    chapter: 5,
+    formalStatement:
+      'Suppose $V$ is finite-dimensional and $T$ ∈ $\\mathcal{L}(V)$. Then the minimal polynomial of $T$is the unique monic polynomial $p$ ∈ $\\mathcal{P}(\\mathbb{F})$ of smallest degree such that $p$($T$) = 0.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.35-matrix-of-an-operator',
+    axlerRef: '5.35',
+    title: 'matrix of an operator, $\\mathcal{M}(T)$',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$. The matrix of $T$ with respect to a basis $v_1,\\ldots,v_n$ of $V$ is the $n$-by-$n$ matrix $\\mathcal{M}(T)=\\begin{pmatrix} A_{1,1} & \\cdots & A_{1,n} \\ \\vdots & & \\vdots \\ A_{n,1} & \\cdots & A_{n,n} \\end{pmatrix}$ whose entries $A_{j,k}$ are defined by $Tv_k=A_{1,k}v_1+\\cdots+A_{n,k}v_n$. The notation $\\mathcal{M}(T,(v_1,\\ldots,v_n))$ is used if the basis is not clear from the context.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.37-diagonal-of-a-matrix',
+    axlerRef: '5.37',
+    title: 'diagonal of a matrix',
+    chapter: 5,
+    formalStatement:
+      'The diagonal of a square matrix consists of the entries on the line from the upper left corner to the bottom right corner.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.38-upper-triangular-matrix',
+    axlerRef: '5.38',
+    title: 'upper-triangular matrix',
+    chapter: 5,
+    formalStatement:
+      'A square matrix is called upper triangular if all entries below the diagonal are 0.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.48-diagonal-matrix',
+    axlerRef: '5.48',
+    title: 'diagonal matrix',
+    chapter: 5,
+    formalStatement:
+      'A diagonal matrix is a square matrix that is 0 everywhere except possibly on the diagonal.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.50-diagonalizable',
+    axlerRef: '5.50',
+    title: 'diagonalizable',
+    chapter: 5,
+    formalStatement:
+      'An operator on $V$ is called diagonalizable if the operator has a diagonal matrix with respect to some basis of $V$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.52-eigenspace',
+    axlerRef: '5.52',
+    title: 'eigenspace, $E(\\lambda,T)$',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda \\in \\mathbb{F}$. The eigenspace of $T$ corresponding to $\\lambda$ is the subspace $E(\\lambda,T)$ of $V$ defined by $E(\\lambda,T)=\\operatorname{null}(T-\\lambda I)=\\{v \\in V: Tv=\\lambda v\\}$. Hence $E(\\lambda,T)$ is the set of all eigenvectors of $T$ corresponding to $\\lambda$, along with the 0 vector.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.66-gershgorin-disks',
+    axlerRef: '5.66',
+    title: 'Gershgorin disks',
+    chapter: 5,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$ and $v_1,\\ldots,v_n$ is a basis of $V$. Let $A$ denote the matrix of $T$ with respect to this basis. A Gershgorin disk of $T$ with respect to the basis $v_1,\\ldots,v_n$ is a set of the form $\\{z \\in \\mathbb{F}: |z-A_{j,j}| \\le \\sum_{\\substack{k=1\\\\k\\ne j}}^{n}|A_{j,k}|\\}$, where $j \\in \\{1,\\ldots,n\\}$.',
+    section: '5.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-5.71-commute',
+    axlerRef: '5.71',
+    title: 'commute',
+    chapter: 6,
+    formalStatement:
+      '• Two operators $S$and $T$on the same vector space commute if $S T$= $T S$.\n• Two square matrices $A$and $B$of the same size commute if $A$$B$= $B$$A$.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.1-dot-product',
+    axlerRef: '6.1',
+    title: 'dot product',
+    chapter: 6,
+    formalStatement:
+      'For $x$, $y$ ∈ $\\mathbb{R}^n$, the dot product of $x$ and $y$, denoted by $x$⋅$y$, is defined by $x$⋅$y$= $x_{1} y_{1}$ + ⋯+ $x_{n} y_{n}$, where $x$= ($x_{1}$, … , $x_{n}$) and $y$= ($y_{1}$, … , $y_{n}$).',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.2-inner-product',
+    axlerRef: '6.2',
+    title: 'inner product',
+    chapter: 6,
+    formalStatement:
+      'An inner product on $V$ is a function that takes each ordered pair ($u$, $v$) of elements of $V$ to a number ⟨$u$, $v$⟩ ∈ $\\mathbb{F}$ and has the following properties.\npositivity: ⟨$v$, $v$⟩≥0 for all $v$ ∈ $V$.\ndefiniteness: ⟨$v$, $v$⟩= 0 if and only if $v$= 0. additivity in first slot ⟨$u$+ $v$, $w$⟩= ⟨$u$, $w$⟩+ ⟨$v$, $w$⟩for all $u$, $v$, $w$ ∈ $V$. homogeneity in first slot ⟨$\\lambda u$, $v$⟩= $\\lambda$⟨$u$, $v$⟩for all $\\lambda$ ∈ $\\mathbb{F}$ and all $u$, $v$ ∈ $V$.\nconjugate symmetry: ⟨$u$, $v$⟩= ⟨$v$, $u$⟩for all $u$, $v$ ∈ $V$.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.4-inner-product-space',
+    axlerRef: '6.4',
+    title: 'inner product space',
+    chapter: 6,
+    formalStatement:
+      'An inner product space is a vector space $V$along with an inner product on $V$.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.7-norm',
+    axlerRef: '6.7',
+    title: 'norm, ‖$v$‖',
+    chapter: 6,
+    formalStatement:
+      'For $v$ ∈ $V$, the norm of $v$, denoted by ‖$v$‖, is defined by ‖$v$‖ = √⟨$v$, $v$⟩.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.10-orthogonal',
+    axlerRef: '6.10',
+    title: 'orthogonal',
+    chapter: 6,
+    formalStatement: 'Two vectors $u$, $v$ ∈ $V$are called orthogonal if ⟨$u$, $v$⟩= 0.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.22-orthonormal',
+    axlerRef: '6.22',
+    title: 'orthonormal',
+    chapter: 6,
+    formalStatement:
+      '• A list of vectors is called orthonormal if each vector in the list has norm 1 and is orthogonal to all the other vectors in the list.\n• In other words, a list $e_{1}$, … , $e_{m}$ of vectors in $V$ is orthonormal if ⎧{1   if $j$= $k$, ⟨$e_{j}$, $e_{k}$⟩=                                 0   if $j$ ≠ $k$                                                                                ⎨{⎩ for all $j$, $k$ ∈ {1, … , $m$}.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.27-orthonormal-basis',
+    axlerRef: '6.27',
+    title: 'orthonormal basis',
+    chapter: 6,
+    formalStatement:
+      'An orthonormal basis of $V$ is an orthonormal list of vectors in $V$that is also a basis of $V$.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.39-linear-functional-dual-space',
+    axlerRef: '6.39',
+    title: 'linear functional, dual space, $V^\\prime$',
+    chapter: 6,
+    formalStatement:
+      '• A linear functional on $V$ is a linear map from $V$ to $\\mathbb{F}$.\n• The dual space of $V$, denoted by $V^\\prime$, is the vector space of all linear functionals on $V$. In other words, $V^\\prime$ = $\\mathcal{L}$($V$, $\\mathbb{F}$).',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.46-orthogonal-complement',
+    axlerRef: '6.46',
+    title: 'orthogonal complement, $U^\\perp$',
+    chapter: 6,
+    formalStatement:
+      'If $U$ is a subset of $V$, then the orthogonal complement of $U$, denoted by $U^\\perp$, is the set of all vectors in $V$that are orthogonal to every vector in $U$: $U^\\perp$= {$v$ ∈ $V$∶⟨$u$, $v$⟩= 0 for every $u$ ∈ $U$}.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.55-orthogonal-projection',
+    axlerRef: '6.55',
+    title: 'orthogonal projection, $P_U$',
+    chapter: 6,
+    formalStatement:
+      'Suppose $U$ is a finite-dimensional subspace of $V$. The orthogonal projection of $V$ onto $U$ is the operator $P_U \\in \\mathcal{L}(V)$ defined as follows: For each $v \\in V$, write $v=u+w$, where $u \\in U$ and $w \\in U^\\perp$. Then let $P_Uv=u$.',
+    section: '6.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-6.68-pseudoinverse',
+    axlerRef: '6.68',
+    title: 'pseudoinverse, $T^\\dagger$',
+    chapter: 7,
+    formalStatement:
+      'Suppose that $V$ is finite-dimensional and $T \\in \\mathcal{L}(V,W)$. The pseudoinverse $T^\\dagger \\in \\mathcal{L}(W,V)$ of $T$ is the linear map from $W$ to $V$ defined by $T^\\dagger w=(T|{(\\operatorname{null}T)^\\perp})^{-1}P{\\operatorname{range}T}w$ for each $w \\in W$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.1-adjoint',
+    axlerRef: '7.1',
+    title: 'adjoint, $T^*$',
+    chapter: 7,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The adjoint of $T$is the function $T^$∶$W$→$V$such that ⟨$T v$, $w$⟩= ⟨$v$, $T^$$w$⟩ for every $v$ ∈ $V$ and every $w$ ∈ $W$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.7-conjugate-transpose',
+    axlerRef: '7.7',
+    title: 'conjugate transpose, $A^*$',
+    chapter: 7,
+    formalStatement:
+      'The conjugate transpose of an $m$-by-$n$ matrix $A$ is the $n$-by-$m$ matrix $A^$ obtained by interchanging the rows and columns and then taking the complex conjugate of each entry. In other words, if $j \\in \\{1,\\ldots,n\\}$ and $k \\in \\{1,\\ldots,m\\}$, then $(A^){j,k}=\\overline{A{k,j}}$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.10-self-adjoint',
+    axlerRef: '7.10',
+    title: 'self-adjoint',
+    chapter: 7,
+    formalStatement: 'An operator $T$ ∈ $\\mathcal{L}(V)$ is called self-adjoint if $T$= $T^*$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.18-normal',
+    axlerRef: '7.18',
+    title: 'normal',
+    chapter: 7,
+    formalStatement:
+      '• An operator on an inner product space is called normal if it commutes with its adjoint.\n• In other words, $T$ ∈ $\\mathcal{L}(V)$ is normal if $T T$∗= $T^*$$T$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.34-positive-operator',
+    axlerRef: '7.34',
+    title: 'positive operator',
+    chapter: 7,
+    formalStatement:
+      'An operator $T$ ∈ $\\mathcal{L}(V)$ is called positive if $T$is self-adjoint and ⟨$T v$, $v$⟩≥0 for all $v$ ∈ $V$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.36-square-root',
+    axlerRef: '7.36',
+    title: 'square root',
+    chapter: 7,
+    formalStatement: 'An operator $R$ is called a square root of an operator $T$ if $R^2=T$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.44-isometry',
+    axlerRef: '7.44',
+    title: 'isometry',
+    chapter: 7,
+    formalStatement:
+      'A linear map $S$ ∈ $\\mathcal{L}(V,W)$ is called an isometry if ‖$S v$‖ = ‖$v$‖ for every $v$ ∈ $V$. In other words, a linear map is an isometry if it preserves norms.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.51-unitary-operator',
+    axlerRef: '7.51',
+    title: 'unitary operator',
+    chapter: 7,
+    formalStatement:
+      'An operator $S$ ∈ $\\mathcal{L}(V)$ is called unitary if $S$is an invertible isometry.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.56-unitary-matrix',
+    axlerRef: '7.56',
+    title: 'unitary matrix',
+    chapter: 7,
+    formalStatement:
+      'An $n$-by-$n$ matrix is called unitary if its columns form an orthonormal list in $\\mathbb{F}^n$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.62-positive-definite',
+    axlerRef: '7.62',
+    title: 'positive definite',
+    chapter: 7,
+    formalStatement:
+      'A matrix $B \\in \\mathbb{F}^{n,n}$ is called positive definite if $B^*=B$ and $\\langle Bx,x\\rangle>0$ for every nonzero $x \\in \\mathbb{F}^n$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.65-singular-values',
+    axlerRef: '7.65',
+    title: 'singular values',
+    chapter: 7,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V,W)$. The singular values of $T$are the nonnegative square roots of the eigenvalues of $T^$$T$, listed in decreasing order, each included as many times as the dimension of the corresponding eigenspace of $T^$$T$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.74-diagonal-matrix',
+    axlerRef: '7.74',
+    title: 'diagonal matrix',
+    chapter: 7,
+    formalStatement:
+      'An $M$-by-$N$matrix $A$is called a diagonal matrix if all entries of the matrix are 0 except possibly $A$$k$,$k$ for $k$= 1, … , min{$M$, $N$}.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.86-norm-of-a-linear-map',
+    axlerRef: '7.86',
+    title: 'norm of a linear map, ‖⋅‖',
+    chapter: 7,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V,W)$. Then the norm of $T$, denoted by ‖$T$‖, is defined by ‖$T$‖ = max{‖$T v$‖ ∶$v$ ∈ $V$ and ‖$v$‖ ≤1}.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.95-ball',
+    axlerRef: '7.95',
+    title: 'ball, $B$',
+    chapter: 7,
+    formalStatement:
+      'The ball in $V$of radius 1 centered at 0, denoted by $B$, is defined by $B$= {$v$ ∈ $V$∶‖$v$‖ < 1}.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.96-ellipsoid-principal-axes',
+    axlerRef: '7.96',
+    title: '$E(s_1f_1,\\ldots,s_nf_n)$, principal axes',
+    chapter: 7,
+    formalStatement:
+      'Suppose that $f_1,\\ldots,f_n$ is an orthonormal basis of $V$ and $s_1,\\ldots,s_n$ are positive numbers. The ellipsoid $E(s_1f_1,\\ldots,s_nf_n)$ with principal axes $s_1f_1,\\ldots,s_nf_n$ is defined by $E(s_1f_1,\\ldots,s_nf_n)=\\{v \\in V: |\\langle v,f_1\\rangle|^2/s_1^2+\\cdots+|\\langle v,f_n\\rangle|^2/s_n^2<1\\}$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.102-parallelepiped',
+    axlerRef: '7.102',
+    title: '$P(v_1,\\ldots,v_n)$, parallelepiped',
+    chapter: 7,
+    formalStatement:
+      'Suppose $v_1,\\ldots,v_n$ is a basis of $V$. Let $P(v_1,\\ldots,v_n)=\\{a_1v_1+\\cdots+a_nv_n: a_1,\\ldots,a_n \\in (0,1)\\}$. A parallelepiped is a set of the form $u+P(v_1,\\ldots,v_n)$ for some $u \\in V$. The vectors $v_1,\\ldots,v_n$ are called the edges of this parallelepiped.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.105-box',
+    axlerRef: '7.105',
+    title: 'box',
+    chapter: 7,
+    formalStatement:
+      'A box in $V$ is a set of the form $u+P(r_1e_1,\\ldots,r_ne_n)$, where $u \\in V$, $r_1,\\ldots,r_n$ are positive numbers, and $e_1,\\ldots,e_n$ is an orthonormal basis of $V$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.108-volume-of-a-box',
+    axlerRef: '7.108',
+    title: 'volume of a box',
+    chapter: 7,
+    formalStatement:
+      'Suppose $\\mathbb{F}=\\mathbb{R}$. If $u \\in V$, $r_1,\\ldots,r_n$ are positive numbers, and $e_1,\\ldots,e_n$ is an orthonormal basis of $V$, then $\\operatorname{volume}(u+P(r_1e_1,\\ldots,r_ne_n))=r_1\\times\\cdots\\times r_n$.',
+    section: '7.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-7.109-volume',
+    axlerRef: '7.109',
+    title: 'volume',
+    chapter: 8,
+    formalStatement:
+      'Suppose $\\mathbb{F}$= $\\mathbb{R}$ and $\\Omega$ ⊆$V$. Then the volume of $\\Omega$, denoted by volume $\\Omega$, is approximately the sum of the volumes of a collection of disjoint boxes that approximate $\\Omega$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.8-generalized-eigenvector',
+    axlerRef: '8.8',
+    title: 'generalized eigenvector',
+    chapter: 8,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda$ is an eigenvalue of $T$. A vector $v \\in V$ is called a generalized eigenvector of $T$ corresponding to $\\lambda$ if $v \\ne 0$ and $(T-\\lambda I)^kv=0$ for some positive integer $k$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.14-nilpotent',
+    axlerRef: '8.14',
+    title: 'nilpotent',
+    chapter: 8,
+    formalStatement: 'An operator is called nilpotent if some power of it equals 0.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.19-generalized-eigenspace',
+    axlerRef: '8.19',
+    title: 'generalized eigenspace, $G(\\lambda,T)$',
+    chapter: 8,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$ and $\\lambda \\in \\mathbb{F}$. The generalized eigenspace of $T$ corresponding to $\\lambda$, denoted by $G(\\lambda,T)$, is defined by $G(\\lambda,T)=\\{v \\in V:(T-\\lambda I)^kv=0$ for some positive integer $k\\}$. Thus $G(\\lambda,T)$ is the set of generalized eigenvectors of $T$ corresponding to $\\lambda$, along with the 0 vector.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.23-multiplicity',
+    axlerRef: '8.23',
+    title: 'multiplicity',
+    chapter: 8,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$. The multiplicity of an eigenvalue $\\lambda$ of $T$ is defined to be the dimension of the corresponding generalized eigenspace $G(\\lambda,T)$. In other words, the multiplicity of an eigenvalue $\\lambda$ of $T$ equals $\\dim \\operatorname{null}(T-\\lambda I)^{\\dim V}$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.26-characteristic-polynomial-complex',
+    axlerRef: '8.26',
+    title: 'characteristic polynomial',
+    chapter: 8,
+    formalStatement:
+      'Suppose $\\mathbb{F}=\\mathbb{C}$ and $T \\in \\mathcal{L}(V)$. Let $\\lambda_1,\\ldots,\\lambda_m$ denote the distinct eigenvalues of $T$, with multiplicities $d_1,\\ldots,d_m$. The polynomial $(z-\\lambda_1)^{d_1}\\cdots(z-\\lambda_m)^{d_m}$ is called the characteristic polynomial of $T$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.35-block-diagonal-matrix',
+    axlerRef: '8.35',
+    title: 'block diagonal matrix',
+    chapter: 8,
+    formalStatement:
+      'A block diagonal matrix is a square matrix of the form $\\begin{pmatrix} A_1 & & 0 \\ & \\ddots & \\ \\ 0 & & A_m \\end{pmatrix}$, where $A_1,\\ldots,A_m$ are square matrices lying along the diagonal and all other entries of the matrix equal 0.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.44-jordan-basis',
+    axlerRef: '8.44',
+    title: 'Jordan basis',
+    chapter: 8,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$. A basis of $V$ is called a Jordan basis for $T$ if with respect to this basis $T$ has a block diagonal matrix $\\begin{pmatrix} A_1 & & 0 \\ & \\ddots & \\ \\ 0 & & A_p \\end{pmatrix}$ in which each $A_k$ is an upper-triangular matrix of the form $A_k=\\begin{pmatrix} \\lambda_k & 1 & & 0 \\ & \\ddots & \\ddots & \\ \\ & & \\ddots & 1 \\ 0 & & & \\lambda_k \\end{pmatrix}$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.47-trace-of-a-matrix',
+    axlerRef: '8.47',
+    title: 'trace of a matrix',
+    chapter: 8,
+    formalStatement:
+      'Suppose $A$is a square matrix with entries in $\\mathbb{F}$. The trace of $A$, denoted tr $A$, is defined to be the sum of the diagonal entries of $A$.',
+    section: '8.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-8.51-trace-of-an-operator',
+    axlerRef: '8.51',
+    title: 'trace of an operator',
+    chapter: 9,
+    formalStatement:
+      'Suppose $T$ ∈ $\\mathcal{L}(V)$. The trace of $T$, denoted tr $T$, is defined by tr $T$= tr $\\mathcal{M}$($T$, ($v_{1}$, … , $v_{n}$)), where $v_{1}$, … , $v_{n}$ is any basis of $V$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.1-bilinear-form',
+    axlerRef: '9.1',
+    title: 'bilinear form',
+    chapter: 9,
+    formalStatement:
+      'A bilinear form on $V$ is a function $\\beta$∶$V$× $V$→$\\mathbb{F}$ such that $v$↦$\\beta$($v$, $u$)  and  $v$↦$\\beta$($u$, $v$) are both linear functionals on $V$for every $u$ ∈ $V$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.3-v2',
+    axlerRef: '9.3',
+    title: '$V$(2)',
+    chapter: 9,
+    formalStatement: 'The set of bilinear forms on $V$ is denoted by $V$(2).',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.4-matrix-of-a-bilinear-form',
+    axlerRef: '9.4',
+    title: 'matrix of a bilinear form, $\\mathcal{M}(\\beta)$',
+    chapter: 9,
+    formalStatement:
+      'Suppose $\\beta$ is a bilinear form on $V$ and $e_1,\\ldots,e_n$ is a basis of $V$. The matrix of $\\beta$ with respect to this basis is the $n$-by-$n$ matrix $\\mathcal{M}(\\beta)$ whose entry $\\mathcal{M}(\\beta){j,k}$ in row $j$, column $k$ is given by $\\mathcal{M}(\\beta){j,k}=\\beta(e_j,e_k)$. If the basis $e_1,\\ldots,e_n$ is not clear from the context, then the notation $\\mathcal{M}(\\beta,(e_1,\\ldots,e_n))$ is used.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.9-symmetric-bilinear-form',
+    axlerRef: '9.9',
+    title: 'symmetric bilinear form, $V$(2)sym',
+    chapter: 9,
+    formalStatement:
+      'A bilinear form $\\rho$ ∈ $V$(2) is called symmetric if $\\rho$($u$, $w$) = $\\rho$($w$, $u$) for all $u$, $w$ ∈ $V$. The set of symmetric bilinear forms on $V$ is denoted by $V$(2)sym.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.11-symmetric-matrix',
+    axlerRef: '9.11',
+    title: 'symmetric matrix',
+    chapter: 9,
+    formalStatement: 'A square matrix $A$is called symmetric if it equals its transpose.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.14-alternating-bilinear-form',
+    axlerRef: '9.14',
+    title: 'alternating bilinear form, $V$(2)alt',
+    chapter: 9,
+    formalStatement:
+      'A bilinear form $\\alpha$ ∈ $V$(2) is called alternating if $\\alpha$($v$, $v$) = 0 for all $v$ ∈ $V$. The set of alternating bilinear forms on $V$ is denoted by $V$(2)alt .',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.18-quadratic-form',
+    axlerRef: '9.18',
+    title: 'quadratic form associated with a bilinear form, $q \\beta$',
+    chapter: 9,
+    formalStatement:
+      'For $\\beta$a bilinear form on $V$, define a function $q \\beta$∶$V$→$\\mathbb{F}$ by $q \\beta$($v$) = $\\beta$($v$, $v$). A function $q:$V$→$\\mathbb{F}$ is called a quadratic form on $V$if there exists a bilinear form $\\beta$on $V$such that $q$= $q \\beta$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.24-vm',
+    axlerRef: '9.24',
+    title: '$V_{m}$',
+    chapter: 9,
+    formalStatement: 'For $m$a positive integer, define $V_{m}$by $V_{m}$= $V$×⏟⋯× $V$ . $m$times',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.25-m-linear-form',
+    axlerRef: '9.25',
+    title: '$m$-linear form, $V$($m$), multilinear form',
+    chapter: 9,
+    formalStatement:
+      '• For $m$a positive integer, an $m$-linear form on $V$ is a function $\\beta$∶$V_{m}$→$\\mathbb{F}$ that is linear in each slot when the other slots are held fixed. This means that for each $k$ ∈ {1, … , $m$} and all $u_{1}$, … , $u_{m}$ ∈ $V$, the function $v$↦$\\beta$($u_{1}$, … , $u_{k}$−1, $v$, $u_{k}$ + 1, … , $u_{m}$) is a linear map from $V$ to $\\mathbb{F}$.\n• The set of $m$-linear forms on $V$ is denoted by $V$($m$).\n• A function $\\beta$ is called a multilinear form on $V$if it is an $m$-linear form on $V$for some positive integer $m$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.27-alternating-forms',
+    axlerRef: '9.27',
+    title: 'alternating forms, $V$($m$)alt',
+    chapter: 9,
+    formalStatement:
+      'Suppose $m$ is a positive integer.\n• An $m$-linear form $\\alpha$on $V$ is called alternating if $\\alpha$($v_{1}$, … , $v_{m}$) = 0 whenever $v_{1}$, … , $v_{m}$ is a list of vectors in $V$ with $v_{j}$= $v_{k}$ for some two distinct values of $j$ and $k$ in {1, … , $m$}.\n• $V$($m$)alt = {$\\alpha$ ∈ $V$($m$) ∶$\\alpha$ is an alternating $m$-linear form on $V$}.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.31-permutation',
+    axlerRef: '9.31',
+    title: 'permutation, perm $m$',
+    chapter: 9,
+    formalStatement:
+      'Suppose $m$ is a positive integer.\n• A permutation of (1, … , $m$) is a list ($j_{1}$, … , $j_{m}$) that contains each of the numbers 1, … , $m$exactly once.\n• The set of all permutations of (1, … , $m$) is denoted by perm $m$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.32-sign-of-a-permutation',
+    axlerRef: '9.32',
+    title: 'sign of a permutation',
+    chapter: 9,
+    formalStatement:
+      'The sign of a permutation ($j_{1}$, … , $j_{m}$) is defined by sign($j_{1}$, … , $j_{m}$) = (−1)$N$, where $N$is the number of pairs of integers ($k$, ℓ) with 1 ≤$k$< ℓ≤$m$ such that $k$appears after ℓin the list ($j_{1}$, … , $j_{m}$).',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.40-alpha-t',
+    axlerRef: '9.40',
+    title: '$\\alpha T$',
+    chapter: 9,
+    formalStatement:
+      'Suppose that $m$ is a positive integer and $T$ ∈ $\\mathcal{L}(V)$. For $\\alpha$ ∈ $V$($m$)alt  , define $\\alpha T$ ∈ $V$($m$)alt  by $\\alpha T$($v_{1}$, … , $v_{m}$) = $\\alpha$($T v_{1}$, … , $T v_{m}$) for each list $v_{1}$, … , $v_{m}$ of vectors in $V$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.41-determinant-of-an-operator',
+    axlerRef: '9.41',
+    title: 'determinant of an operator, $\\det T$',
+    chapter: 9,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$. The determinant of $T$, denoted by $\\det T$, is defined to be the unique number in $\\mathbb{F}$ such that $\\alpha_T=(\\det T)\\alpha$ for all $\\alpha \\in V^{(\\dim V)}_{\\mathrm{alt}}$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.43-determinant-of-a-matrix',
+    axlerRef: '9.43',
+    title: 'determinant of a matrix, det $A$',
+    chapter: 9,
+    formalStatement:
+      'Suppose that $n$ is a positive integer and $A$is an $n$-by-$n$square matrix with entries in $\\mathbb{F}$. Let $T$ ∈ $\\mathcal{L}$($\\mathbb{F}^n$) be the operator whose matrix with respect to the standard basis of $\\mathbb{F}^n$ equals $A$. The determinant of $A$, denoted by det $A$, is defined by det $A$= det $T$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.63-characteristic-polynomial',
+    axlerRef: '9.63',
+    title: 'characteristic polynomial',
+    chapter: 9,
+    formalStatement:
+      'Suppose $T \\in \\mathcal{L}(V)$. The polynomial defined by $z\\mapsto\\det(zI-T)$ is called the characteristic polynomial of $T$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.68-bilinear-functional',
+    axlerRef: '9.68',
+    title: 'bilinear functional on $V$× $W$, the vector space $\\mathcal{B}$($V$, $W$)',
+    chapter: 9,
+    formalStatement:
+      '• A bilinear functional on $V$× $W$ is a function $\\beta$∶$V$× $W$→$\\mathbb{F}$ such that $v$↦$\\beta$($v$, $w$) is a linear functional on $V$for each $w$ ∈ $W$and $w$↦$\\beta$($v$, $w$) is a linear functional on $W$for each $v$ ∈ $V$.\n• The vector space of bilinear functionals on $V$× $W$ is denoted by $\\mathcal{B}$($V$, $W$).',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.71-tensor-product-vw',
+    axlerRef: '9.71',
+    title: 'tensor product, $V$⊗$W$, $v$⊗$w$',
+    chapter: 9,
+    formalStatement:
+      '• The tensor product $V$⊗$W$ is defined to be $\\mathcal{B}$($V^\\prime$, $W^\\prime$).\n• For $v$ ∈ $V$ and $w$ ∈ $W$, the tensor product $v$⊗$w$ is the element of $V$⊗$W$ defined by ($v$⊗$w$)($\\varphi$, $\\tau$) = $\\varphi$($v$)$\\tau$($w$) for all ($\\varphi$, $\\tau$) ∈$V^\\prime$× $W^\\prime$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.77-bilinear-map',
+    axlerRef: '9.77',
+    title: 'bilinear map',
+    chapter: 9,
+    formalStatement:
+      'A bilinear map from $V$× $W$to a vector space $U$ is a function Γ∶$V$× $W$→$U$ such that $v$↦Γ($v$, $w$) is a linear map from $V$ to $U$for each $w$ ∈ $W$and $w$↦Γ($v$, $w$) is a linear map from $W$to $U$for each $v$ ∈ $V$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.82-inner-product-on-tensor-product',
+    axlerRef: '9.82',
+    title: 'inner product on tensor product of two inner product spaces',
+    chapter: 9,
+    formalStatement:
+      'Suppose $V$ and $W$are inner product spaces. The inner product on $V$⊗$W$ is the unique function ⟨⋅, ⋅⟩from ($V$⊗$W$) × ($V$⊗$W$) to $\\mathbb{F}$ such that ⟨$v$⊗$w$, $u$⊗$x$⟩= ⟨$v$, $u$⟩⟨$w$, $x$⟩ for all $v$, $u$ ∈ $V$ and $w$, $x$ ∈ $W$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.85-m-linear-functional',
+    axlerRef: '9.85',
+    title: '$m$-linear functional, the vector space $\\mathcal{B}$($V_{1}$, … , $V_{m}$)',
+    chapter: 9,
+    formalStatement:
+      '• An $m$-linear functional on $V_{1}$ × ⋯× $V_{m}$ is a function $\\beta$∶$V_{1}$ × ⋯× $V_{m}$→$\\mathbb{F}$ that is a linear functional in each slot when the other slots are held fixed.\n• The vector space of $m$-linear functionals on $V_{1}$ × ⋯× $V_{m}$ is denoted by $\\mathcal{B}$($V_{1}$, … , $V_{m}$).',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.88-tensor-product-general',
+    axlerRef: '9.88',
+    title: 'tensor product, $V_1\\otimes\\cdots\\otimes V_m$, $v_1\\otimes\\cdots\\otimes v_m$',
+    chapter: 9,
+    formalStatement:
+      'The tensor product $V_1\\otimes\\cdots\\otimes V_m$ is defined to be $\\mathcal{B}(V_1^$prime$,\\ldots,V_m^\\prime)$. For $v_1 \\in V_1,\\ldots,v_m \\in V_m$, the tensor product $v_1\\otimes\\cdots\\otimes v_m$ is the element of $V_1\\otimes\\cdots\\otimes V_m$ defined by $(v_1\\otimes\\cdots\\otimes v_m)(\\varphi_1,\\ldots,\\varphi_m)=\\varphi_1(v_1)\\cdots\\varphi_m(v_m)$ for all $(\\varphi_1,\\ldots,\\varphi_m) \\in V_1^\\prime\\times\\cdots\\times V_m^\\prime$.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
+  {
+    id: 'def-9.91-m-linear-map',
+    axlerRef: '9.91',
+    title: '$m$-linear map',
+    chapter: 9,
+    formalStatement:
+      'An $m$-linear map from $V_{1}$ × ⋯× $V_{m}$ to a vector space $U$ is a function Γ∶$V_{1}$ × ⋯× $V_{m}$→$U$that is a linear map in each slot when the other slots are held fixed.',
+    section: '9.?',
+    linkedVisualizers: ['symbolic-formula'],
+    prerequisites: [],
+    examples: [],
+    nonexamples: [],
+  },
 ] as const;

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { JSX } from 'react';
 import { useStore } from 'zustand';
 import { defaultStore } from '../state/index.ts';
@@ -18,6 +19,8 @@ type LibItem = {
 export function ObjectLibrary({ selected, onSelect }: Props): JSX.Element {
   const session = useStore(defaultStore);
   const named = session.namedObjects;
+  const { removeVector, removeMap, removeSpace } = defaultStore.getState();
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   const spaces: LibItem[] = Object.entries(session.spaces).map(([id, sp]) => {
     const name =
@@ -92,53 +95,87 @@ export function ObjectLibrary({ selected, onSelect }: Props): JSX.Element {
             <span style={{ marginLeft: 'auto', color: 'var(--ink-4)' }}>{g.items.length}</span>
           </div>
           {/* Items */}
-          {g.items.map((item) => (
-            <div
-              key={`${item.ref.kind}:${item.ref.id}`}
-              onClick={() => onSelect(item.ref)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 14px',
-                cursor: 'pointer',
-                color: 'var(--ink)',
-                borderLeft: `2px solid ${isSelected(item.ref) ? 'var(--accent)' : 'transparent'}`,
-                background: isSelected(item.ref) ? 'var(--accent-soft)' : 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                if (!isSelected(item.ref)) e.currentTarget.style.background = 'var(--bg-2)';
-              }}
-              onMouseLeave={(e) => {
-                if (!isSelected(item.ref)) e.currentTarget.style.background = 'transparent';
-              }}
-            >
-              <span
+          {g.items.map((item) => {
+            const itemKey = `${item.ref.kind}:${item.ref.id}`;
+            const hovered = hoveredKey === itemKey;
+            return (
+              <div
+                key={itemKey}
+                onClick={() => onSelect(item.ref)}
+                onMouseEnter={() => setHoveredKey(itemKey)}
+                onMouseLeave={() => setHoveredKey(null)}
                 style={{
-                  fontFamily: 'var(--font-math)',
-                  fontStyle: 'italic',
-                  fontSize: '13.5px',
-                  flex: 1,
-                  minWidth: 0,
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '6px 8px 6px 14px',
+                  cursor: 'pointer',
+                  color: 'var(--ink)',
+                  borderLeft: `2px solid ${isSelected(item.ref) ? 'var(--accent)' : 'transparent'}`,
+                  background: isSelected(item.ref)
+                    ? 'var(--accent-soft)'
+                    : hovered
+                      ? 'var(--bg-2)'
+                      : 'transparent',
                 }}
               >
-                {item.name}
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-mono)',
-                  fontSize: 'var(--t-micro)',
-                  color: 'var(--ink-3)',
-                  flexShrink: 0,
-                }}
-              >
-                {item.typeLabel}
-              </span>
-            </div>
-          ))}
+                <span
+                  style={{
+                    fontFamily: 'var(--font-math)',
+                    fontStyle: 'italic',
+                    fontSize: '13.5px',
+                    flex: 1,
+                    minWidth: 0,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {item.name}
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--t-micro)',
+                    color: 'var(--ink-3)',
+                    flexShrink: 0,
+                  }}
+                >
+                  {item.typeLabel}
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (item.ref.kind === 'vector') removeVector(item.ref.id);
+                    else if (item.ref.kind === 'map') removeMap(item.ref.id);
+                    else if (item.ref.kind === 'space') removeSpace(item.ref.id);
+                  }}
+                  style={{
+                    opacity: hovered ? 1 : 0,
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--ink-4)',
+                    fontSize: '11px',
+                    padding: '2px 4px',
+                    borderRadius: 'var(--radius)',
+                    flexShrink: 0,
+                    lineHeight: 1,
+                    transition: 'opacity 0.1s',
+                  }}
+                  title={`Delete ${item.name}`}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--kind-spec)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--ink-4)';
+                  }}
+                >
+                  ✕
+                </button>
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>

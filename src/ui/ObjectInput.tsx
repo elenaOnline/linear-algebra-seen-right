@@ -4,12 +4,15 @@ import { useStore } from 'zustand';
 import { defaultStore } from '../state/index.ts';
 import { parseInput } from '../interaction/parser/index.ts';
 import type { ParseResult } from '../interaction/parser/index.ts';
+import { extractFormulaBody, evaluateFormulaBody } from '../interaction/parser/evaluate.ts';
 import { mkVectorSpaceFn } from '../types/space.ts';
-import { mkConcreteVector } from '../types/vector.ts';
-import { mkLinearMapByMatrix, mkLinearMapByFormula } from '../types/map.ts';
-import { rational } from '../types/scalar.ts';
+import { mkConcreteVector, mkDerivedVector } from '../types/vector.ts';
+import { mkLinearMapByMatrix, mkDerivedMap } from '../types/map.ts';
+import { mkMatrix } from '../types/matrix.ts';
+import { rational, float } from '../types/scalar.ts';
 import type { Scalar } from '../types/index.ts';
-import type { BasisId } from '../types/ids.ts';
+import type { BasisId, SpaceId } from '../types/ids.ts';
+import type { VectorExpression, MapExpression } from '../types/derivation.ts';
 
 const PLACEHOLDER_EXAMPLES = ['[[1, 2], [3, 4]]', '(1, -2, 3)', 'T(x, y) = (x + y, x - y)'];
 
@@ -19,14 +22,122 @@ function scalarToRational(v: number): Scalar {
   return rational(Math.round(v * denom), denom);
 }
 
-function applyParseResult(result: ParseResult, name: string): string | null {
+// Helper: resolve space and dimension from a vector expression.
+function resolveVectorExprSpace(
+  expr: VectorExpression,
+  session: ReturnType<typeof defaultStore.getState>,
+): { spaceId: SpaceId; dim: number } | null {
+  let spaceId: string | undefined;
+  let dim: number | undefined;
+  if (expr.op === 'add' || expr.op === 'sub') {
+    const v = session.vectors[expr.left];
+    if (v?.kind === 'concrete') {
+      spaceId = v.space;
+      dim = v.components.length;
+    }
+  } else if (expr.op === 'scale') {
+    const v = session.vectors[expr.vector];
+    if (v?.kind === 'concrete') {
+      spaceId = v.space;
+      dim = v.components.length;
+    }
+  } else if (expr.op === 'apply') {
+    const map = session.maps[expr.map];
+    const codomainSpace = map ? session.spaces[map.codomain] : undefined;
+    if (map && codomainSpace?.kind === 'Fn') {
+      spaceId = map.codomain;
+      dim = codomainSpace.n;
+    }
+  }
+  if (!spaceId || dim === undefined) return null;
+  return { spaceId: spaceId as SpaceId, dim };
+}
+
+type AddFn = ReturnType<typeof defaultStore.getState>['addVector'];
+type AddMapFn = ReturnType<typeof defaultStore.getState>['addMap'];
+type NameFn = ReturnType<typeof defaultStore.getState>['nameObject'];
+type OpenFn = ReturnType<typeof defaultStore.getState>['openView'];
+
+function applyVectorExpr(
+  expr: VectorExpression,
+  name: string,
+  session: ReturnType<typeof defaultStore.getState>,
+  addVector: AddFn,
+  nameObject: NameFn,
+  openView: OpenFn,
+): string | null {
+  const resolved = resolveVectorExprSpace(expr, session);
+  if (!resolved)
+    return 'Could not resolve vector dimensions — check objects exist and are compatible';
+  const { spaceId, dim } = resolved;
+  // Create with placeholder zeros; recomputeDerived (called by addVector) fills real values.
+  const placeholder: Scalar[] = Array.from({ length: dim }, () => float(0));
+  const derived = mkDerivedVector('R', spaceId, expr, placeholder);
+  addVector(derived);
+  nameObject(name || 'v', { kind: 'vector', id: derived.id });
+  openView('symbolic', { kind: 'vector', id: derived.id });
+  if (dim === 2) openView('geometric_2d', { kind: 'vector', id: derived.id });
+  if (dim === 3) openView('geometric_3d', { kind: 'vector', id: derived.id });
+  return null;
+}
+
+function applyMapExpr(
+  expr: MapExpression,
+  name: string,
+  session: ReturnType<typeof defaultStore.getState>,
+  addMap: AddMapFn,
+  nameObject: NameFn,
+  openView: OpenFn,
+): string | null {
+  let domainId: string | undefined;
+  let codomainId: string | undefined;
+  if (expr.op === 'compose') {
+    domainId = session.maps[expr.right]?.domain;
+    codomainId = session.maps[expr.left]?.codomain;
+  } else if (expr.op === 'sum') {
+    domainId = session.maps[expr.left]?.domain;
+    codomainId = session.maps[expr.left]?.codomain;
+  } else if (expr.op === 'scale') {
+    domainId = session.maps[expr.map]?.domain;
+    codomainId = session.maps[expr.map]?.codomain;
+  }
+  if (!domainId || !codomainId) return 'Could not determine map dimensions for expression';
+
+  const dId = domainId as SpaceId;
+  const cId = codomainId as SpaceId;
+  const domSpace = session.spaces[dId];
+  const codSpace = session.spaces[cId];
+  const domDim = domSpace?.kind === 'Fn' ? domSpace.n : 2;
+  const codDim = codSpace?.kind === 'Fn' ? codSpace.n : 2;
+
+  const domBid = dId as unknown as BasisId;
+  const codBid = cId as unknown as BasisId;
+  // Zero-filled placeholder matrix; recomputeDerived fills real values.
+  const zeroRows: Scalar[][] = Array.from({ length: codDim }, () =>
+    Array.from({ length: domDim }, () => float(0)),
+  );
+  const mat = mkMatrix('R', zeroRows, domBid, codBid);
+  if (!mat.ok) return mat.error.message;
+  const derived = mkDerivedMap(dId, cId, expr, mat.value, domBid, codBid);
+  if (!derived.ok) return derived.error.message;
+  addMap(derived.value);
+  nameObject(name || 'T', { kind: 'map', id: derived.value.id });
+  openView('matrix', { kind: 'map', id: derived.value.id });
+  if (codDim === 2 && domDim === 2) openView('diagram', { kind: 'map', id: derived.value.id });
+  return null;
+}
+
+function applyParseResult(
+  result: ParseResult,
+  name: string,
+  session: ReturnType<typeof defaultStore.getState>,
+): string | null {
   const { addSpace, addVector, addMap, nameObject, openView } = defaultStore.getState();
-  const session = defaultStore.getState();
 
   if (result.kind === 'error') return result.message;
 
   if (result.kind === 'ambiguous') {
-    return applyParseResult(result.alternatives[0] ?? result, name);
+    return applyParseResult(result.alternatives[0] ?? result, name, session);
   }
 
   if (result.kind === 'vector') {
@@ -81,17 +192,69 @@ function applyParseResult(result: ParseResult, name: string): string | null {
   if (result.kind === 'formula') {
     const n = result.params.length;
     const field = 'R';
-    const space = mkVectorSpaceFn(field, n);
-    if (!space.ok) return space.error.message;
-    if (!session.spaces[space.value.id]) addSpace(space.value);
-    const fnLabel = result.label;
-    const map = mkLinearMapByFormula(space.value.id, space.value.id, (v) => v, fnLabel);
-    addMap(map);
-    const label = result.name || 'T';
-    nameObject(label, { kind: 'map', id: map.id });
-    openView('symbolic', { kind: 'map', id: map.id });
-    if (n === 2) openView('diagram', { kind: 'map', id: map.id });
+
+    // Evaluate the formula body at each standard basis vector to recover the matrix columns.
+    const body = extractFormulaBody(result.label);
+    const columns: number[][] = [];
+    for (let j = 0; j < n; j++) {
+      const binding: Record<string, number> = {};
+      result.params.forEach((p, i) => {
+        binding[p] = i === j ? 1 : 0;
+      });
+      const col = evaluateFormulaBody(body, binding);
+      if (typeof col === 'string') return `Formula error: ${col}`;
+      columns.push(col);
+    }
+
+    // Infer codomain dimension from the output arity of the first column.
+    const m = columns[0]?.length ?? n;
+    const domainSpace = mkVectorSpaceFn(field, n);
+    const codomainSpace = mkVectorSpaceFn(field, m);
+    if (!domainSpace.ok) return domainSpace.error.message;
+    if (!codomainSpace.ok) return codomainSpace.error.message;
+    if (!session.spaces[domainSpace.value.id]) addSpace(domainSpace.value);
+    if (!session.spaces[codomainSpace.value.id]) addSpace(codomainSpace.value);
+
+    const domBid = domainSpace.value.id as unknown as BasisId;
+    const codBid = codomainSpace.value.id as unknown as BasisId;
+
+    // Build rows from columns: rows[i][j] = columns[j][i].
+    const rows: Scalar[][] = Array.from({ length: m }, (_, i) =>
+      Array.from({ length: n }, (_, j) => {
+        const v = columns[j]?.[i] ?? 0;
+        return Number.isInteger(v) ? rational(v) : float(v);
+      }),
+    );
+    const mat = mkMatrix(field, rows, domBid, codBid);
+    if (!mat.ok) return mat.error.message;
+    const map = mkLinearMapByMatrix(
+      domainSpace.value.id,
+      codomainSpace.value.id,
+      mat.value,
+      domBid,
+      codBid,
+    );
+    if (!map.ok) return map.error.message;
+
+    addMap(map.value);
+    const label = name || result.name || 'T';
+    nameObject(label, { kind: 'map', id: map.value.id });
+    openView('matrix', { kind: 'map', id: map.value.id });
+    if (n === 2 && m === 2) {
+      openView('geometric_2d', { kind: 'map', id: map.value.id });
+      openView('diagram', { kind: 'map', id: map.value.id });
+    }
     return null;
+  }
+
+  if (result.kind === 'vector-expr') {
+    const err2 = applyVectorExpr(result.expression, name, session, addVector, nameObject, openView);
+    return err2;
+  }
+
+  if (result.kind === 'map-expr') {
+    const err2 = applyMapExpr(result.expression, name, session, addMap, nameObject, openView);
+    return err2;
   }
 
   return 'Unhandled parse result';
@@ -148,7 +311,8 @@ export function ObjectInput(): JSX.Element {
       setPreview(null);
       return;
     }
-    const result = parseInput(val);
+    const namedObjects = defaultStore.getState().namedObjects;
+    const result = parseInput(val, namedObjects);
     if (result.kind === 'error') {
       setPreview(null);
       setError(result.message);
@@ -163,6 +327,12 @@ export function ObjectInput(): JSX.Element {
     } else if (result.kind === 'formula') {
       setPreview(`Linear map — ${result.name}(${result.params.join(', ')})`);
       setError(null);
+    } else if (result.kind === 'vector-expr') {
+      setPreview(`Derived vector expression`);
+      setError(null);
+    } else if (result.kind === 'map-expr') {
+      setPreview(`Derived map expression`);
+      setError(null);
     } else if (result.kind === 'ambiguous') {
       setPreview(`Ambiguous — interpreted as ${result.alternatives[0]?.kind ?? '?'}`);
       setError(null);
@@ -171,7 +341,13 @@ export function ObjectInput(): JSX.Element {
 
   const handleSubmit = (): void => {
     if (!text.trim()) return;
-    const err = applyParseResult(parseInput(text.trim()), nameText.trim());
+    const currentSession = defaultStore.getState();
+    const namedObjects = currentSession.namedObjects;
+    const err = applyParseResult(
+      parseInput(text.trim(), namedObjects),
+      nameText.trim(),
+      currentSession,
+    );
     if (err) {
       setError(err);
     } else {

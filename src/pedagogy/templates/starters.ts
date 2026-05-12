@@ -2,10 +2,10 @@
 // Each build() is pure — no store access, no side effects.
 
 import { mkVectorSpaceFn } from '../../types/space.ts';
-import { mkConcreteVector } from '../../types/vector.ts';
+import { mkConcreteVector, mkDerivedVector } from '../../types/vector.ts';
 import { mkLinearMapByMatrix } from '../../types/map.ts';
 import { mkMatrix } from '../../types/matrix.ts';
-import { rational } from '../../types/scalar.ts';
+import { rational, float } from '../../types/scalar.ts';
 import type { BasisId } from '../../types/ids.ts';
 import { invariantViolation } from '../../types/errors.ts';
 import type { SceneBuild, SceneTemplate } from './types.ts';
@@ -150,14 +150,19 @@ const complexArithmeticTemplate: SceneTemplate = {
 const vectorAdditionTemplate: SceneTemplate = {
   id: 'vector-addition-r2',
   title: 'Vector addition in ℝ²',
-  description: 'Two vectors v₁ = (1,2) and v₂ = (3,−1) and their sum w = (4,1) in ℝ².',
+  description:
+    'Two vectors v₁ = (1,2) and v₂ = (3,−1). Their sum w = v₁ + v₂ is a live derived vector — drag v₁ or v₂ and w updates automatically.',
   tags: ['addition', 'chapter-1', 'r2'],
   parameters: [],
   build: (): SceneBuild => {
     const space = ok(mkVectorSpaceFn('R', 2));
     const v1 = ok(mkConcreteVector('R', space.id, [rational(1), rational(2)]));
     const v2 = ok(mkConcreteVector('R', space.id, [rational(3), rational(-1)]));
-    const w = ok(mkConcreteVector('R', space.id, [rational(4), rational(1)]));
+    // w is derived: w = v1 + v2 = (4, 1) initially, recomputed on drag
+    const w = mkDerivedVector('R', space.id, { op: 'add', left: v1.id, right: v2.id }, [
+      float(4),
+      float(1),
+    ]);
     return {
       spaces: [space],
       bases: [],
@@ -661,32 +666,47 @@ const spanTemplate: SceneTemplate = {
 const linearCombTemplate: SceneTemplate = {
   id: 'linear-combination-builder',
   title: 'Linear combination',
-  description: 'A linear combination 3v₁ + 2v₂ of two basis vectors in ℝ².',
+  description:
+    'Scaled vectors 3v₁ and 2v₂ and their sum w = 3v₁ + 2v₂. The intermediate scaled vectors and the sum are all live — drag v₁ or v₂ to see all three update.',
   tags: ['linear-combination', 'chapter-2', 'r2'],
   parameters: [],
   build: (): SceneBuild => {
     const space = ok(mkVectorSpaceFn('R', 2));
     const v1 = ok(mkConcreteVector('R', space.id, [rational(1), rational(0)]));
     const v2 = ok(mkConcreteVector('R', space.id, [rational(0), rational(1)]));
-    const combo = ok(mkConcreteVector('R', space.id, [rational(3), rational(2)]));
+    // a = 3 * v1 (derived), b = 2 * v2 (derived), w = a + b (derived)
+    const a = mkDerivedVector('R', space.id, { op: 'scale', scalar: rational(3), vector: v1.id }, [
+      float(3),
+      float(0),
+    ]);
+    const b = mkDerivedVector('R', space.id, { op: 'scale', scalar: rational(2), vector: v2.id }, [
+      float(0),
+      float(2),
+    ]);
+    const w = mkDerivedVector('R', space.id, { op: 'add', left: a.id, right: b.id }, [
+      float(3),
+      float(2),
+    ]);
     return {
       spaces: [space],
       bases: [],
-      vectors: [v1, v2, combo],
+      vectors: [v1, v2, a, b, w],
       maps: [],
       namedObjects: [
         { name: 'v₁', ref: { kind: 'vector', id: v1.id } },
         { name: 'v₂', ref: { kind: 'vector', id: v2.id } },
-        { name: 'w', ref: { kind: 'vector', id: combo.id } },
+        { name: '3v₁', ref: { kind: 'vector', id: a.id } },
+        { name: '2v₂', ref: { kind: 'vector', id: b.id } },
+        { name: 'w', ref: { kind: 'vector', id: w.id } },
       ],
       views: [
         { kind: 'geometric_2d', visualizerId: 'arrow-2d', objectId: v1.id, refKind: 'vector' },
         { kind: 'geometric_2d', visualizerId: 'arrow-2d', objectId: v2.id, refKind: 'vector' },
-        { kind: 'geometric_2d', visualizerId: 'arrow-2d', objectId: combo.id, refKind: 'vector' },
+        { kind: 'geometric_2d', visualizerId: 'arrow-2d', objectId: w.id, refKind: 'vector' },
         {
           kind: 'symbolic',
           visualizerId: 'coordinate-display',
-          objectId: combo.id,
+          objectId: w.id,
           refKind: 'vector',
         },
       ],

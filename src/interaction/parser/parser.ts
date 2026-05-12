@@ -5,6 +5,8 @@ import type {
   ParsedVector,
   ParsedMatrix,
   ParsedFormula,
+  ParsedVectorExpr,
+  ParsedMapExpr,
   ParseError,
 } from './types.ts';
 import type { Field } from '../../types/field.ts';
@@ -13,6 +15,7 @@ import { mkMatrix } from '../../types/matrix.ts';
 import { mkVectorSpaceFn } from '../../types/space.ts';
 import type { Scalar } from '../../types/index.ts';
 import type { BasisId } from '../../types/ids.ts';
+import type { MathObjectRef } from '../../state/types.ts';
 
 // --- Token stream ---
 
@@ -352,12 +355,133 @@ function parseFormula(src: string, s: TokenStream): ParsedFormula | ParseError {
   };
 }
 
+// --- Named-object expression parsing ---
+// Supported forms (when namedObjects is supplied):
+//   v + w      — vector sum (both vector-kind)
+//   v - w      — vector difference (both vector-kind)
+//   2v  / 2*v  — scalar * vector (literal * vector-kind name)
+//   A(v) / A v — map application (map-kind name applied to vector-kind name)
+//   A * B      — map composition (both map-kind)
+//   A + B      — map sum (both map-kind)
+
+function tryParseNamedExpr(
+  trimmed: string,
+  namedObjects: Record<string, MathObjectRef>,
+): ParsedVectorExpr | ParsedMapExpr | null {
+  const tokens = tokenize(trimmed);
+  // Must have at least 3 tokens (name op name) or special forms (scalar name, name(name))
+  if (tokens.length < 2) return null;
+
+  const first = tokens[0];
+  if (!first) return null;
+
+  // Form: "scalar * name" or "scalar name" (scalar multiple)
+  if (first.kind === 'number') {
+    const scalar = parseFloat(first.raw);
+    if (!isFinite(scalar)) return null;
+    // Next may be '*' then name, or directly name
+    let nameIdx = 1;
+    if (tokens[1]?.kind === 'star') nameIdx = 2;
+    const nameTok = tokens[nameIdx];
+    if (nameTok?.kind !== 'ident') return null;
+    if (tokens[nameIdx + 1]?.kind !== 'eof') return null;
+    const ref = namedObjects[nameTok.raw];
+    if (!ref || ref.kind !== 'vector') return null;
+    return {
+      kind: 'vector-expr',
+      expression: {
+        op: 'scale',
+        scalar: Number.isInteger(scalar) ? rational(scalar) : float(scalar),
+        vector: ref.id,
+      },
+    };
+  }
+
+  if (first.kind !== 'ident') return null;
+  const leftName = first.raw;
+  const leftRef = namedObjects[leftName];
+  if (!leftRef) return null;
+
+  // Form: "A(v)" — map application
+  if (tokens[1]?.kind === 'lparen' && leftRef.kind === 'map') {
+    const argTok = tokens[2];
+    if (argTok?.kind !== 'ident') return null;
+    if (tokens[3]?.kind !== 'rparen') return null;
+    if (tokens[4]?.kind !== 'eof') return null;
+    const argRef = namedObjects[argTok.raw];
+    if (!argRef || argRef.kind !== 'vector') return null;
+    return {
+      kind: 'vector-expr',
+      expression: { op: 'apply', map: leftRef.id, vector: argRef.id },
+    };
+  }
+
+  // Form: "A v" (juxtaposition, map application)
+  if (tokens[1]?.kind === 'ident' && tokens[2]?.kind === 'eof' && leftRef.kind === 'map') {
+    const argRef = namedObjects[tokens[1].raw];
+    if (argRef?.kind === 'vector') {
+      return {
+        kind: 'vector-expr',
+        expression: { op: 'apply', map: leftRef.id, vector: argRef.id },
+      };
+    }
+  }
+
+  const opTok = tokens[1];
+  const rightTok = tokens[2];
+  if (!opTok || !rightTok || tokens[3]?.kind !== 'eof') return null;
+  if (rightTok.kind !== 'ident') return null;
+
+  const rightRef = namedObjects[rightTok.raw];
+  if (!rightRef) return null;
+
+  // Form: "v + w" or "v - w" — vector add/sub
+  if (
+    (opTok.kind === 'plus' || opTok.kind === 'minus') &&
+    leftRef.kind === 'vector' &&
+    rightRef.kind === 'vector'
+  ) {
+    return {
+      kind: 'vector-expr',
+      expression: {
+        op: opTok.kind === 'plus' ? 'add' : 'sub',
+        left: leftRef.id,
+        right: rightRef.id,
+      },
+    };
+  }
+
+  // Form: "A * B" — map composition
+  if (opTok.kind === 'star' && leftRef.kind === 'map' && rightRef.kind === 'map') {
+    return {
+      kind: 'map-expr',
+      expression: { op: 'compose', left: leftRef.id, right: rightRef.id },
+    };
+  }
+
+  // Form: "A + B" — map sum
+  if (opTok.kind === 'plus' && leftRef.kind === 'map' && rightRef.kind === 'map') {
+    return {
+      kind: 'map-expr',
+      expression: { op: 'sum', left: leftRef.id, right: rightRef.id },
+    };
+  }
+
+  return null;
+}
+
 // --- Top-level entry point ---
 
-export function parseInput(src: string): ParseResult {
+export function parseInput(src: string, namedObjects?: Record<string, MathObjectRef>): ParseResult {
   const trimmed = src.trim();
   if (trimmed === '') {
     return { kind: 'error', message: 'Empty input', pos: 0, length: 0, code: 'EMPTY' };
+  }
+
+  // Try named-object expression first (only when namedObjects is provided and non-empty)
+  if (namedObjects && Object.keys(namedObjects).length > 0) {
+    const exprResult = tryParseNamedExpr(trimmed, namedObjects);
+    if (exprResult !== null) return exprResult;
   }
 
   const tokens = tokenize(trimmed);

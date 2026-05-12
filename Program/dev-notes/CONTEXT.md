@@ -40,7 +40,9 @@ A web-based mathematical sandbox for exploring concepts from Sheldon Axler's *Li
 
 **Phase 10 (Connected Sandbox) — complete.** AI-006 (formula map evaluation), AI-007 (Inspector computed: rank/nullity/det), AI-008 (deletion + ObjectLibrary ✕ buttons), AI-009 (named-object referencing + `DerivedVector`/`DerivedMap` with live `recomputeDerived`). 338 tests. See ADR-018 + devlog.
 
-**Next:** Phase 9 content resumes. Addresses the gap between the sandbox as a static viewer and a genuinely interactive environment. Four action items: AI-006 (formula map evaluation — currently uses identity function), AI-007 (Inspector computed properties — currently shows "—"), AI-008 (deletion + ObjectLibrary selection wiring), AI-009 (named-object referencing + derived live objects). AI-009 is the architectural core: `DerivedVector`/`DerivedMap` types with live recomputation when dependencies change (ADR-018). Phase 9 content work should resume after Phase 10 lands, since derived objects will make the remaining templates substantially more honest.
+**Phase 11 (Design Debt & UX) — planned, next.** Nine findings from a design review (`Program/Design/Design Review Synthesis - standalone.html`) split into four stages: 11A (expression input + symbol palette — F-07, F-08), 11B (visual system + catalog thumbnails + tile resizing — F-04, F-05, F-06), 11C (tag vocabulary + Browse→Sandbox context + relational display — F-01, F-02, F-03, requires ADR-019 first), 11D (URL-hash persistence + localStorage — F-09). See `PRD/11 — Design Debt & UX.md`.
+
+**Phase 9 (Content Expansion) — paused, resumes after Phase 11.** Chapters 4–9 overrides, more generator constraints.
 
 ---
 

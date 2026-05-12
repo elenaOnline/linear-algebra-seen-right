@@ -24,6 +24,23 @@ If an item turns out to be wrong or no longer applies, mark it `withdrawn (YYYY-
 
 ## Open items
 
+*None.*
+
+---
+
+## Resolved items (Phase 10)
+
+### AI-006  (resolved 2026-05-12)
+### AI-007  (resolved 2026-05-12)
+### AI-008  (resolved 2026-05-12)
+### AI-009  (resolved 2026-05-12)
+
+All four resolved in commit `f9a803c`. See DEVLOG for full details.
+
+---
+
+## Previously open items (now resolved)
+
 ### AI-006 — Fix formula map evaluation in ObjectInput  (open)
 
 **What.** `ObjectInput.tsx:88` calls `mkLinearMapByFormula(space.id, space.id, (v) => v, fnLabel)` regardless of what the user typed — the identity function is always used. The parse result (`result.label`, `result.params`) is stored in the label but the formula body is never evaluated. Every formula map silently behaves as the identity.

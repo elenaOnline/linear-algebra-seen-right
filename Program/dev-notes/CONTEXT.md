@@ -38,7 +38,9 @@ A web-based mathematical sandbox for exploring concepts from Sheldon Axler's *Li
 
 **Phase 9 (Content Expansion) — in progress, paused.** All 14 placeholder templates replaced with real builds (19 templates total). Chapter 3 overrides complete (30 definitions, §3.A–3.F). Generator constraints: 17 (target ~30). Chapters 4–9 overrides remain. After any override edits: `pnpm build:definitions` locally, commit `generated.ts`.
 
-**Phase 10 (Connected Sandbox) — planned next.** Addresses the gap between the sandbox as a static viewer and a genuinely interactive environment. Four action items: AI-006 (formula map evaluation — currently uses identity function), AI-007 (Inspector computed properties — currently shows "—"), AI-008 (deletion + ObjectLibrary selection wiring), AI-009 (named-object referencing + derived live objects). AI-009 is the architectural core: `DerivedVector`/`DerivedMap` types with live recomputation when dependencies change (ADR-018). Phase 9 content work should resume after Phase 10 lands, since derived objects will make the remaining templates substantially more honest.
+**Phase 10 (Connected Sandbox) — complete.** AI-006 (formula map evaluation), AI-007 (Inspector computed: rank/nullity/det), AI-008 (deletion + ObjectLibrary ✕ buttons), AI-009 (named-object referencing + `DerivedVector`/`DerivedMap` with live `recomputeDerived`). 338 tests. See ADR-018 + devlog.
+
+**Next:** Phase 9 content resumes. Addresses the gap between the sandbox as a static viewer and a genuinely interactive environment. Four action items: AI-006 (formula map evaluation — currently uses identity function), AI-007 (Inspector computed properties — currently shows "—"), AI-008 (deletion + ObjectLibrary selection wiring), AI-009 (named-object referencing + derived live objects). AI-009 is the architectural core: `DerivedVector`/`DerivedMap` types with live recomputation when dependencies change (ADR-018). Phase 9 content work should resume after Phase 10 lands, since derived objects will make the remaining templates substantially more honest.
 
 ---
 

@@ -21,6 +21,19 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 10: Connected Sandbox (AI-006 through AI-009)
+
+**Touched:** `src/interaction/parser/evaluate.ts` (new), `src/interaction/parser/parser.ts`, `src/interaction/parser/types.ts`, `src/types/derivation.ts` (new), `src/types/vector.ts`, `src/types/map.ts`, `src/state/derivation.ts` (new), `src/state/store.ts`, `src/registry/helpers.ts`, `src/ui/Inspector.tsx`, `src/ui/ObjectInput.tsx`, `src/ui/ObjectLibrary.tsx`, `src/pedagogy/templates/starters.ts` + 3 new test files
+**Status:** complete
+
+Four AI items landed as a single commit. AI-006: formula map evaluation via standard-basis substitution — `T(x,y)=(x+y,x-y)` now produces `[[1,1],[1,-1]]`. AI-007: Inspector computed section now shows rank, nullity, and determinant using `computeRank`/`computeDet` from `registry/helpers.ts` (pure float arithmetic, no engine). AI-008: `removeVector`/`removeMap`/`removeSpace` store actions with view cascade and namedObjects cleanup; ObjectLibrary hover-reveal ✕ buttons. AI-009: `VectorExpression`/`MapExpression` types in `src/types/derivation.ts`; `DerivedVector`/`DerivedMap` via optional `derivation` field on existing concrete types; `recomputeDerived()` topological pass called after every mutation; parser extended with `parseInput(src, namedObjects)` supporting `v+w`, `v-w`, `2v`, `A(v)`, `A*B`, `A+B`; ObjectInput creates derived objects with placeholder components (recomputed on `addVector`); `vector-addition-r2` and `linear-combination-builder` templates updated to use live derived vectors.
+
+**Notable:** Layer violation — `src/state/derivation.ts` cannot import from `src/registry/helpers.ts` (Layer 2 → Layer 3). Resolved by inlining `scalarToNumber` in `derivation.ts`. ObjectInput's initial inline arithmetic was replaced by a placeholder + `recomputeDerived` pattern, eliminating ~100 lines of duplicate math.
+
+**Next:** Phase 9 content resumes (Ch4–9 overrides, more generator constraints). Templates for later chapters should use `mkDerivedVector`/`mkDerivedMap` where applicable.
+
+---
+
 ## 2026-05-12 — Phase 9 content expansion (templates, Ch3 overrides, generator)
 
 **Touched:** `src/pedagogy/templates/starters.ts`, `src/pedagogy/definitions/overrides.ts`, `src/pedagogy/definitions/generated.ts`, `src/pedagogy/generator/constraints.ts`, `src/pedagogy/generator/types.ts`, `src/pedagogy/generator/index.ts`

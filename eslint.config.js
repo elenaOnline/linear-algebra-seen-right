@@ -75,6 +75,28 @@ export default [
       ],
     },
   },
+  // Layer boundary enforcement: Renderers (Layer 4) must not import state, compute, or higher layers.
+  // Renderers are pure components — they consume RendererProps only.
+  {
+    files: ['src/renderers/**/*.ts', 'src/renderers/**/*.tsx'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['*/state*', '../state/*', '../../state/*'],
+              message: 'Renderers must not import from Layer 2 (state) — consume props only',
+            },
+            {
+              group: ['*/compute*', '../compute/*', '../../compute/*'],
+              message: 'Renderers must not import from Layer 1 (compute) — consume props only',
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Layer boundary enforcement: Layer 2 (state) must not import from Layer 3 or above.
   {
     files: ['src/state/**/*.ts'],

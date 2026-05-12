@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "engines": {
-    "node": ">=20",
-    "pnpm": ">=8"
+    "node": ">=20"
   },
   "scripts": {
     "dev": "vite",
@@ -19,12 +18,20 @@
     "verify": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm test"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/d3": "^7.4.3",
+    "@types/three": "^0.176.0",
     "comlink": "^4.4.2",
+    "d3": "^7.9.0",
+    "dagre": "^0.8.5",
     "fraction.js": "^5.3.4",
     "immer": "^11.1.8",
+    "katex": "^0.16.45",
     "ml-matrix": "^6.12.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "three": "^0.176.0",
     "zustand": "^5.0.13"
   },
   "pnpm": {
@@ -33,6 +40,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^16.3.2",
+    "@types/dagre": "^0.7.54",
+    "@types/katex": "^0.16.8",
     "@types/node": "^20.0.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.1",
@@ -41,6 +51,7 @@
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^9.0.0",
     "fast-check": "^3.22.0",
+    "happy-dom": "^20.9.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.4",
     "vite": "^5.4.0",

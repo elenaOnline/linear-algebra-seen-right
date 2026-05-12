@@ -51,6 +51,12 @@ export type InverseResult =
   | { readonly kind: 'success'; readonly exact: Matrix | null; readonly numerical: Matrix }
   | { readonly kind: 'singular' };
 
+// matrixOf can fail when the map's representation doesn't carry enough information
+// to extract a matrix (e.g. a formula-kind map with no domain basis decomposition).
+export type MatrixOfResult =
+  | { readonly kind: 'success'; readonly exact: Matrix | null; readonly numerical: Matrix }
+  | { readonly kind: 'not_representable' };
+
 export type EngineError =
   | { readonly kind: 'worker_crashed'; readonly message: string }
   | { readonly kind: 'computation_failed'; readonly message: string }

@@ -7,6 +7,7 @@ import type { Polynomial } from '../types/polynomial.ts';
 import type { Scalar } from '../types/scalar.ts';
 import type { Field } from '../types/field.ts';
 import type { BasisId, SpaceId } from '../types/ids.ts';
+import type { SessionView } from '../types/session-view.ts';
 import { mkMatrix } from '../types/matrix.ts';
 import { mkPolynomial } from '../types/polynomial.ts';
 import { float, rational, addScalar, mulScalar } from '../types/scalar.ts';
@@ -20,6 +21,7 @@ import type {
   SVDResult,
   QRResult,
   InverseResult,
+  MatrixOfResult,
   JordanResult,
   ExactNumerical,
 } from './types.ts';
@@ -45,8 +47,14 @@ export interface ComputationEngine {
   /** Resolves when the symbolic track is ready. Numerical calls do not need to await this. */
   readonly ready: Promise<void>;
 
-  eigendecompose(M: Matrix, opts?: { signal?: AbortSignal }): Promise<ExactNumerical<EigenResult>>;
-  nullSpace(M: Matrix, opts?: { signal?: AbortSignal }): Promise<ExactNumerical<Basis>>;
+  eigendecompose(
+    M: Matrix,
+    opts?: { signal?: AbortSignal; session?: SessionView },
+  ): Promise<ExactNumerical<EigenResult>>;
+  nullSpace(
+    M: Matrix,
+    opts?: { signal?: AbortSignal; session?: SessionView },
+  ): Promise<ExactNumerical<Basis>>;
   rank(M: Matrix, opts?: { signal?: AbortSignal }): Promise<ExactNumerical<number>>;
   rref(M: Matrix, opts?: { signal?: AbortSignal }): Promise<ExactNumerical<Matrix>>;
   inverse(M: Matrix, opts?: { signal?: AbortSignal }): Promise<InverseResult>;
@@ -72,11 +80,11 @@ export interface ComputationEngine {
     codomainBasis: Basis,
     field: Field,
     opts?: { signal?: AbortSignal },
-  ): Promise<ExactNumerical<Matrix>>;
+  ): Promise<MatrixOfResult>;
   applyMap(
     map: LinearMap,
     v: Vector,
-    opts?: { signal?: AbortSignal },
+    opts?: { signal?: AbortSignal; session?: SessionView },
   ): Promise<ExactNumerical<Vector>>;
 }
 
@@ -98,7 +106,10 @@ function vectorToFloats(v: Vector): number[] {
   });
 }
 
-function spaceIdOfMatrix(M: Matrix): SpaceId {
+function spaceIdOfMatrix(M: Matrix, session?: SessionView): SpaceId {
+  const fromSession = session?.getSpaceForBasis(M.domainBasis);
+  if (fromSession !== undefined) return fromSession;
+  // Fallback: the ID scheme encodes space in the basis key; works for square operators.
   return M.domainBasis as unknown as SpaceId;
 }
 
@@ -111,7 +122,7 @@ class Engine implements ComputationEngine {
 
   async eigendecompose(
     M: Matrix,
-    opts?: { signal?: AbortSignal },
+    opts?: { signal?: AbortSignal; session?: SessionView },
   ): Promise<ExactNumerical<EigenResult>> {
     assertSquare(M);
     const numerical = numericalEigendecompose(M);
@@ -121,7 +132,7 @@ class Engine implements ComputationEngine {
       const result = await this.symbolic.eigendecompose(serializeMatrix(M).entries, opts?.signal);
       if (result.kind === 'error') return { exact: null, numerical };
 
-      const spaceId = spaceIdOfMatrix(M);
+      const spaceId = spaceIdOfMatrix(M, opts?.session);
       const values = result.values.map((v) => ({
         value: deserializeScalar(v.value),
         algebraicMultiplicity: v.multiplicity,
@@ -138,8 +149,11 @@ class Engine implements ComputationEngine {
     }
   }
 
-  async nullSpace(M: Matrix, opts?: { signal?: AbortSignal }): Promise<ExactNumerical<Basis>> {
-    const spaceId = spaceIdOfMatrix(M);
+  async nullSpace(
+    M: Matrix,
+    opts?: { signal?: AbortSignal; session?: SessionView },
+  ): Promise<ExactNumerical<Basis>> {
+    const spaceId = spaceIdOfMatrix(M, opts?.session);
     const pseudoSpace = { kind: 'Fn' as const, id: spaceId, field: M.field, n: M.cols };
 
     const numMat = numericalNullSpace(M, M.domainBasis, M.codomainBasis);
@@ -369,10 +383,10 @@ class Engine implements ComputationEngine {
     codomainBasis: Basis,
     field: Field,
     _opts?: { signal?: AbortSignal },
-  ): Promise<ExactNumerical<Matrix>> {
+  ): Promise<MatrixOfResult> {
     if (map.representation.kind === 'matrix') {
       const m = map.representation.matrix;
-      return Promise.resolve({ exact: m, numerical: m });
+      return Promise.resolve({ kind: 'success', exact: m, numerical: m });
     }
     if (map.representation.kind === 'basis_action') {
       const pairs = map.representation.pairs;
@@ -386,16 +400,18 @@ class Engine implements ComputationEngine {
         }),
       );
       const result = mkMatrix(field, entries, domainBasis.id, codomainBasis.id);
-      if (!result.ok) return Promise.resolve({ exact: null, numerical: null as unknown as Matrix });
-      return Promise.resolve({ exact: result.value, numerical: result.value });
+      if (!result.ok) return Promise.resolve({ kind: 'not_representable' });
+      return Promise.resolve({ kind: 'success', exact: result.value, numerical: result.value });
     }
-    return Promise.resolve({ exact: null, numerical: null as unknown as Matrix });
+    // formula-kind: cannot extract a matrix without applying to each basis vector
+    // and decomposing the result in the codomain basis — deferred to a future enhancement.
+    return Promise.resolve({ kind: 'not_representable' });
   }
 
   applyMap(
     map: LinearMap,
     v: Vector,
-    _opts?: { signal?: AbortSignal },
+    opts?: { signal?: AbortSignal; session?: SessionView },
   ): Promise<ExactNumerical<Vector>> {
     if (map.representation.kind === 'formula') {
       const result = map.representation.fn(v);
@@ -403,7 +419,8 @@ class Engine implements ComputationEngine {
     }
     if (map.representation.kind === 'matrix' && v.kind === 'concrete') {
       const m = map.representation.matrix;
-      const spaceId = m.codomainBasis as unknown as SpaceId;
+      const spaceId =
+        opts?.session?.getSpaceForBasis(m.codomainBasis) ?? (m.codomainBasis as unknown as SpaceId);
       if (v.components.length !== m.cols) {
         return Promise.resolve({ exact: null, numerical: v });
       }

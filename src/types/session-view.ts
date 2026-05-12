@@ -11,6 +11,10 @@ export interface SessionView {
   getSubspace(id: SubspaceId): Subspace | undefined;
   getBasis(id: BasisId): Basis | undefined;
   getActiveBasis(spaceId: SpaceId): BasisId | undefined;
+  getSpaceForBasis(id: BasisId): SpaceId | undefined;
   getMapDomain(id: MapId): SpaceId | undefined;
   getMapCodomain(id: MapId): SpaceId | undefined;
+  // Content-addressed computation cache. Key is a plain string (not branded ComputationKey)
+  // so this interface stays in Layer 0 without importing Layer 2 types.
+  getCachedResult(key: string): unknown;
 }

@@ -91,6 +91,8 @@ export function dimOf(state: SessionSnapshot, spaceId: SpaceId): number | 'infin
     getBasis: (id: BasisId): Basis | undefined => state.bases[id as string],
     getActiveBasis: (id: SpaceId): BasisId | undefined =>
       state.selectedBasis[id as string] as BasisId | undefined,
+    getSpaceForBasis: (id: BasisId): SpaceId | undefined => state.bases[id as string]?.space,
+    getCachedResult: (_key: string): unknown => undefined,
     getMapDomain: (id: MapId): SpaceId | undefined => state.maps[id as string]?.domain,
     getMapCodomain: (id: MapId): SpaceId | undefined => state.maps[id as string]?.codomain,
   };

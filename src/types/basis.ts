@@ -20,7 +20,8 @@ export function mkBasis(
   vectors: readonly Vector[],
   label: string,
 ): Result<Basis, ConstructionError> {
-  if (vectors.length === 0) {
+  // Empty basis is valid only for zero-dimensional spaces (F^0).
+  if (vectors.length === 0 && dim(space) !== 0) {
     return err(constructionError('EMPTY_BASIS', 'Basis must contain at least one vector'));
   }
   // Check dimension consistency when the space has a known finite dimension.

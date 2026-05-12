@@ -69,9 +69,12 @@ export function _resetSpaceRegistry(): void {
 // --- Factories ---
 
 export function mkVectorSpaceFn(field: Field, n: number): Result<VectorSpace, ConstructionError> {
-  if (!Number.isInteger(n) || n <= 0) {
+  if (!Number.isInteger(n) || n < 0) {
     return err(
-      constructionError('INVALID_DIMENSION', `Fn dimension must be a positive integer, got ${n}`),
+      constructionError(
+        'INVALID_DIMENSION',
+        `Fn dimension must be a non-negative integer, got ${n}`,
+      ),
     );
   }
   const key = `space:Fn:${field}:${n}`;

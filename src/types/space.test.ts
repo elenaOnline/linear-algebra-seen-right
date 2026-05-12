@@ -30,6 +30,8 @@ function makeSession(
     getSubspace: (id) => subspaces?.get(id),
     getBasis: (_id: BasisId) => undefined,
     getActiveBasis: (_id: SpaceId) => undefined,
+    getSpaceForBasis: (_id: BasisId) => undefined,
+    getCachedResult: (_key: string) => undefined,
     getMapDomain: (_id: MapId) => undefined,
     getMapCodomain: (_id: MapId) => undefined,
   };
@@ -56,8 +58,16 @@ describe('mkVectorSpaceFn', () => {
     expect(a.ok && b.ok && a.value === b.value).toBe(true);
   });
 
-  it('rejects non-positive dimension', () => {
-    expect(mkVectorSpaceFn('R', 0).ok).toBe(false);
+  it('accepts zero dimension (F^0 is a valid trivial vector space)', () => {
+    const r = mkVectorSpaceFn('R', 0);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.value.kind).toBe('Fn');
+      expect(dim(r.value)).toBe(0);
+    }
+  });
+
+  it('rejects negative dimension', () => {
     expect(mkVectorSpaceFn('R', -1).ok).toBe(false);
   });
 
@@ -261,6 +271,8 @@ describe('quotient space with known subspace dim', () => {
       getSubspace: (id) => (id === sub.value.id ? sub.value : undefined),
       getBasis: (_id: BasisId) => undefined,
       getActiveBasis: (_id: SpaceId) => undefined,
+      getSpaceForBasis: (_id: BasisId) => undefined,
+      getCachedResult: (_key: string) => undefined,
       getMapDomain: (_id: MapId) => undefined,
       getMapCodomain: (_id: MapId) => undefined,
     };

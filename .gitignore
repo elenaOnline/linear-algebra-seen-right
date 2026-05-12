@@ -10,3 +10,9 @@ Thumbs.db
 .vscode/extensions.json
 coverage/
 .pnpm-store/
+.netlify/
+
+# Copyrighted textbook content — not distributed with the repo
+LADR4e.pdf
+LADR4e_definitions_subscripts_fixed.md
+LADR_Definitions/

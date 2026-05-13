@@ -80,6 +80,14 @@
 }
 
 :root {
+  /* Semantic diagram roles — used by renderers and the DiagramTheme module */
+  --color-input: #4a86c8; /* blue   — free objects, map inputs          */
+  --color-derived: #a355b4; /* purple — computed / derived objects         */
+  --color-basis: #3a8a6b; /* green  — basis vectors, coordinate frames   */
+  --color-null-space: #e8a84a; /* amber  — kernel, null space                 */
+  --color-image: #4ab4a3; /* teal   — range / image                      */
+  --color-negative: #c45c3a; /* rust   — negated vectors, negative eigenvalues */
+
   /* Representation-kind tints */
   --kind-geo: #2e6f5e;
   --kind-geo-soft: rgba(46, 111, 94, 0.1);

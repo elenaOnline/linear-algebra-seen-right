@@ -127,4 +127,20 @@ export default [
       ],
     },
   },
+  // Renderer color enforcement: no hardcoded hex literals in renderer files.
+  // All colors must come from DIAGRAM_THEME (src/ui/theme/diagram.ts).
+  {
+    files: ['src/renderers/**/*.ts', 'src/renderers/**/*.tsx'],
+    ignores: ['src/renderers/**/*.test.ts', 'src/renderers/**/*.test.tsx'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/^#[0-9a-fA-F]{3,8}$/i]',
+          message:
+            'Hardcoded hex color in a renderer. Add the color to DIAGRAM_THEME in src/ui/theme/diagram.ts and reference it there.',
+        },
+      ],
+    },
+  },
 ];

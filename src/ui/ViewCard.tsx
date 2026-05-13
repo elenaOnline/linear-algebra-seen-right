@@ -83,9 +83,11 @@ function footMetaFor(snap: SessionSnapshot, ref: MathObjectRef): string {
 
 type Props = {
   readonly view: View;
+  readonly isResizable?: boolean;
+  readonly onResizeStart?: (startX: number) => void;
 };
 
-export function ViewCard({ view }: Props): JSX.Element {
+export function ViewCard({ view, isResizable = false, onResizeStart }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
@@ -131,6 +133,7 @@ export function ViewCard({ view }: Props): JSX.Element {
     <div
       className="canvas-tile"
       style={{
+        position: 'relative',
         border: '1px solid var(--line)',
         borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
@@ -325,6 +328,45 @@ export function ViewCard({ view }: Props): JSX.Element {
           {footMeta}
         </span>
       </div>
+
+      {/* Right-edge drag handle — shown on all tiles except the last in the row */}
+      {isResizable && (
+        <div
+          onMouseDown={(e) => {
+            e.preventDefault();
+            onResizeStart?.(e.clientX);
+          }}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: -4,
+            width: 8,
+            height: '100%',
+            cursor: 'col-resize',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: 2,
+              height: 32,
+              borderRadius: 1,
+              background: 'var(--line-3)',
+              opacity: 0,
+              transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.opacity = '1';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.opacity = '0';
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }

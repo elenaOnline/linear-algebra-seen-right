@@ -3,20 +3,24 @@ import type { JSX } from 'react';
 import katex from 'katex';
 import type { MatrixProps } from '../registry/index.ts';
 import { ProvenanceBadge } from '../ui/ProvenanceBadge.tsx';
+import { DIAGRAM_THEME as T } from '../ui/theme/diagram.ts';
 
-// Heatmap palette: white (0) → indigo (1), matches the project's accent color.
+// Heatmap palette: white (0) → matrixHeatBase (1).
 function heatmapColor(normalized: number): string {
-  // Clamp to [0, 1]
   const t = Math.max(0, Math.min(1, normalized));
-  // Interpolate: white → #4f46e5 (indigo-600)
-  const r = Math.round(255 * (1 - t) + 79 * t);
-  const g = Math.round(255 * (1 - t) + 70 * t);
-  const b = Math.round(255 * (1 - t) + 229 * t);
+  // Parse the base hex color into RGB components
+  const base = T.matrixHeatBase; // '#4f46e5'
+  const br = parseInt(base.slice(1, 3), 16);
+  const bg = parseInt(base.slice(3, 5), 16);
+  const bb = parseInt(base.slice(5, 7), 16);
+  const r = Math.round(255 * (1 - t) + br * t);
+  const g = Math.round(255 * (1 - t) + bg * t);
+  const b = Math.round(255 * (1 - t) + bb * t);
   return `rgb(${r},${g},${b})`;
 }
 
 function textColorFor(normalized: number): string {
-  return normalized > 0.55 ? '#ffffff' : '#111827';
+  return normalized > 0.55 ? T.matrixTextLight : T.matrixTextDark;
 }
 
 type CellProps = {
@@ -76,7 +80,11 @@ export function MatrixRenderer({ props }: Props): JSX.Element {
     <div style={{ padding: '12px 16px', overflowX: 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '8px' }}>
         <span
-          style={{ fontSize: '0.75rem', color: '#6b7280', fontFamily: 'system-ui, sans-serif' }}
+          style={{
+            fontSize: '0.75rem',
+            color: T.matrixLabelColor,
+            fontFamily: 'system-ui, sans-serif',
+          }}
         >
           {rows}×{cols}
         </span>
@@ -86,7 +94,11 @@ export function MatrixRenderer({ props }: Props): JSX.Element {
       {/* Matrix bracket + grid */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
         <span
-          style={{ fontSize: `${Math.max(1.5, rows * 0.55)}rem`, color: '#374151', lineHeight: 1 }}
+          style={{
+            fontSize: `${Math.max(1.5, rows * 0.55)}rem`,
+            color: T.matrixValueColor,
+            lineHeight: 1,
+          }}
         >
           ⎡
         </span>
@@ -110,7 +122,7 @@ export function MatrixRenderer({ props }: Props): JSX.Element {
                   padding: '2px 8px',
                   textAlign: 'center',
                   fontSize: '0.7rem',
-                  color: '#6b7280',
+                  color: T.matrixLabelColor,
                   fontFamily: 'system-ui, sans-serif',
                 }}
               >
@@ -126,7 +138,7 @@ export function MatrixRenderer({ props }: Props): JSX.Element {
                   style={{
                     padding: '6px 8px 6px 0',
                     fontSize: '0.7rem',
-                    color: '#6b7280',
+                    color: T.matrixLabelColor,
                     fontFamily: 'system-ui, sans-serif',
                     display: 'flex',
                     alignItems: 'center',
@@ -142,7 +154,11 @@ export function MatrixRenderer({ props }: Props): JSX.Element {
           ))}
         </div>
         <span
-          style={{ fontSize: `${Math.max(1.5, rows * 0.55)}rem`, color: '#374151', lineHeight: 1 }}
+          style={{
+            fontSize: `${Math.max(1.5, rows * 0.55)}rem`,
+            color: T.matrixValueColor,
+            lineHeight: 1,
+          }}
         >
           ⎦
         </span>

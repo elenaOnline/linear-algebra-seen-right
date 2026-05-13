@@ -2,10 +2,11 @@ import { useMemo } from 'react';
 import type { JSX } from 'react';
 import { scaleLinear } from 'd3';
 import type { ChartProps } from '../registry/index.ts';
+import { DIAGRAM_THEME as T } from '../ui/theme/diagram.ts';
 
-const COLOR_RANK = '#2dd4bf'; // teal-400 — matches DiagramRenderer range highlight
-const COLOR_NULLITY = '#fbbf24'; // amber-400 — matches DiagramRenderer kernel highlight
-const COLOR_BAR = '#60a5fa'; // blue-400
+const COLOR_RANK = T.chartRankFill;
+const COLOR_NULLITY = T.chartNullityFill;
+const COLOR_BAR = T.chartBarFill;
 
 const FONT = 'system-ui, sans-serif';
 
@@ -87,7 +88,7 @@ function DimensionBars({
           y={barY + barH / 2 + 4}
           textAnchor="middle"
           fontSize={12}
-          fill="#92400e"
+          fill={T.chartNullityFill}
           fontFamily={FONT}
           fontWeight="600"
         >
@@ -100,7 +101,7 @@ function DimensionBars({
         y={barY + barH + 24}
         textAnchor="middle"
         fontSize={11}
-        fill="#6b7280"
+        fill={T.matrixLabelColor}
         fontFamily={FONT}
       >
         {theoremLabel}
@@ -112,7 +113,7 @@ function DimensionBars({
           y={barY - 6}
           textAnchor="start"
           fontSize={11}
-          fill="#0d9488"
+          fill={T.chartRankFill}
           fontFamily={FONT}
         >
           {rankLabel}
@@ -124,7 +125,7 @@ function DimensionBars({
           y={barY - 6}
           textAnchor="end"
           fontSize={11}
-          fill="#b45309"
+          fill={T.colorNullSpace}
           fontFamily={FONT}
         >
           {nullLabel}
@@ -165,10 +166,17 @@ function BarChart({
         const barW = xScale(Math.abs(d.value));
         const cy = i * barGap + barGap / 2;
         const isNeg = d.value < 0;
-        const color = provenance === 'numerical' ? '#93c5fd' : COLOR_BAR;
+        const color = provenance === 'numerical' ? T.chartBarNumerical : COLOR_BAR;
         return (
           <g key={d.label}>
-            <text x={-6} y={cy + 4} textAnchor="end" fontSize={11} fill="#374151" fontFamily={FONT}>
+            <text
+              x={-6}
+              y={cy + 4}
+              textAnchor="end"
+              fontSize={11}
+              fill={T.matrixValueColor}
+              fontFamily={FONT}
+            >
               {d.label}
             </text>
             <rect
@@ -184,7 +192,7 @@ function BarChart({
               y={cy + 4}
               textAnchor="start"
               fontSize={10}
-              fill="#6b7280"
+              fill={T.matrixLabelColor}
               fontFamily={FONT}
             >
               {d.value.toPrecision(4)}
@@ -196,7 +204,7 @@ function BarChart({
         );
       })}
       {/* Zero line */}
-      <line x1={0} y1={0} x2={0} y2={chartH} stroke="#d1d5db" strokeWidth={1} />
+      <line x1={0} y1={0} x2={0} y2={chartH} stroke={T.matrixZeroLine} strokeWidth={1} />
     </g>
   );
 }

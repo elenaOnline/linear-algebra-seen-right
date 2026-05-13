@@ -4,6 +4,7 @@ import { DEFINITIONS } from '../pedagogy/definitions/index.ts';
 import type { DefinitionRecord } from '../pedagogy/definitions/index.ts';
 import { KindBadge } from './KindBadge.tsx';
 import { LatexText } from './LatexText.tsx';
+import { CatalogThumbnail } from './assets/thumbnails.tsx';
 import type { RendererKind } from '../registry/index.ts';
 
 // ── Helpers ──────────────────────────────────────────────────────────────
@@ -74,6 +75,9 @@ function ConceptCard({ def, isOpen, onClick }: CardProps): JSX.Element {
         if (!isOpen) e.currentTarget.style.borderColor = 'var(--line)';
       }}
     >
+      {/* Visual thumbnail */}
+      <CatalogThumbnail kind={renderer} />
+
       {/* Chapter reference */}
       <span
         style={{

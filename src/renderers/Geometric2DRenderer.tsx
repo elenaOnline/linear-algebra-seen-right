@@ -2,19 +2,19 @@ import { useMemo } from 'react';
 import type { JSX } from 'react';
 import { scaleLinear, ticks } from 'd3';
 import type { Geometric2DProps } from '../registry/index.ts';
+import { DIAGRAM_THEME as T } from '../ui/theme/diagram.ts';
 
-// Colors
-const COLOR_AXIS = '#64748b'; // slate-500
-const COLOR_TICK_LABEL = '#94a3b8'; // slate-400
-const COLOR_GRID_ORIGINAL = '#e2e8f0'; // slate-200
-const COLOR_GRID_DEFORMED = '#bfdbfe'; // blue-200
-const COLOR_BASIS_E1 = '#ef4444'; // red-500
-const COLOR_BASIS_E2 = '#22c55e'; // green-500
-const COLOR_ARROW_DEFAULT = '#3b82f6'; // blue-500
+const COLOR_AXIS = T.axisColor;
+const COLOR_TICK_LABEL = T.tickLabelColor;
+const COLOR_GRID_ORIGINAL = T.gridColor;
+const COLOR_GRID_DEFORMED = T.gridColorDeformed;
+const COLOR_BASIS_E1 = T.colorBasisX;
+const COLOR_BASIS_E2 = T.colorBasisY;
+const COLOR_ARROW_DEFAULT = T.colorInput;
 
 const SVG_SIZE = 400;
 const PADDING = 36;
-const ARROWHEAD_SIZE = 7;
+const ARROWHEAD_SIZE = T.arrowheadSize;
 
 type Scale = ((v: number) => number) & { invert: (v: number) => number };
 

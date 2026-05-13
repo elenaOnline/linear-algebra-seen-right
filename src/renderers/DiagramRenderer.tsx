@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { JSX } from 'react';
 import dagre from 'dagre';
 import type { DiagramProps } from '../registry/index.ts';
+import { DIAGRAM_THEME as T } from '../ui/theme/diagram.ts';
 
 const NODE_PADDING_X = 16;
 const NODE_PADDING_Y = 10;
@@ -9,22 +10,22 @@ const FONT_SIZE = 13;
 const CHAR_WIDTH = 7.5; // approximate px per character at FONT_SIZE
 
 const HIGHLIGHT_COLORS: Record<string, string> = {
-  kernel: '#fef3c7', // amber-100 fill
-  'kernel-stroke': '#f59e0b',
-  range: '#ccfbf1', // teal-100 fill
-  'range-stroke': '#14b8a6',
-  eigenspace: '#ede9fe', // violet-100 fill
-  'eigenspace-stroke': '#7c3aed',
-  none: '#f1f5f9', // slate-100 fill
-  'none-stroke': '#94a3b8',
+  kernel: T.nodeKernel,
+  'kernel-stroke': T.nodeKernelStroke,
+  range: T.nodeRange,
+  'range-stroke': T.nodeRangeStroke,
+  eigenspace: T.nodeEigenspace,
+  'eigenspace-stroke': T.nodeEigenspaceStroke,
+  none: T.nodeDefault,
+  'none-stroke': T.nodeDefaultStroke,
 };
 
 function nodeColors(highlight?: string): { fill: string; stroke: string; text: string } {
   const key = highlight ?? 'none';
   return {
-    fill: HIGHLIGHT_COLORS[key] ?? HIGHLIGHT_COLORS['none'] ?? '#f1f5f9',
-    stroke: HIGHLIGHT_COLORS[`${key}-stroke`] ?? HIGHLIGHT_COLORS['none-stroke'] ?? '#94a3b8',
-    text: '#1e293b',
+    fill: HIGHLIGHT_COLORS[key] ?? T.nodeDefault,
+    stroke: HIGHLIGHT_COLORS[`${key}-stroke`] ?? T.nodeDefaultStroke,
+    text: T.nodeText,
   };
 }
 
@@ -154,7 +155,7 @@ export function DiagramRenderer({ props }: Props): JSX.Element {
             markerHeight="8"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={T.axisColor} />
           </marker>
           <marker
             id="arrow-dashed"
@@ -165,7 +166,7 @@ export function DiagramRenderer({ props }: Props): JSX.Element {
             markerHeight="8"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill={T.tickLabelColor} />
           </marker>
         </defs>
 
@@ -178,13 +179,19 @@ export function DiagramRenderer({ props }: Props): JSX.Element {
               <path
                 d={edgePath(edge.points)}
                 fill="none"
-                stroke={isDashed ? '#94a3b8' : '#64748b'}
+                stroke={isDashed ? T.tickLabelColor : T.axisColor}
                 strokeWidth={1.5}
                 strokeDasharray={isDashed ? '5 3' : undefined}
                 markerEnd={isDashed ? 'url(#arrow-dashed)' : 'url(#arrow)'}
               />
               {midPt && edge.label && (
-                <text x={midPt.x} y={midPt.y - 6} textAnchor="middle" fontSize={11} fill="#64748b">
+                <text
+                  x={midPt.x}
+                  y={midPt.y - 6}
+                  textAnchor="middle"
+                  fontSize={11}
+                  fill={T.axisColor}
+                >
                   {edge.label}
                 </text>
               )}

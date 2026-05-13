@@ -3,14 +3,14 @@ import type { JSX } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { Geometric3DProps } from '../registry/index.ts';
+import { DIAGRAM_THEME as T } from '../ui/theme/diagram.ts';
 
-// Color palette — mirrors Geometric2DRenderer.
-const COLOR_ARROW = '#3b82f6'; // blue-500
-const COLOR_BASIS_X = '#ef4444'; // red-500
-const COLOR_BASIS_Y = '#22c55e'; // green-500
-const COLOR_BASIS_Z = '#3b82f6'; // blue-500
-const COLOR_GRID_ORIGINAL = '#e2e8f0'; // slate-200
-const COLOR_GRID_DEFORMED = '#bfdbfe'; // blue-200
+const COLOR_ARROW = T.colorInput;
+const COLOR_BASIS_X = T.colorBasisX;
+const COLOR_BASIS_Y = T.colorBasisY;
+const COLOR_BASIS_Z = T.colorBasisZ;
+const COLOR_GRID_ORIGINAL = T.gridColor;
+const COLOR_GRID_DEFORMED = T.gridColorDeformed;
 
 type Mat3 = readonly [
   readonly [number, number, number],
@@ -128,7 +128,7 @@ export function Geometric3DRenderer({ props }: Props): JSX.Element {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#f8fafc');
+    scene.background = new THREE.Color(T.canvasBg);
     scene.add(new THREE.AmbientLight(0xffffff, 0.8));
 
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 1000);

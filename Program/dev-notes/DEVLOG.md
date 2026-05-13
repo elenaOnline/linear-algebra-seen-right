@@ -21,6 +21,36 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 11B: Visual system, catalog thumbnails, tile resizing
+
+**Touched:** `src/ui/theme/diagram.ts` (new), `src/ui/assets/thumbnails.tsx` (new), `src/styles/tokens.css`, `eslint.config.js`, all five renderers (Geometric2D/3D, Chart, Diagram, Matrix), `src/ui/BrowseMode.tsx`, `src/ui/ViewCard.tsx`, `src/ui/ViewGrid.tsx`
+**Status:** complete
+
+F-05: Created `DIAGRAM_THEME` as single source of truth for all renderer colors. Six semantic roles (`colorInput`, `colorDerived`, `colorBasis`, `colorNullSpace`, `colorImage`, `colorNegative`) plus per-renderer palettes. All renderers import from there; ESLint rule blocks hex literals in `src/renderers/`. Six `--color-*` CSS custom properties added to `tokens.css`.
+
+F-04: `thumbnails.tsx` contains six SVG thumbnail components (one per renderer kind), each painted with `DIAGRAM_THEME` values. `BrowseMode` renders `CatalogThumbnail` at top of every `ConceptCard`.
+
+F-06: `ViewGrid` tracks column widths as proportional `fr` values; heuristic defaults give geometric/diagram views 1.4fr vs 0.8fr for others. Saves/restores from localStorage keyed by view IDs. `ViewCard` gains `isResizable`/`onResizeStart` props and a right-edge drag handle (visible on hover).
+
+**Notable:** ESLint `ignores` for renderer test files — test assertions contain hex strings that should not be blocked by the renderer color rule.
+
+**Next:** Phase 11C (tag vocabulary + Browse→Sandbox context + relational display). Requires ADR-019 vocabulary decision first. Then 11D (URL hash persistence).
+
+---
+
+## 2026-05-12 — Phase 11A: Expression input, symbol palette, and audit fixes
+
+**Touched:** `src/ui/ObjectInput.tsx`, `src/interaction/parser/evaluate.ts`, `src/interaction/parser/parser.ts`
+**Status:** complete
+
+F-08: Live KaTeX preview (80ms debounce) below expression textarea. `spellCheck=false`, `autoCorrect=off`. "name" → "label" with `e.g. v₁, T, A` helper text. Expression field bumped to 14px monospace.
+
+F-07: Context-aware two-palette system. Label field focused → label palette (Greek letters, subscript digits ₀–₉, modifiers). Expression field focused → expression palette (matrix builder, `/`, `^`, π, e, ⊕, ⊗, ⟨·,·⟩) plus dynamic right section that propagates non-ASCII chars from named object labels (max 3 + overflow). All symbols rendered via `katex.renderToString`. Tab key advances cursor to next `,`-delimited slot in vector/matrix templates.
+
+Audit fixes: `^` power added to formula evaluator. `π`, `e`, `i` added as numeric constants to both the scalar parser and formula evaluator (formula params override constants). ℝ, ℂ, ∈, ⊆, ⊥, `_` removed from palettes (no compositional use in expression context). `ker`/`im`/`det`/`tr` replaced with Greek letters in overflow.
+
+---
+
 ## 2026-05-12 — Phase 10: Connected Sandbox (AI-006 through AI-009)
 
 **Touched:** `src/interaction/parser/evaluate.ts` (new), `src/interaction/parser/parser.ts`, `src/interaction/parser/types.ts`, `src/types/derivation.ts` (new), `src/types/vector.ts`, `src/types/map.ts`, `src/state/derivation.ts` (new), `src/state/store.ts`, `src/registry/helpers.ts`, `src/ui/Inspector.tsx`, `src/ui/ObjectInput.tsx`, `src/ui/ObjectLibrary.tsx`, `src/pedagogy/templates/starters.ts` + 3 new test files

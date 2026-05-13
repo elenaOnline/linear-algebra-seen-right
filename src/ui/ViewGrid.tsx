@@ -5,13 +5,12 @@ import { defaultStore } from '../state/index.ts';
 import { ViewCard } from './ViewCard.tsx';
 import type { View } from '../state/types.ts';
 
-// Heuristic default column width (in fr units) by renderer kind.
-function defaultFr(view: View): number {
-  if (['geometric_2d', 'geometric_3d', 'diagram'].includes(view.kind)) return 1.4;
-  return 0.8;
+function defaultWidth(view: View): number {
+  return ['geometric_2d', 'geometric_3d', 'diagram'].includes(view.kind) ? 320 : 220;
 }
 
-const LS_KEY = 'ladr_col_widths';
+const MIN_TILE_WIDTH = 100;
+const LS_KEY = 'ladr_col_widths_px';
 
 function saveWidths(viewIds: string[], widths: number[]): void {
   try {
@@ -26,7 +25,6 @@ function loadWidths(viewIds: string[]): number[] | null {
     const raw = localStorage.getItem(LS_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as { ids: string[]; widths: number[] };
-    // Only restore if the view IDs match exactly (same session).
     if (parsed.ids.length === viewIds.length && parsed.ids.every((id, i) => id === viewIds[i])) {
       return parsed.widths;
     }
@@ -36,7 +34,11 @@ function loadWidths(viewIds: string[]): number[] | null {
   return null;
 }
 
-export function ViewGrid(): JSX.Element {
+type Props = {
+  readonly rows: 1 | 2;
+};
+
+export function ViewGrid({ rows }: Props): JSX.Element {
   const views = useStore(defaultStore, (s) => s.views);
   const [colWidths, setColWidths] = useState<number[]>([]);
 
@@ -52,32 +54,28 @@ export function ViewGrid(): JSX.Element {
       setColWidths(restored);
       return;
     }
-    setColWidths(views.map(defaultFr));
+    setColWidths(views.map(defaultWidth));
   }, [views.length]);
 
-  // Persist on every resize.
+  // Persist on every resize (debounced).
   const persistRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const persist = useCallback((ids: string[], widths: number[]) => {
     if (persistRef.current) clearTimeout(persistRef.current);
     persistRef.current = setTimeout(() => saveWidths(ids, widths), 400);
   }, []);
 
-  // Drag-resize a column.
+  // Drag-resize a column — pixel delta applied directly.
   const onResizeStart = useCallback(
     (index: number, startX: number) => {
       const startWidths = [...colWidths];
-      const totalFr = startWidths.reduce((s, w) => s + w, 0);
 
       const onMove = (e: MouseEvent): void => {
         const deltaX = e.clientX - startX;
-        // Convert pixel delta to fractional units using the container width.
-        const containerWidth =
-          (document.querySelector('.viewgrid-container') as HTMLElement)?.offsetWidth ?? 800;
-        const frPerPx = totalFr / containerWidth;
-        const delta = deltaX * frPerPx;
         const next = [...startWidths];
-        // Clamp so each column stays at least 0.3fr.
-        next[index] = Math.max(0.3, (startWidths[index] ?? 1) + delta);
+        next[index] = Math.max(
+          MIN_TILE_WIDTH,
+          (startWidths[index] ?? defaultWidth(views[index]!)) + deltaX,
+        );
         setColWidths(next);
         persist(
           views.map((v) => v.id),
@@ -127,30 +125,45 @@ export function ViewGrid(): JSX.Element {
     );
   }
 
-  const effectiveWidths = colWidths.length === views.length ? colWidths : views.map(defaultFr);
-  const template = effectiveWidths.map((w) => `${w}fr`).join(' ');
+  const effectiveWidths = colWidths.length === views.length ? colWidths : views.map(defaultWidth);
 
   return (
+    // Outer scroll container — horizontal always, vertical only in 2-tall mode.
     <div
       className="viewgrid-container"
       style={{
-        display: 'grid',
-        gridTemplateColumns: template,
-        gap: 'var(--gap)',
-        padding: 'var(--pad)',
         height: '100%',
+        overflowX: 'auto',
+        overflowY: rows === 2 ? 'auto' : 'hidden',
         boxSizing: 'border-box',
-        position: 'relative',
       }}
     >
-      {views.map((view, i) => (
-        <ViewCard
-          key={view.id}
-          view={view}
-          isResizable={i < views.length - 1}
-          onResizeStart={(startX) => onResizeStart(i, startX)}
-        />
-      ))}
+      {/* Inner flex row — 2× height in 2-tall mode so tiles fill double the viewport. */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          gap: 'var(--gap)',
+          padding: 'var(--pad)',
+          height: rows === 1 ? '100%' : '200%',
+          boxSizing: 'border-box',
+        }}
+      >
+        {views.map((view, i) => (
+          <div
+            key={view.id}
+            style={{
+              flexShrink: 0,
+              width: `${effectiveWidths[i] ?? defaultWidth(view)}px`,
+              minWidth: `${MIN_TILE_WIDTH}px`,
+              height: '100%',
+            }}
+          >
+            <ViewCard view={view} onResizeStart={(startX) => onResizeStart(i, startX)} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

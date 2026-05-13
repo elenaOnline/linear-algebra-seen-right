@@ -18,9 +18,10 @@ type Mode = 'sandbox' | 'browse';
 
 type SandboxLayoutProps = {
   readonly originDefId: string | null;
+  readonly gridRows: 1 | 2;
 };
 
-function SandboxLayout({ originDefId }: SandboxLayoutProps): JSX.Element {
+function SandboxLayout({ originDefId, gridRows }: SandboxLayoutProps): JSX.Element {
   const [selected, setSelected] = useState<MathObjectRef | null>(null);
 
   return (
@@ -84,7 +85,7 @@ function SandboxLayout({ originDefId }: SandboxLayoutProps): JSX.Element {
           }}
         >
           <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
-            <ViewGrid />
+            <ViewGrid rows={gridRows} />
           </div>
         </div>
 
@@ -132,6 +133,7 @@ function SandboxLayout({ originDefId }: SandboxLayoutProps): JSX.Element {
 function AppInner(): JSX.Element {
   const [mode, setMode] = useState<Mode>('sandbox');
   const [originDefId, setOriginDefId] = useState<string | null>(null);
+  const [gridRows, setGridRows] = useState<1 | 2>(1);
 
   const handleOpenInSandbox = useCallback((def: DefinitionRecord) => {
     try {
@@ -152,7 +154,6 @@ function AppInner(): JSX.Element {
 
   const historyCursor = useStore(defaultStore, (s) => s.historyCursor);
   const historyLength = useStore(defaultStore, (s) => s.history.length);
-  const field = useStore(defaultStore, (s) => s.field);
   const { undo, redo } = defaultStore.getState();
   const canUndo = historyCursor > 0;
   const canRedo = historyCursor < historyLength - 1;
@@ -258,19 +259,23 @@ function AppInner(): JSX.Element {
 
         <div style={{ flex: 1 }} />
 
-        {/* Field pill */}
-        <div
+        {/* Card height toggle */}
+        <button
+          onClick={() => setGridRows((r) => (r === 1 ? 2 : 1))}
+          title={gridRows === 1 ? 'Switch to 2-tall card layout' : 'Switch to 1-tall card layout'}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '7px',
-            padding: '4px 10px 4px 9px',
+            gap: '6px',
+            padding: '4px 10px',
             background: 'var(--bg-2)',
             border: '1px solid var(--line)',
             borderRadius: '999px',
             fontSize: 'var(--t-micro)',
             color: 'var(--ink-2)',
             fontFamily: 'var(--font-mono)',
+            cursor: 'pointer',
+            letterSpacing: '0.02em',
           }}
         >
           <div
@@ -282,26 +287,8 @@ function AppInner(): JSX.Element {
               flexShrink: 0,
             }}
           />
-          <span style={{ fontFamily: 'var(--font-math)', fontStyle: 'italic', fontSize: '13px' }}>
-            {field === 'R' ? 'ℝ' : 'ℂ'}
-          </span>
-          <button
-            onClick={() => defaultStore.getState().setField(field === 'R' ? 'C' : 'R')}
-            style={{
-              fontSize: 'var(--t-micro)',
-              color: 'var(--ink-3)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '0',
-              fontFamily: 'var(--font-mono)',
-              lineHeight: 1,
-            }}
-            title={`Switch to ${field === 'R' ? 'ℂ' : 'ℝ'}`}
-          >
-            ⇄
-          </button>
-        </div>
+          {gridRows === 1 ? '1×' : '2×'}
+        </button>
 
         {/* Undo / redo */}
         <div style={{ display: 'flex', gap: '4px' }}>
@@ -336,7 +323,7 @@ function AppInner(): JSX.Element {
       {/* ── Main content ── */}
       <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
         {mode === 'sandbox' ? (
-          <SandboxLayout originDefId={originDefId} />
+          <SandboxLayout originDefId={originDefId} gridRows={gridRows} />
         ) : (
           <BrowseMode onOpenInSandbox={handleOpenInSandbox} />
         )}

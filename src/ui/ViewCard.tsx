@@ -127,24 +127,24 @@ function formatMapExpr(expr: MapExpression, namedObjects: Record<string, MathObj
 
 type Props = {
   readonly view: View;
-  readonly isResizable?: boolean;
   readonly onResizeStart?: (startX: number) => void;
 };
 
-export function ViewCard({ view, isResizable = false, onResizeStart }: Props): JSX.Element {
+export function ViewCard({ view, onResizeStart }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
   const [isPulsing, setIsPulsing] = useState(false);
+  const [isNarrow, setIsNarrow] = useState(false);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const prevComponentsRef = useRef<string | null>(null);
   const session = useStore(defaultStore);
 
-  // Close menu on outside click — exclude both the trigger button and the portal content
-  // so that clicking a menu item in the portal fires its onClick before the menu closes.
+  // Close menu on outside click.
   useEffect(() => {
     if (!menuOpen) return;
-    const handler = (e: MouseEvent) => {
+    const handler = (e: MouseEvent): void => {
       const target = e.target as Node;
       if (!menuBtnRef.current?.contains(target) && !portalRef.current?.contains(target)) {
         setMenuOpen(false);
@@ -153,11 +153,23 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
     window.addEventListener('mousedown', handler);
     return () => window.removeEventListener('mousedown', handler);
   }, [menuOpen]);
+
+  // Observe header width for narrow layout switching.
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const obs = new ResizeObserver(([entry]) => {
+      if (entry) setIsNarrow(entry.contentRect.width < 150);
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
   const { closeView, openView } = defaultStore.getState();
   const sessionView = sessionViewFrom(session);
-
   const objectName = nameForRef(session, view.objectRef);
   const obj = resolveMathObject(session, view.objectRef);
+  const footMeta = footMetaFor(session, view.objectRef);
 
   // Typed lookups for derivation-aware objects.
   const sessionVec =
@@ -189,8 +201,9 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
       : sessionMap?.derivation
         ? formatMapExpr(sessionMap.derivation, session.namedObjects)
         : null;
+
   const objectKind = objectKindFor(view.objectRef);
-  const footMeta = footMetaFor(session, view.objectRef);
+  const footMetaStr = footMeta;
 
   const activeVisualizer =
     objectKind && obj
@@ -206,6 +219,236 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
           .filter((v) => v.renderer !== view.kind)
       : [];
 
+  // Shared button styles.
+  const iconBtnStyle = {
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    padding: '2px 5px',
+    fontSize: 'var(--t-meta)',
+    color: 'var(--ink-4)',
+    lineHeight: '1' as const,
+    borderRadius: 'var(--radius)',
+    flexShrink: 0,
+  };
+
+  // Buttons shared between narrow and wide layouts.
+  const viewMenuBtn =
+    otherVisualizers.length > 0 ? (
+      <button
+        ref={menuBtnRef}
+        onClick={() => {
+          const rect = menuBtnRef.current?.getBoundingClientRect() ?? null;
+          setMenuRect(rect);
+          setMenuOpen((o) => !o);
+        }}
+        title="View as…"
+        style={{
+          background: 'none',
+          border: '1px solid var(--line-2)',
+          borderRadius: 'var(--radius)',
+          cursor: 'pointer',
+          padding: '2px 7px',
+          fontSize: 'var(--t-micro)',
+          color: 'var(--ink-3)',
+          fontFamily: 'var(--font-mono)',
+          lineHeight: '1.4',
+          flexShrink: 0,
+        }}
+      >
+        + view
+      </button>
+    ) : null;
+
+  const closeBtn = (
+    <button
+      onClick={() => closeView(view.id)}
+      title="Close view"
+      style={iconBtnStyle}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = 'var(--ink)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = 'var(--ink-4)';
+      }}
+    >
+      ✕
+    </button>
+  );
+
+  const viewMenuPortal =
+    menuOpen && menuRect !== null
+      ? createPortal(
+          <div
+            ref={portalRef}
+            style={{
+              position: 'fixed',
+              top: menuRect.bottom + 4,
+              right: window.innerWidth - menuRect.right,
+              background: 'var(--panel)',
+              border: '1px solid var(--line-2)',
+              borderRadius: 'var(--radius)',
+              boxShadow: '0 4px 14px rgba(22,22,20,0.12)',
+              zIndex: 9999,
+              minWidth: '160px',
+              overflow: 'hidden',
+            }}
+          >
+            {otherVisualizers.map((viz) => (
+              <button
+                key={viz.id}
+                onClick={() => {
+                  openView(viz.renderer, view.objectRef);
+                  setMenuOpen(false);
+                }}
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '7px 12px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 'var(--t-meta)',
+                  color: 'var(--ink)',
+                  fontFamily: 'var(--font-sans)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                }}
+              >
+                {viz.label}
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )
+      : null;
+
+  const narrowHeader = (
+    <div
+      ref={headerRef}
+      style={{
+        borderBottom: '1px solid var(--line)',
+        background: 'var(--panel-2)',
+        flexShrink: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '3px',
+        padding: '5px 8px',
+      }}
+    >
+      {/* Row 1: buttons right-aligned */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '4px' }}>
+        {viewMenuBtn}
+        {closeBtn}
+      </div>
+      {/* Row 2: badge */}
+      <div>
+        <KindBadge renderer={view.kind} />
+      </div>
+      {/* Row 3: name + info, truncated */}
+      <div
+        style={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          fontFamily: 'var(--font-math)',
+          fontStyle: 'italic',
+          fontSize: 'var(--t-meta)',
+          color: 'var(--ink)',
+        }}
+      >
+        {objectName}
+        {derivationLabel && (
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontStyle: 'normal',
+              fontSize: 'var(--t-micro)',
+              color: 'var(--color-derived)',
+              marginLeft: '4px',
+            }}
+          >
+            {derivationLabel}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+
+  const wideHeader = (
+    <div
+      ref={headerRef}
+      style={{
+        padding: '7px 10px',
+        borderBottom: '1px solid var(--line)',
+        background: 'var(--panel-2)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '7px',
+        flexShrink: 0,
+        minHeight: '34px',
+        minWidth: 0,
+        overflow: 'hidden',
+      }}
+    >
+      <KindBadge renderer={view.kind} />
+
+      {/* Object name */}
+      <span
+        style={{
+          fontFamily: 'var(--font-math)',
+          fontStyle: 'italic',
+          fontSize: 'var(--t-meta)',
+          color: 'var(--ink)',
+          whiteSpace: 'nowrap',
+          flexShrink: 0,
+        }}
+      >
+        {objectName}
+      </span>
+
+      {/* Derivation label */}
+      {derivationLabel !== null && (
+        <span
+          style={{
+            fontFamily: 'var(--font-mono)',
+            fontSize: 'var(--t-micro)',
+            color: 'var(--color-derived)',
+            whiteSpace: 'nowrap',
+            opacity: 0.85,
+            flexShrink: 0,
+          }}
+        >
+          {derivationLabel}
+        </span>
+      )}
+
+      {/* Visualizer label — fills remaining space, truncates */}
+      <span
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'var(--t-micro)',
+          color: 'var(--ink-3)',
+          flex: 1,
+          minWidth: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {activeVisualizer?.label ?? view.kind}
+      </span>
+
+      {viewMenuBtn}
+      {closeBtn}
+    </div>
+  );
+
   return (
     <div
       className={`canvas-tile${isPulsing ? ' derived-pulse' : ''}`}
@@ -217,176 +460,30 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
         display: 'flex',
         flexDirection: 'column',
         background: 'var(--panel)',
+        height: '100%',
+        width: '100%',
+        minWidth: '100px',
+        boxSizing: 'border-box',
       }}
     >
-      {/* tile-head */}
+      {isNarrow ? narrowHeader : wideHeader}
+      {viewMenuPortal}
+
+      {/* tile-body — content centered */}
       <div
         style={{
-          padding: '7px 10px',
-          borderBottom: '1px solid var(--line)',
-          background: 'var(--panel-2)',
+          flex: 1,
+          overflow: 'auto',
+          minHeight: 0,
+          background: 'var(--panel)',
           display: 'flex',
           alignItems: 'center',
-          gap: '7px',
-          flexShrink: 0,
-          minHeight: '34px',
-          minWidth: 0,
-          overflow: 'hidden',
+          justifyContent: 'center',
         }}
       >
-        <KindBadge renderer={view.kind} />
-
-        {/* Object name — math italic */}
-        <span
-          style={{
-            fontFamily: 'var(--font-math)',
-            fontStyle: 'italic',
-            fontSize: 'var(--t-meta)',
-            color: 'var(--ink)',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {objectName}
-        </span>
-
-        {/* Derivation label (only for derived objects) */}
-        {derivationLabel !== null && (
-          <span
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 'var(--t-micro)',
-              color: 'var(--color-derived)',
-              whiteSpace: 'nowrap',
-              opacity: 0.85,
-            }}
-          >
-            {derivationLabel}
-          </span>
-        )}
-
-        {/* Visualizer label */}
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 'var(--t-micro)',
-            color: 'var(--ink-3)',
-            flex: 1,
-            minWidth: 0,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {activeVisualizer?.label ?? view.kind}
-        </span>
-
-        {/* "View as…" menu — portaled to document.body so it escapes tile overflow:hidden */}
-        {otherVisualizers.length > 0 && (
-          <div style={{ flexShrink: 0 }}>
-            <button
-              ref={menuBtnRef}
-              onClick={() => {
-                const rect = menuBtnRef.current?.getBoundingClientRect() ?? null;
-                setMenuRect(rect);
-                setMenuOpen((o) => !o);
-              }}
-              title="View as…"
-              style={{
-                background: 'none',
-                border: '1px solid var(--line-2)',
-                borderRadius: 'var(--radius)',
-                cursor: 'pointer',
-                padding: '2px 7px',
-                fontSize: 'var(--t-micro)',
-                color: 'var(--ink-3)',
-                fontFamily: 'var(--font-mono)',
-                lineHeight: '1.4',
-              }}
-            >
-              + view
-            </button>
-            {menuOpen &&
-              menuRect !== null &&
-              createPortal(
-                <div
-                  ref={portalRef}
-                  style={{
-                    position: 'fixed',
-                    top: menuRect.bottom + 4,
-                    right: window.innerWidth - menuRect.right,
-                    background: 'var(--panel)',
-                    border: '1px solid var(--line-2)',
-                    borderRadius: 'var(--radius)',
-                    boxShadow: '0 4px 14px rgba(22,22,20,0.12)',
-                    zIndex: 9999,
-                    minWidth: '160px',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {otherVisualizers.map((viz) => (
-                    <button
-                      key={viz.id}
-                      onClick={() => {
-                        openView(viz.renderer, view.objectRef);
-                        setMenuOpen(false);
-                      }}
-                      style={{
-                        display: 'block',
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '7px 12px',
-                        background: 'none',
-                        border: 'none',
-                        cursor: 'pointer',
-                        fontSize: 'var(--t-meta)',
-                        color: 'var(--ink)',
-                        fontFamily: 'var(--font-sans)',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'var(--bg-2)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'none';
-                      }}
-                    >
-                      {viz.label}
-                    </button>
-                  ))}
-                </div>,
-                document.body,
-              )}
-          </div>
-        )}
-
-        {/* Close */}
-        <button
-          onClick={() => closeView(view.id)}
-          title="Close view"
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            padding: '2px 5px',
-            fontSize: 'var(--t-meta)',
-            color: 'var(--ink-4)',
-            lineHeight: 1,
-            borderRadius: 'var(--radius)',
-            flexShrink: 0,
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = 'var(--ink)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = 'var(--ink-4)';
-          }}
-        >
-          ✕
-        </button>
-      </div>
-
-      {/* tile-body */}
-      <div style={{ flex: 1, overflow: 'auto', minHeight: 0, background: 'var(--panel)' }}>
-        <ViewContainer view={view} />
+        <div style={{ height: '100%', width: '100%' }}>
+          <ViewContainer view={view} />
+        </div>
       </div>
 
       {/* tile-foot */}
@@ -411,22 +508,18 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
-            fontStyle:
-              view.objectRef.kind === 'vector' || view.objectRef.kind === 'space'
-                ? 'normal'
-                : 'normal',
           }}
         >
-          {footMeta}
+          {footMetaStr}
         </span>
       </div>
 
-      {/* Right-edge drag handle — shown on all tiles except the last in the row */}
-      {isResizable && (
+      {/* Right-edge drag handle — always shown so any tile can be resized */}
+      {onResizeStart && (
         <div
           onMouseDown={(e) => {
             e.preventDefault();
-            onResizeStart?.(e.clientX);
+            onResizeStart(e.clientX);
           }}
           style={{
             position: 'absolute',

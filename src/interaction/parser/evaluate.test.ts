@@ -64,4 +64,30 @@ describe('evaluateFormulaBody', () => {
     const result = evaluateFormulaBody('()', {});
     expect(typeof result).toBe('string');
   });
+
+  it('evaluates integer power x^2', () => {
+    const result = evaluateFormulaBody('(x^2, y)', { x: 3, y: 2 });
+    expect(result).toEqual([9, 2]);
+  });
+
+  it('evaluates power with literal base 2^3', () => {
+    const result = evaluateFormulaBody('(2^3, x)', { x: 1 });
+    expect(result).toEqual([8, 1]);
+  });
+
+  it('power is right-associative: 2^3^2 = 2^(3^2) = 512', () => {
+    // trailing comma: only the first component matters
+    const result = evaluateFormulaBody('(2^3^2, 0)', {});
+    expect(Array.isArray(result) && Math.abs(result[0]! - 512) < 0.01).toBe(true);
+  });
+
+  it('power binds tighter than multiplication: 2*x^2 at x=3 = 18', () => {
+    const result = evaluateFormulaBody('(2*x^2, 0)', { x: 3 });
+    expect(Array.isArray(result) && Math.abs(result[0]! - 18) < 0.01).toBe(true);
+  });
+
+  it('negative exponent x^-1 at x=4 = 0.25', () => {
+    const result = evaluateFormulaBody('(x^-1, 0)', { x: 4 });
+    expect(Array.isArray(result) && Math.abs(result[0]! - 0.25) < 1e-10).toBe(true);
+  });
 });

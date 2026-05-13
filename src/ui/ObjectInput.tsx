@@ -347,10 +347,12 @@ const PALETTE_MORE: PaletteSymbol[] = [
     title: 'Inner product ⟨·,·⟩',
   },
   { kind: 'symbol', latex: '\\perp', insert: '⊥', title: 'Orthogonal ⊥' },
-  { kind: 'symbol', latex: '\\ker', insert: 'ker', title: 'Kernel ker' },
-  { kind: 'symbol', latex: '\\text{im}', insert: 'im', title: 'Image im' },
-  { kind: 'symbol', latex: '\\det', insert: 'det', title: 'Determinant det' },
-  { kind: 'symbol', latex: '\\text{tr}', insert: 'tr', title: 'Trace tr' },
+  { kind: 'symbol', latex: '\\theta', insert: 'θ', title: 'Theta θ — rotation angle' },
+  { kind: 'symbol', latex: '\\varepsilon', insert: 'ε', title: 'Epsilon ε' },
+  { kind: 'symbol', latex: '\\varphi', insert: 'φ', title: 'Phi φ — basis angle' },
+  { kind: 'symbol', latex: '\\omega', insert: 'ω', title: 'Omega ω' },
+  { kind: 'symbol', latex: '\\mu', insert: 'μ', title: 'Mu μ' },
+  { kind: 'symbol', latex: '\\pi', insert: 'π', title: 'Pi π' },
 ];
 
 // Pre-render palette latex to HTML at module load time.
@@ -524,6 +526,31 @@ export function ObjectInput(): JSX.Element {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit();
+      return;
+    }
+
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const el = inputRef.current;
+      if (!el) return;
+      const pos = el.selectionEnd ?? 0;
+      // Find the next comma after current cursor position
+      const commaIdx = text.indexOf(',', pos);
+      if (commaIdx === -1) return;
+      // Skip past the comma and any whitespace to find the slot start
+      let slotStart = commaIdx + 1;
+      while (slotStart < text.length && text[slotStart] === ' ') slotStart++;
+      // Select to the end of this slot (next , ] or ))
+      let slotEnd = slotStart;
+      while (
+        slotEnd < text.length &&
+        text[slotEnd] !== ',' &&
+        text[slotEnd] !== ']' &&
+        text[slotEnd] !== ')'
+      ) {
+        slotEnd++;
+      }
+      el.setSelectionRange(slotStart, slotEnd);
     }
   };
 

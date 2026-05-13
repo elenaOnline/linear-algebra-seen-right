@@ -43,9 +43,10 @@ class EvalStream {
 
 // --- Recursive-descent arithmetic evaluator ---
 // Grammar:
-//   expr   ::= term ( ('+' | '-') term )*
-//   term   ::= unary ( ('*' | '/') unary )*
-//   unary  ::= '-' unary | primary
+//   expr    ::= term ( ('+' | '-') term )*
+//   term    ::= power ( ('*' | '/') power )*
+//   power   ::= unary ( '^' power )?   — right-associative
+//   unary   ::= '-' unary | primary
 //   primary ::= number | ident | '(' expr ')'
 
 function parseExpr(s: EvalStream, vars: Record<string, number>): EvalResult {
@@ -61,16 +62,28 @@ function parseExpr(s: EvalStream, vars: Record<string, number>): EvalResult {
 }
 
 function parseTerm(s: EvalStream, vars: Record<string, number>): EvalResult {
-  let left = parseUnary(s, vars);
+  let left = parsePower(s, vars);
   if (isErr(left)) return left;
   while (s.at('star') || s.at('slash')) {
     const op = s.consume().kind;
-    const right = parseUnary(s, vars);
+    const right = parsePower(s, vars);
     if (isErr(right)) return right;
     if (op === 'slash' && right.value === 0) return evalErr('Division by zero');
     left = evalOk(op === 'star' ? left.value * right.value : left.value / right.value);
   }
   return left;
+}
+
+function parsePower(s: EvalStream, vars: Record<string, number>): EvalResult {
+  const base = parseUnary(s, vars);
+  if (isErr(base)) return base;
+  if (s.at('caret')) {
+    s.consume();
+    const exp = parsePower(s, vars); // right-associative: 2^3^4 = 2^(3^4)
+    if (isErr(exp)) return exp;
+    return evalOk(Math.pow(base.value, exp.value));
+  }
+  return base;
 }
 
 function parseUnary(s: EvalStream, vars: Record<string, number>): EvalResult {

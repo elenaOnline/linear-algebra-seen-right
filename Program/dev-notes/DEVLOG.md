@@ -21,6 +21,16 @@ A devlog entry should usually be under 20 lines. If it's longer, the excess prob
 
 ---
 
+## 2026-05-12 — Phase 11C: ADR-019 tag vocabulary, derivation labels, pulse animation
+
+**Touched:** `Program/dev-notes/NOTES.md`, `src/ui/KindBadge.tsx`, `src/ui/App.tsx`, `src/ui/Inspector.tsx`, `src/ui/ViewCard.tsx`, `src/styles/tokens.css`, `src/ui/ProvenanceBadge.test.tsx`
+
+Recorded ADR-019 (Option A confirmed): Sandbox tile-head `KindBadge` components now use action verbs (Plot 2D, Plot 3D, Draw as diagram, Matrix view, Spectrum, Symbolic) while Browse filter chips keep existing taxonomy labels unchanged. Threaded `originDefId` from `handleOpenInSandbox` through `SandboxLayout` → `Inspector` so that entering Sandbox from Browse shows the source definition's title and formal statement in the Inspector's empty state. Added derivation edge labels (`= v + w`, `= A ∘ B`, etc.) in the tile-head of any view whose object has a `.derivation` field, using named-object names resolved from `session.namedObjects`. Added `@keyframes derived-pulse` CSS animation that fires a brief purple `box-shadow` ripple on a derived tile whenever `recomputeDerived` updates its cached components. 343 tests, 0 errors.
+
+**Notable:** `DefinitionRecord` has `formalStatement` / `plainStatement`, not `text` — caught at compile time. The `MathObject` union doesn't discriminate via `view.objectRef.kind`, so typed session lookups (`session.vectors[id]`, `session.maps[id]`) are required for the derivation-aware path. The pulse `useEffect` tracks previous component signatures (JSON-serialised) in a ref rather than comparing props — keeps renderers pure.
+
+---
+
 ## 2026-05-12 — Phase 11B: Visual system, catalog thumbnails, tile resizing
 
 **Touched:** `src/ui/theme/diagram.ts` (new), `src/ui/assets/thumbnails.tsx` (new), `src/styles/tokens.css`, `eslint.config.js`, all five renderers (Geometric2D/3D, Chart, Diagram, Matrix), `src/ui/BrowseMode.tsx`, `src/ui/ViewCard.tsx`, `src/ui/ViewGrid.tsx`

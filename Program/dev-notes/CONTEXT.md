@@ -43,8 +43,8 @@ A web-based mathematical sandbox for exploring concepts from Sheldon Axler's *Li
 **Phase 11 (Design Debt & UX) — in progress.** See `PRD/11 — Design Debt & UX.md`.
 - **11A complete:** Live KaTeX preview in ObjectInput, context-aware two-palette system (label vs. expression), π/e/i as numeric constants, Tab slot navigation, `^` power in formula evaluator.
 - **11B complete:** `DIAGRAM_THEME` single source of truth (`src/ui/theme/diagram.ts`); all five renderers import from it; ESLint enforces no raw hex in renderers. Six semantic color tokens in `tokens.css`. SVG catalog thumbnails in BrowseMode. Tile resizing (drag handle on ViewCard right edge, `fr`-unit column tracking in ViewGrid, localStorage persistence).
-- **11C next:** Tag vocabulary disambiguation (requires ADR-019 decision first — Option A: verbs for Sandbox view modes, content categories for Browse). Then Browse→Sandbox definition context (Inspector default = source definition), derived-object tile header edges, pulse animation on derived tiles.
-- **11D:** URL hash persistence + localStorage auto-save + Copy Link button.
+- **11C complete:** ADR-019 recorded (Option A: Sandbox tile headers use action verbs — Plot 2D/3D, Draw as diagram, Matrix view, Spectrum, Symbolic; Browse filter chips unchanged). `originDefId` threading so Inspector shows source definition on Browse→Sandbox entry. Derivation edge labels (`= v + w`, `= A ∘ B`) in tile-head chrome for derived objects. CSS pulse animation on derived tiles when `recomputeDerived` updates cached values.
+- **11D next:** URL hash persistence via `CompressionStream`/`DecompressionStream`, localStorage auto-save last 5 sessions, Copy Link button in Sandbox toolbar.
 
 **Phase 9 (Content Expansion) — paused, resumes after Phase 11.** Chapters 4–9 overrides, more generator constraints.
 

@@ -281,86 +281,116 @@ function tryRenderKatex(latex: string): string | null {
   }
 }
 
-// ── Symbol palette definition ─────────────────────────────────────────────
+// ── Palette definitions ───────────────────────────────────────────────────
 
 type PaletteSymbol = { kind: 'symbol'; latex: string; insert: string; title: string };
 type PaletteAction = {
   kind: 'action';
   latex: string;
   title: string;
-  action: 'fraction' | 'superscript' | 'subscript' | 'matrix';
+  action: 'fraction' | 'superscript' | 'matrix';
 };
 type PaletteItem = PaletteSymbol | PaletteAction;
 
-const PALETTE_GROUPS: Array<{ label: string; items: PaletteItem[] }> = [
-  {
-    label: 'Sets',
-    items: [
-      { kind: 'symbol', latex: '\\mathbb{R}', insert: 'R', title: 'Real field ℝ' },
-      { kind: 'symbol', latex: '\\mathbb{C}', insert: 'C', title: 'Complex field ℂ' },
-    ],
-  },
-  {
-    label: 'Variables',
-    items: [
-      { kind: 'symbol', latex: '\\lambda', insert: 'λ', title: 'Eigenvalue λ' },
-      { kind: 'symbol', latex: '\\sigma', insert: 'σ', title: 'Singular value σ' },
-      { kind: 'symbol', latex: '\\alpha', insert: 'α', title: 'Alpha α' },
-      { kind: 'symbol', latex: '\\beta', insert: 'β', title: 'Beta β' },
-    ],
-  },
-  {
-    label: 'Relations',
-    items: [
-      { kind: 'symbol', latex: '\\in', insert: '∈', title: 'Element of ∈' },
-      { kind: 'symbol', latex: '\\subseteq', insert: '⊆', title: 'Subspace ⊆' },
-      { kind: 'symbol', latex: '\\oplus', insert: '⊕', title: 'Direct sum ⊕' },
-    ],
-  },
+// Expression palette — only symbols that compose with the parser.
+const EXPR_PALETTE_GROUPS: Array<{ label: string; items: PaletteItem[] }> = [
   {
     label: 'Structures',
     items: [
-      { kind: 'action', latex: '\\tfrac{a}{b}', title: 'Fraction (inserts /)', action: 'fraction' },
-      {
-        kind: 'action',
-        latex: 'x^{n}',
-        title: 'Power / superscript (inserts ^)',
-        action: 'superscript',
-      },
-      { kind: 'action', latex: 'x_{n}', title: 'Subscript (inserts _)', action: 'subscript' },
       {
         kind: 'action',
         latex: '\\begin{smallmatrix}\\cdot&\\cdot\\\\\\cdot&\\cdot\\end{smallmatrix}',
         title: 'Matrix builder',
         action: 'matrix',
       },
+      { kind: 'action', latex: '\\tfrac{a}{b}', title: 'Rational — inserts /', action: 'fraction' },
+      { kind: 'action', latex: 'x^{n}', title: 'Power — inserts ^', action: 'superscript' },
+    ],
+  },
+  {
+    label: 'Constants',
+    items: [
+      { kind: 'symbol', latex: '\\pi', insert: 'π', title: 'π = 3.14159…' },
+      { kind: 'symbol', latex: 'e', insert: 'e', title: "e = 2.71828… (Euler's number)" },
+    ],
+  },
+  {
+    label: 'Operators',
+    items: [
+      { kind: 'symbol', latex: '\\oplus', insert: '⊕', title: 'Direct sum ⊕' },
+      { kind: 'symbol', latex: '\\otimes', insert: '⊗', title: 'Tensor product ⊗' },
+      {
+        kind: 'symbol',
+        latex: '\\langle\\cdot,\\cdot\\rangle',
+        insert: '⟨·,·⟩',
+        title: 'Inner product ⟨·,·⟩',
+      },
     ],
   },
 ];
 
-const PALETTE_MORE: PaletteSymbol[] = [
-  { kind: 'symbol', latex: '\\otimes', insert: '⊗', title: 'Tensor product ⊗' },
+// Label palette — broad Unicode for naming objects.
+const LABEL_PALETTE_GROUPS: Array<{ label: string; items: PaletteSymbol[] }> = [
   {
-    kind: 'symbol',
-    latex: '\\langle\\cdot,\\cdot\\rangle',
-    insert: '⟨·,·⟩',
-    title: 'Inner product ⟨·,·⟩',
+    label: 'Greek',
+    items: [
+      { kind: 'symbol', latex: '\\lambda', insert: 'λ', title: 'Lambda λ' },
+      { kind: 'symbol', latex: '\\sigma', insert: 'σ', title: 'Sigma σ' },
+      { kind: 'symbol', latex: '\\alpha', insert: 'α', title: 'Alpha α' },
+      { kind: 'symbol', latex: '\\beta', insert: 'β', title: 'Beta β' },
+      { kind: 'symbol', latex: '\\gamma', insert: 'γ', title: 'Gamma γ' },
+      { kind: 'symbol', latex: '\\delta', insert: 'δ', title: 'Delta δ' },
+      { kind: 'symbol', latex: '\\theta', insert: 'θ', title: 'Theta θ' },
+      { kind: 'symbol', latex: '\\varphi', insert: 'φ', title: 'Phi φ' },
+      { kind: 'symbol', latex: '\\omega', insert: 'ω', title: 'Omega ω' },
+      { kind: 'symbol', latex: '\\mu', insert: 'μ', title: 'Mu μ' },
+      { kind: 'symbol', latex: '\\rho', insert: 'ρ', title: 'Rho ρ' },
+      { kind: 'symbol', latex: '\\varepsilon', insert: 'ε', title: 'Epsilon ε' },
+    ],
   },
-  { kind: 'symbol', latex: '\\perp', insert: '⊥', title: 'Orthogonal ⊥' },
-  { kind: 'symbol', latex: '\\theta', insert: 'θ', title: 'Theta θ — rotation angle' },
-  { kind: 'symbol', latex: '\\varepsilon', insert: 'ε', title: 'Epsilon ε' },
-  { kind: 'symbol', latex: '\\varphi', insert: 'φ', title: 'Phi φ — basis angle' },
-  { kind: 'symbol', latex: '\\omega', insert: 'ω', title: 'Omega ω' },
-  { kind: 'symbol', latex: '\\mu', insert: 'μ', title: 'Mu μ' },
-  { kind: 'symbol', latex: '\\pi', insert: 'π', title: 'Pi π' },
+  {
+    label: 'Subscripts',
+    items: [
+      ...'₀₁₂₃₄₅₆₇₈₉'.split('').map((ch, i) => ({
+        kind: 'symbol' as const,
+        latex: `_{${i}}`,
+        insert: ch,
+        title: `Subscript ${i}`,
+      })),
+    ],
+  },
+  {
+    label: 'Modifiers',
+    items: [
+      { kind: 'symbol', latex: "v'", insert: '′', title: 'Prime ′' },
+      { kind: 'symbol', latex: 'v^*', insert: '∗', title: 'Star ∗' },
+      { kind: 'symbol', latex: 'v^\\dagger', insert: '†', title: 'Dagger †' },
+      { kind: 'symbol', latex: '\\infty', insert: '∞', title: 'Infinity ∞' },
+    ],
+  },
 ];
 
-// Pre-render palette latex to HTML at module load time.
+// Pre-render all palette latex to HTML at module load time (single typeface, single size).
 const PALETTE_RENDERED = new Map<string, string>();
-[...PALETTE_GROUPS.flatMap((g) => g.items), ...PALETTE_MORE].forEach((item) => {
+[
+  ...EXPR_PALETTE_GROUPS.flatMap((g) => g.items),
+  ...LABEL_PALETTE_GROUPS.flatMap((g) => g.items),
+].forEach((item) => {
   const html = tryRenderKatex(item.latex);
   if (html) PALETTE_RENDERED.set(item.latex, html);
 });
+
+// Scan named object labels for non-ASCII Unicode characters to surface in the expression palette.
+function extractNamedSymbols(namedObjects: Record<string, unknown>): string[] {
+  const seen = new Set<string>();
+  for (const name of Object.keys(namedObjects)) {
+    for (const ch of name) {
+      const code = ch.codePointAt(0) ?? 0;
+      if (code > 127) seen.add(ch);
+    }
+  }
+  return [...seen];
+}
 
 // ── Matrix template builder ──────────────────────────────────────────────
 
@@ -383,8 +413,10 @@ export function ObjectInput(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [katexHtml, setKatexHtml] = useState<string | null>(null);
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  // Which field is currently focused — determines which palette is shown.
+  const [focusedField, setFocusedField] = useState<'label' | 'expression'>('expression');
 
-  // More palette popover
+  // More palette popover (overflow for expression palette)
   const [showMore, setShowMore] = useState(false);
   const [moreRect, setMoreRect] = useState<DOMRect | null>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
@@ -398,11 +430,18 @@ export function ObjectInput(): JSX.Element {
   const matrixMenuRef = useRef<HTMLDivElement>(null);
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const labelRef = useRef<HTMLInputElement>(null);
   const previewTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const views = useStore(defaultStore, (s) => s.views);
+  const namedObjects = useStore(defaultStore, (s) => s.namedObjects);
   const placeholder = PLACEHOLDER_EXAMPLES[placeholderIdx % PLACEHOLDER_EXAMPLES.length] ?? '';
   const canSubmit = !!text.trim() && !error;
+
+  // Dynamic symbols from named object labels (for expression palette right section).
+  const dynamicSymbols = extractNamedSymbols(namedObjects);
+  const dynamicVisible = dynamicSymbols.slice(0, 3);
+  const dynamicOverflow = dynamicSymbols.slice(3);
 
   // Close more menu on outside click
   useEffect(() => {
@@ -448,6 +487,21 @@ export function ObjectInput(): JSX.Element {
 
   const insertAt = useCallback(
     (insert: string, cursorAfterInsert?: number): void => {
+      if (focusedField === 'label') {
+        // Insert into label field at current cursor position.
+        const el = labelRef.current;
+        const start = el?.selectionStart ?? nameText.length;
+        const end = el?.selectionEnd ?? nameText.length;
+        const next = nameText.slice(0, start) + insert + nameText.slice(end);
+        setNameText(next);
+        requestAnimationFrame(() => {
+          el?.focus();
+          const pos = start + insert.length;
+          el?.setSelectionRange(pos, pos);
+        });
+        return;
+      }
+      // Insert into expression textarea.
       const el = inputRef.current;
       if (!el) {
         setText((prev) => prev + insert);
@@ -465,7 +519,7 @@ export function ObjectInput(): JSX.Element {
         el.setSelectionRange(pos, pos);
       });
     },
-    [text],
+    [focusedField, nameText, text],
   );
 
   const insertSymbol = (item: PaletteSymbol): void => insertAt(item.insert);
@@ -475,8 +529,6 @@ export function ObjectInput(): JSX.Element {
       insertAt('/');
     } else if (action === 'superscript') {
       insertAt('^');
-    } else if (action === 'subscript') {
-      insertAt('_');
     } else if (action === 'matrix') {
       const rect = matrixButtonRef.current?.getBoundingClientRect() ?? null;
       setMatrixPickerRect(rect);
@@ -566,38 +618,151 @@ export function ObjectInput(): JSX.Element {
         gap: '5px',
       }}
     >
-      {/* ── Symbol palette ─────────────────────────────────────────── */}
+      {/* ── Context-aware palette ──────────────────────────────────── */}
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
           gap: '1px',
-          flexWrap: 'nowrap',
           overflowX: 'auto',
+          flexWrap: 'nowrap',
         }}
       >
-        {PALETTE_GROUPS.map((group, gi) => (
-          <div
-            key={group.label}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '1px',
-              paddingRight: gi < PALETTE_GROUPS.length - 1 ? '6px' : 0,
-              marginRight: gi < PALETTE_GROUPS.length - 1 ? '5px' : 0,
-              borderRight: gi < PALETTE_GROUPS.length - 1 ? '1px solid var(--line)' : 'none',
-              flexShrink: 0,
-            }}
-          >
-            {group.items.map((item) => {
-              const renderedHtml = PALETTE_RENDERED.get(item.latex);
-              if (item.kind === 'action' && item.action === 'matrix') {
-                return (
+        {/* Mode label */}
+        <span
+          style={{
+            fontSize: '10px',
+            fontFamily: 'var(--font-mono)',
+            color: 'var(--ink-4)',
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            marginRight: '5px',
+            flexShrink: 0,
+          }}
+        >
+          {focusedField === 'label' ? 'Name' : 'Insert'}
+        </span>
+
+        {focusedField === 'label' ? (
+          // ── Label palette ──────────────────────────────────────────
+          <>
+            {LABEL_PALETTE_GROUPS.map((group, gi) => (
+              <div
+                key={group.label}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1px',
+                  paddingRight: gi < LABEL_PALETTE_GROUPS.length - 1 ? '6px' : 0,
+                  marginRight: gi < LABEL_PALETTE_GROUPS.length - 1 ? '5px' : 0,
+                  borderRight:
+                    gi < LABEL_PALETTE_GROUPS.length - 1 ? '1px solid var(--line)' : 'none',
+                  flexShrink: 0,
+                }}
+              >
+                {group.items.map((item) => {
+                  const html = PALETTE_RENDERED.get(item.latex);
+                  return (
+                    <button
+                      key={item.latex}
+                      onClick={() => insertSymbol(item)}
+                      title={item.title}
+                      style={paletteButtonStyle}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--line-3)';
+                        e.currentTarget.style.background = 'var(--bg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--line-2)';
+                        e.currentTarget.style.background = 'var(--panel)';
+                      }}
+                    >
+                      {html ? (
+                        <span dangerouslySetInnerHTML={{ __html: html }} />
+                      ) : (
+                        <span style={{ fontFamily: 'var(--font-math)', fontSize: '12px' }}>
+                          {item.insert}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </>
+        ) : (
+          // ── Expression palette ─────────────────────────────────────
+          <>
+            {EXPR_PALETTE_GROUPS.map((group, gi) => (
+              <div
+                key={group.label}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1px',
+                  paddingRight: gi < EXPR_PALETTE_GROUPS.length - 1 ? '6px' : 0,
+                  marginRight: gi < EXPR_PALETTE_GROUPS.length - 1 ? '5px' : 0,
+                  borderRight:
+                    gi < EXPR_PALETTE_GROUPS.length - 1 ? '1px solid var(--line)' : 'none',
+                  flexShrink: 0,
+                }}
+              >
+                {group.items.map((item) => {
+                  const html = PALETTE_RENDERED.get(item.latex);
+                  const isMatrix = item.kind === 'action' && item.action === 'matrix';
+                  return (
+                    <button
+                      key={item.latex}
+                      ref={isMatrix ? matrixButtonRef : undefined}
+                      onClick={() =>
+                        item.kind === 'symbol' ? insertSymbol(item) : insertAction(item.action)
+                      }
+                      title={item.title}
+                      style={paletteButtonStyle}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--line-3)';
+                        e.currentTarget.style.background = 'var(--bg)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = 'var(--line-2)';
+                        e.currentTarget.style.background = 'var(--panel)';
+                      }}
+                    >
+                      {html ? (
+                        <span dangerouslySetInnerHTML={{ __html: html }} />
+                      ) : (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px' }}>
+                          {item.kind === 'symbol'
+                            ? item.insert
+                            : item.action === 'matrix'
+                              ? 'M'
+                              : '?'}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+
+            {/* Dynamic symbols from named objects — right-justified, up to 3 + overflow */}
+            {(dynamicVisible.length > 0 || dynamicOverflow.length > 0) && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1px',
+                  paddingLeft: '6px',
+                  marginLeft: '5px',
+                  borderLeft: '1px solid var(--line)',
+                  flexShrink: 0,
+                }}
+              >
+                {dynamicVisible.map((ch) => (
                   <button
-                    key={item.latex}
-                    ref={matrixButtonRef}
-                    onClick={() => insertAction(item.action)}
-                    title={item.title}
+                    key={ch}
+                    onClick={() => insertAt(ch)}
+                    title={`Insert '${ch}' (from named object)`}
                     style={paletteButtonStyle}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.borderColor = 'var(--line-3)';
@@ -608,34 +773,6 @@ export function ObjectInput(): JSX.Element {
                       e.currentTarget.style.background = 'var(--panel)';
                     }}
                   >
-                    {renderedHtml ? (
-                      <span dangerouslySetInnerHTML={{ __html: renderedHtml }} />
-                    ) : (
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px' }}>M</span>
-                    )}
-                  </button>
-                );
-              }
-              return (
-                <button
-                  key={item.latex}
-                  onClick={() =>
-                    item.kind === 'symbol' ? insertSymbol(item) : insertAction(item.action)
-                  }
-                  title={item.title}
-                  style={paletteButtonStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--line-3)';
-                    e.currentTarget.style.background = 'var(--bg)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--line-2)';
-                    e.currentTarget.style.background = 'var(--panel)';
-                  }}
-                >
-                  {renderedHtml ? (
-                    <span dangerouslySetInnerHTML={{ __html: renderedHtml }} />
-                  ) : (
                     <span
                       style={{
                         fontFamily: 'var(--font-math)',
@@ -643,42 +780,42 @@ export function ObjectInput(): JSX.Element {
                         fontSize: '12px',
                       }}
                     >
-                      {item.kind === 'symbol' ? item.insert : '?'}
+                      {ch}
                     </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        ))}
-
-        {/* More button */}
-        <button
-          ref={moreButtonRef}
-          onClick={() => {
-            const rect = moreButtonRef.current?.getBoundingClientRect() ?? null;
-            setMoreRect(rect);
-            setShowMore((s) => !s);
-          }}
-          title="More symbols"
-          style={{
-            ...paletteButtonStyle,
-            minWidth: '28px',
-            color: 'var(--ink-3)',
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--line-3)';
-            e.currentTarget.style.background = 'var(--bg)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--line-2)';
-            e.currentTarget.style.background = 'var(--panel)';
-          }}
-        >
-          ···
-        </button>
+                  </button>
+                ))}
+                {dynamicOverflow.length > 0 && (
+                  <button
+                    ref={moreButtonRef}
+                    onClick={() => {
+                      const rect = moreButtonRef.current?.getBoundingClientRect() ?? null;
+                      setMoreRect(rect);
+                      setShowMore((s) => !s);
+                    }}
+                    title="More named symbols"
+                    style={{
+                      ...paletteButtonStyle,
+                      minWidth: '26px',
+                      color: 'var(--ink-3)',
+                      fontFamily: 'var(--font-mono)',
+                      fontSize: '11px',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--line-3)';
+                      e.currentTarget.style.background = 'var(--bg)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'var(--line-2)';
+                      e.currentTarget.style.background = 'var(--panel)';
+                    }}
+                  >
+                    ···
+                  </button>
+                )}
+              </div>
+            )}
+          </>
+        )}
       </div>
 
       {/* ── Input row ──────────────────────────────────────────────── */}
@@ -686,13 +823,15 @@ export function ObjectInput(): JSX.Element {
         {/* Label field */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', flexShrink: 0 }}>
           <input
+            ref={labelRef}
             value={nameText}
             onChange={(e) => setNameText(e.target.value)}
+            onFocus={() => setFocusedField('label')}
             placeholder="label"
             style={{
               width: '52px',
               padding: '6px 8px',
-              border: '1px solid var(--line-2)',
+              border: `1px solid ${focusedField === 'label' ? 'var(--line-3)' : 'var(--line-2)'}`,
               borderRadius: 'var(--radius)',
               fontSize: 'var(--t-meta)',
               fontFamily: 'var(--font-math)',
@@ -719,6 +858,7 @@ export function ObjectInput(): JSX.Element {
           ref={inputRef}
           value={text}
           onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => setFocusedField('expression')}
           onKeyDown={handleKey}
           placeholder={placeholder}
           rows={1}
@@ -728,7 +868,7 @@ export function ObjectInput(): JSX.Element {
           style={{
             flex: 1,
             padding: '7px 10px',
-            border: `1px solid ${error ? 'var(--kind-spec)' : 'var(--line-2)'}`,
+            border: `1px solid ${error ? 'var(--kind-spec)' : focusedField === 'expression' ? 'var(--line-3)' : 'var(--line-2)'}`,
             borderRadius: 'var(--radius)',
             fontSize: '14px',
             fontFamily: 'var(--font-mono)',
@@ -825,42 +965,31 @@ export function ObjectInput(): JSX.Element {
               maxWidth: '240px',
             }}
           >
-            {PALETTE_MORE.map((item) => {
-              const html = PALETTE_RENDERED.get(item.latex);
-              return (
-                <button
-                  key={item.latex}
-                  onClick={() => {
-                    insertSymbol(item);
-                    setShowMore(false);
-                  }}
-                  title={item.title}
-                  style={paletteButtonStyle}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--line-3)';
-                    e.currentTarget.style.background = 'var(--bg)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--line-2)';
-                    e.currentTarget.style.background = 'var(--panel)';
-                  }}
+            {dynamicOverflow.map((ch) => (
+              <button
+                key={ch}
+                onClick={() => {
+                  insertAt(ch);
+                  setShowMore(false);
+                }}
+                title={`Insert '${ch}'`}
+                style={paletteButtonStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--line-3)';
+                  e.currentTarget.style.background = 'var(--bg)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--line-2)';
+                  e.currentTarget.style.background = 'var(--panel)';
+                }}
+              >
+                <span
+                  style={{ fontFamily: 'var(--font-math)', fontStyle: 'italic', fontSize: '12px' }}
                 >
-                  {html ? (
-                    <span dangerouslySetInnerHTML={{ __html: html }} />
-                  ) : (
-                    <span
-                      style={{
-                        fontFamily: 'var(--font-math)',
-                        fontStyle: 'italic',
-                        fontSize: '12px',
-                      }}
-                    >
-                      {item.insert}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
+                  {ch}
+                </span>
+              </button>
+            ))}
           </div>,
           document.body,
         )}

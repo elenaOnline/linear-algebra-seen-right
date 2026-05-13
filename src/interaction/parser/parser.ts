@@ -59,6 +59,16 @@ function isError(r: unknown): r is ParseError {
 // --- Scalar parsing ---
 
 // Parse a scalar value from a single token (or negative prefix)
+// Named numeric constants recognised in vector/matrix component position.
+// Variables explicitly listed as formula parameters override these (handled in evaluate.ts).
+const SCALAR_CONSTANTS: Record<string, Scalar> = {
+  π: float(Math.PI),
+  pi: float(Math.PI),
+  e: float(Math.E),
+  // Imaginary unit produces a pure-imaginary complex scalar.
+  i: { kind: 'complex', re: rational(0), im: rational(1) },
+};
+
 function parseScalar(s: TokenStream): Scalar | ParseError {
   let neg = false;
   if (s.at('minus')) {
@@ -67,6 +77,19 @@ function parseScalar(s: TokenStream): Scalar | ParseError {
   }
 
   const t = s.peek();
+
+  // Recognise named constants (π, e, i, pi) as numeric values.
+  if (t.kind === 'ident' && t.raw in SCALAR_CONSTANTS) {
+    s.consume();
+    const c = SCALAR_CONSTANTS[t.raw]!;
+    if (!neg) return c;
+    // Negate: for float constants negate the value; for complex negate imaginary part.
+    if (c.kind === 'float') return float(-c.value);
+    if (c.kind === 'rational') return rational(-Number(c.value.n), Number(c.value.d));
+    if (c.kind === 'complex') return { kind: 'complex', re: rational(0), im: rational(-1) };
+    return c;
+  }
+
   if (t.kind !== 'number') {
     return {
       kind: 'error',

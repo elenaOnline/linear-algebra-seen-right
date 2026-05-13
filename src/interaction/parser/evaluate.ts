@@ -120,9 +120,11 @@ function parsePrimary(s: EvalStream, vars: Record<string, number>): EvalResult {
 
   if (t.kind === 'ident') {
     s.consume();
-    const val = vars[t.raw];
-    if (val === undefined) return evalErr(`Unknown variable '${t.raw}'`);
-    return evalOk(val);
+    // Formula parameters override built-in constants (e.g. T(e) uses e as a variable).
+    if (t.raw in vars) return evalOk(vars[t.raw]!);
+    const EVAL_CONSTANTS: Record<string, number> = { π: Math.PI, pi: Math.PI, e: Math.E };
+    if (t.raw in EVAL_CONSTANTS) return evalOk(EVAL_CONSTANTS[t.raw]!);
+    return evalErr(`Unknown variable '${t.raw}'`);
   }
 
   if (t.kind === 'lparen') {

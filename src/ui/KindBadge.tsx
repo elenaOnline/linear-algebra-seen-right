@@ -2,12 +2,12 @@ import type { JSX } from 'react';
 import type { RendererKind } from '../registry/index.ts';
 
 const KIND_META: Record<RendererKind, { label: string; cls: string }> = {
-  geometric_2d: { label: 'geometric', cls: 'geo' },
-  geometric_3d: { label: 'geometric', cls: 'geo' },
-  diagram: { label: 'abstract diagram', cls: 'abs' },
-  matrix: { label: 'matrix', cls: 'mat' },
-  chart: { label: 'spectral', cls: 'spec' },
-  symbolic: { label: 'symbolic', cls: 'sym' },
+  geometric_2d: { label: 'Plot 2D', cls: 'geo' },
+  geometric_3d: { label: 'Plot 3D', cls: 'geo' },
+  diagram: { label: 'Draw as diagram', cls: 'abs' },
+  matrix: { label: 'Matrix view', cls: 'mat' },
+  chart: { label: 'Spectrum', cls: 'spec' },
+  symbolic: { label: 'Symbolic', cls: 'sym' },
 };
 
 type Props = {

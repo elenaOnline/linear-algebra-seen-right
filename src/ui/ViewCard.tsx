@@ -5,6 +5,8 @@ import { useStore } from 'zustand';
 import { defaultStore, sessionViewFrom } from '../state/index.ts';
 import { visualizerRegistry, type MathObjectKind, type MathObject } from '../registry/index.ts';
 import type { View, MathObjectRef, SessionSnapshot } from '../state/types.ts';
+import type { VectorExpression, MapExpression } from '../types/derivation.ts';
+import type { Scalar } from '../types/scalar.ts';
 import { ViewContainer } from './ViewContainer.tsx';
 import { KindBadge } from './KindBadge.tsx';
 
@@ -79,6 +81,48 @@ function footMetaFor(snap: SessionSnapshot, ref: MathObjectRef): string {
   }
 }
 
+// --- Derivation label helpers ---
+
+function scalarLabel(s: Scalar): string {
+  if (s.kind === 'rational') {
+    const v = Number(s.value);
+    return Number.isInteger(v) ? String(v) : v.toPrecision(3);
+  }
+  return '~';
+}
+
+function nameForId(id: string, namedObjects: Record<string, MathObjectRef>): string {
+  const entry = Object.entries(namedObjects).find(([, r]) => r.id === id);
+  return entry ? entry[0] : id.slice(0, 4);
+}
+
+function formatVectorExpr(
+  expr: VectorExpression,
+  namedObjects: Record<string, MathObjectRef>,
+): string {
+  switch (expr.op) {
+    case 'add':
+      return `= ${nameForId(expr.left, namedObjects)} + ${nameForId(expr.right, namedObjects)}`;
+    case 'sub':
+      return `= ${nameForId(expr.left, namedObjects)} − ${nameForId(expr.right, namedObjects)}`;
+    case 'scale':
+      return `= ${scalarLabel(expr.scalar)}${nameForId(expr.vector, namedObjects)}`;
+    case 'apply':
+      return `= ${nameForId(expr.map, namedObjects)}(${nameForId(expr.vector, namedObjects)})`;
+  }
+}
+
+function formatMapExpr(expr: MapExpression, namedObjects: Record<string, MathObjectRef>): string {
+  switch (expr.op) {
+    case 'compose':
+      return `= ${nameForId(expr.left, namedObjects)} ∘ ${nameForId(expr.right, namedObjects)}`;
+    case 'sum':
+      return `= ${nameForId(expr.left, namedObjects)} + ${nameForId(expr.right, namedObjects)}`;
+    case 'scale':
+      return `= ${scalarLabel(expr.scalar)}${nameForId(expr.map, namedObjects)}`;
+  }
+}
+
 // --- ViewCard ---
 
 type Props = {
@@ -90,8 +134,10 @@ type Props = {
 export function ViewCard({ view, isResizable = false, onResizeStart }: Props): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuRect, setMenuRect] = useState<DOMRect | null>(null);
+  const [isPulsing, setIsPulsing] = useState(false);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const portalRef = useRef<HTMLDivElement>(null);
+  const prevComponentsRef = useRef<string | null>(null);
   const session = useStore(defaultStore);
 
   // Close menu on outside click — exclude both the trigger button and the portal content
@@ -111,8 +157,39 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
   const sessionView = sessionViewFrom(session);
 
   const objectName = nameForRef(session, view.objectRef);
-  const objectKind = objectKindFor(view.objectRef);
   const obj = resolveMathObject(session, view.objectRef);
+
+  // Typed lookups for derivation-aware objects.
+  const sessionVec =
+    view.objectRef.kind === 'vector' ? session.vectors[view.objectRef.id] : undefined;
+  const sessionMap = view.objectRef.kind === 'map' ? session.maps[view.objectRef.id] : undefined;
+
+  // Pulse when a derived object's cached components update.
+  useEffect(() => {
+    const sig =
+      sessionVec?.kind === 'concrete' && sessionVec.derivation
+        ? JSON.stringify(sessionVec.components)
+        : sessionMap?.derivation && sessionMap.representation.kind === 'matrix'
+          ? JSON.stringify(sessionMap.representation.matrix.entries)
+          : null;
+    if (sig === null) return undefined;
+    if (prevComponentsRef.current !== null && prevComponentsRef.current !== sig) {
+      setIsPulsing(true);
+      const t = setTimeout(() => setIsPulsing(false), 600);
+      return () => clearTimeout(t);
+    }
+    prevComponentsRef.current = sig;
+    return undefined;
+  }, [sessionVec, sessionMap]);
+
+  // Derivation label for tile header.
+  const derivationLabel: string | null =
+    sessionVec?.kind === 'concrete' && sessionVec.derivation
+      ? formatVectorExpr(sessionVec.derivation, session.namedObjects)
+      : sessionMap?.derivation
+        ? formatMapExpr(sessionMap.derivation, session.namedObjects)
+        : null;
+  const objectKind = objectKindFor(view.objectRef);
   const footMeta = footMetaFor(session, view.objectRef);
 
   const activeVisualizer =
@@ -131,7 +208,7 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
 
   return (
     <div
-      className="canvas-tile"
+      className={`canvas-tile${isPulsing ? ' derived-pulse' : ''}`}
       style={{
         position: 'relative',
         border: '1px solid var(--line)',
@@ -171,6 +248,21 @@ export function ViewCard({ view, isResizable = false, onResizeStart }: Props): J
         >
           {objectName}
         </span>
+
+        {/* Derivation label (only for derived objects) */}
+        {derivationLabel !== null && (
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'var(--t-micro)',
+              color: 'var(--color-derived)',
+              whiteSpace: 'nowrap',
+              opacity: 0.85,
+            }}
+          >
+            {derivationLabel}
+          </span>
+        )}
 
         {/* Visualizer label */}
         <span

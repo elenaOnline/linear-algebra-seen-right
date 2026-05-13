@@ -39,20 +39,21 @@ describe('ProvenanceBadge (exactness chip)', () => {
 });
 
 describe('KindBadge', () => {
-  it('renders "geometric" label for geometric_2d', () => {
+  it('renders "Plot 2D" label for geometric_2d', () => {
     const { container } = render(<KindBadge renderer="geometric_2d" />);
-    expect(container.textContent).toContain('geometric');
+    expect(container.textContent).toContain('Plot 2D');
     expect(container.querySelector('.kind-badge.geo')).not.toBeNull();
   });
 
-  it('renders "geometric" label for geometric_3d', () => {
+  it('renders "Plot 3D" label for geometric_3d', () => {
     const { container } = render(<KindBadge renderer="geometric_3d" />);
+    expect(container.textContent).toContain('Plot 3D');
     expect(container.querySelector('.kind-badge.geo')).not.toBeNull();
   });
 
-  it('renders "abstract diagram" label for diagram', () => {
+  it('renders "Draw as diagram" label for diagram', () => {
     const { container } = render(<KindBadge renderer="diagram" />);
-    expect(container.textContent).toContain('abstract diagram');
+    expect(container.textContent).toContain('Draw as diagram');
     expect(container.querySelector('.kind-badge.abs')).not.toBeNull();
   });
 

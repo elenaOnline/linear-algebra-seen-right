@@ -16,7 +16,11 @@ import type { MathObjectRef } from '../state/types.ts';
 
 type Mode = 'sandbox' | 'browse';
 
-function SandboxLayout(): JSX.Element {
+type SandboxLayoutProps = {
+  readonly originDefId: string | null;
+};
+
+function SandboxLayout({ originDefId }: SandboxLayoutProps): JSX.Element {
   const [selected, setSelected] = useState<MathObjectRef | null>(null);
 
   return (
@@ -114,7 +118,7 @@ function SandboxLayout(): JSX.Element {
               Inspector
             </span>
           </div>
-          <Inspector selected={selected} />
+          <Inspector selected={selected} originDefId={originDefId} />
         </div>
       </div>
 
@@ -127,6 +131,7 @@ function SandboxLayout(): JSX.Element {
 
 function AppInner(): JSX.Element {
   const [mode, setMode] = useState<Mode>('sandbox');
+  const [originDefId, setOriginDefId] = useState<string | null>(null);
 
   const handleOpenInSandbox = useCallback((def: DefinitionRecord) => {
     try {
@@ -136,6 +141,7 @@ function AppInner(): JSX.Element {
       if (!template) return;
       const build = template.build(firstExample.parameters ?? {});
       loadScene(build);
+      setOriginDefId(def.id);
       setMode('sandbox');
     } catch (e) {
       // Template build failure — log and stay in Browse mode rather than
@@ -330,7 +336,7 @@ function AppInner(): JSX.Element {
       {/* ── Main content ── */}
       <div style={{ flex: 1, overflow: 'hidden', minHeight: 0 }}>
         {mode === 'sandbox' ? (
-          <SandboxLayout />
+          <SandboxLayout originDefId={originDefId} />
         ) : (
           <BrowseMode onOpenInSandbox={handleOpenInSandbox} />
         )}

@@ -28,6 +28,18 @@ Format template:
 **Implications.** Knock-on effects on other layers, conventions, or future work.
 ```
 
+### ADR-019 — Tag vocabulary: verbs for Sandbox view modes, taxonomy terms for Browse filters  (2026-05-12)
+
+**Context.** The project uses five `RendererKind` values (geometric_2d, geometric_3d, diagram, matrix, chart, symbolic) internally. These same identifiers were feeding both the `KindBadge` component shown on Sandbox view tiles and the filter chip labels in Browse mode. The two surfaces serve different communicative purposes: Browse filters categorize mathematical *content*, while Sandbox tile badges describe a *rendering action* being applied to an object. Using the same vocabulary in both places made the Sandbox badges feel like category labels rather than mode selectors.
+
+**Choice.** Option A: Sandbox tile badges (`KindBadge`) use action verbs — "Plot 2D", "Plot 3D", "Draw as diagram", "Matrix view", "Spectrum", "Symbolic" — describing what the tile is doing to the selected object. Browse filter chips keep the existing taxonomy terms — Geometric, Abstract, Matrix, Spectral, Symbolic — which describe the mathematical character of the content. `FILTER_LABELS` in `BrowseMode.tsx` and `CONSTRAINT_LABELS` in `generator/index.ts` are unchanged; only `KindBadge`'s label strings update.
+
+**Why.** In Sandbox, the user is choosing *how to look at* a selected object. Verbs ("Plot 2D", "Draw as diagram") correctly frame this as an action — the tile is a view mode, not a category. In Browse, the user is filtering a catalog by mathematical domain; noun phrases ("Geometric", "Abstract") correctly frame these as content descriptors. Merging the two into one vocabulary would force one surface to be phrased unnaturally.
+
+**Implications.** `KindBadge` is used in both Browse concept cards (via `primaryRenderer`) and Sandbox view tiles. After this change, Browse concept cards will also show action-verb badges, which is slightly incongruous but acceptable — the badges are small and the Browse mode is not the primary interaction surface for these labels. If this causes confusion in a later audit, a separate `BrowseKindBadge` variant can be introduced. No data model changes; no test changes (existing tests do not assert on badge label strings).
+
+---
+
 ### ADR-018 — Derived objects: expression-typed session values with cached recomputation  (2026-05-12)
 
 **Context.** Every object in the session (`ConcreteVector`, `LinearMap`) is currently an independent concrete value. Naming an object (adding it to `session.namedObjects`) is purely cosmetic — the parser cannot resolve names, and there is no representational category for "object whose value is defined relative to other objects." This makes the sandbox a static collection of diagrams rather than an interactive mathematical environment. Two specific failure modes: (a) formula maps typed as `T(x,y) = (x+y, x−y)` silently use an identity placeholder because the formula body is never evaluated; (b) compositional templates (e.g., vector addition) hardcode the derived value as a third independent vector, so dragging one of the inputs does not update the result.

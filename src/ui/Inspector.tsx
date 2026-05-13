@@ -3,13 +3,16 @@ import { useStore } from 'zustand';
 import { defaultStore, sessionViewFrom } from '../state/index.ts';
 import type { MathObjectRef } from '../state/types.ts';
 import { KindBadge } from './KindBadge.tsx';
+import { LatexText } from './LatexText.tsx';
 import { visualizerRegistry } from '../registry/index.ts';
 import { computeRank, computeDet } from '../registry/helpers.ts';
 import { defaultStore as store } from '../state/index.ts';
 import { GeneratorPanel } from './GeneratorPanel.tsx';
+import { DEFINITIONS } from '../pedagogy/definitions/index.ts';
 
 type Props = {
   readonly selected: MathObjectRef | null;
+  readonly originDefId?: string | null;
 };
 
 function KVRow({ k, v }: { readonly k: string; readonly v: string }): JSX.Element {
@@ -39,12 +42,76 @@ function KVRow({ k, v }: { readonly k: string; readonly v: string }): JSX.Elemen
   );
 }
 
-export function Inspector({ selected }: Props): JSX.Element {
+export function Inspector({ selected, originDefId }: Props): JSX.Element {
   const session = useStore(defaultStore);
   const sessionView = sessionViewFrom(session);
   const { openView } = store.getState();
 
   if (selected === null) {
+    const originDef = originDefId ? DEFINITIONS.find((d) => d.id === originDefId) : null;
+    if (originDef) {
+      return (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'var(--t-micro)',
+              color: 'var(--ink-3)',
+              marginBottom: '6px',
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Definition
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-math)',
+              fontStyle: 'italic',
+              fontSize: '15px',
+              color: 'var(--ink)',
+              marginBottom: '10px',
+            }}
+          >
+            <LatexText text={originDef.title} />
+          </div>
+          {originDef.plainStatement && (
+            <div
+              style={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--t-meta)',
+                color: 'var(--ink-2)',
+                lineHeight: 1.6,
+                marginBottom: '8px',
+              }}
+            >
+              <LatexText text={originDef.plainStatement} />
+            </div>
+          )}
+          <div
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: 'var(--t-meta)',
+              color: 'var(--ink-2)',
+              lineHeight: 1.6,
+            }}
+          >
+            <LatexText text={originDef.formalStatement} />
+          </div>
+          <div
+            style={{
+              marginTop: '14px',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'var(--t-micro)',
+              color: 'var(--ink-4)',
+              lineHeight: 1.6,
+            }}
+          >
+            Select an object to inspect it.
+          </div>
+        </div>
+      );
+    }
     return (
       <div
         style={{
